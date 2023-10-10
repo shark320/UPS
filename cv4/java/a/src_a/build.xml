@@ -1,0 +1,33 @@
+<project name="mydemo" default="build" basedir="./src">
+
+    <!-- Define the output directory -->
+    <property name="output.dir" value="../target"/>
+
+    <target name="build" depends="server,client">
+        <echo message="${basedir}"/>
+    </target>
+
+    <target name="server" depends="">
+        <echo message="Compiling server"/>
+        <mkdir dir="${output.dir}"/> <!-- Create the output directory if it doesn't exist -->
+        <javac srcdir="${basedir}" destdir="${output.dir}">
+            <src path="${basedir}"/>
+<!--            <include name="serverTCPSingle.java"/>-->
+        </javac>
+    </target>
+
+    <target name="client" depends="">
+        <echo message="Compiling client"/>
+        <mkdir dir="${output.dir}"/> <!-- Create the output directory if it doesn't exist -->
+        <javac srcdir="${basedir}" destdir="${output.dir}">
+            <src path="${basedir}"/>
+<!--            <include name="clientTCP.java"/>-->
+        </javac>
+    </target>
+
+    <target name="clean" depends="">
+        <echo message="Deleting binaries..."/>
+        <delete dir="${output.dir}"/>
+    </target>
+
+</project>
