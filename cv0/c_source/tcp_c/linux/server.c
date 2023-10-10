@@ -7,20 +7,24 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
+#include <stdlib.h>
 
 #define OUT_BYTES 1
 #define OUT_CHARS 2
 
+#define RAND_SEED 1
+
 #define PORT 10032
 #define B_SIZE 1024
+
 
 void var_dump(void* var, unsigned long bytes, int flag){
 	unsigned long i = 0;
 	unsigned char byte;
 	if (flag == OUT_BYTES){
-		printf("Var dump flag set to BYTES\n");
+		printf("[Thread:%ld] Var dump flag set to BYTES\n", pthread_self());
 	}else if (flag == OUT_CHARS){
-		printf("Var dump flag set to CHARS\n");
+		printf("[Thread:%ld] Var dump flag set to CHARS\n", pthread_self());
 	}
 	for (;i<bytes;++i){
 		byte = *((char *)(var+i));
@@ -47,25 +51,21 @@ void print_connection_info(int client_sock){
         if (inet_ntop(AF_INET, &(client_addr.sin_addr), client_ip, INET_ADDRSTRLEN) != NULL) {
             printf("[Thread:%ld] Client IP: %s\n", pthread_self(), client_ip);
         } else {
-            perror("[Thread:%ld] Failed to convert IP address\n");
+            printf("[Thread:%ld] Failed to convert IP address\n", pthread_self());
         }
     } else {
-        perror("[Thread:%ld] Failed to get client information\n");
+        printf("[Thread:%ld] Failed to get client information\n", pthread_self());
     }
-}
-
-void remove_crlf(){
-
 }
 
 /**
  * @return 1 in case of HELLO is accepted. 0 if received msg was not 'HELLO'. -100 in case of error 
 */
-int validateHello(int client_sock){
+int validate_hello(int client_sock){
 	char buffer[B_SIZE];
 	char* hello_str = "HELLO";
 	if (get_line(client_sock, buffer, sizeof(buffer))==0){
-		printf("Error on getting 'HELLO'\n");
+		printf("[Thread:%ld] Error on getting 'HELLO'\n", pthread_self());
 		return -100;
 	}
 	
@@ -76,12 +76,13 @@ int get_line(int client_sock, char* buffer, int size){
 	char c;
 	int bytes, i;
 
-	memset(buffer,0,sizeof(buffer));
-	bytes = recv(client_sock, buffer, sizeof(buffer), 0);
+	memset(buffer,0,B_SIZE);
+	bytes = recv(client_sock, buffer, B_SIZE, 0);
 	if (bytes == 0){
 		return 0;
 	}
 	//str termination
+	var_dump(buffer, bytes, OUT_BYTES);
 	buffer[bytes] = '\0';
 	//cut on '\n'
 	for (i = 0; i < bytes; ++i){
@@ -91,9 +92,55 @@ int get_line(int client_sock, char* buffer, int size){
 			break;
 		}
 	}
+	
 	return bytes;
 }
 
+void close_connection(int client_sock){
+	printf("[Thread:%ld] Closing connection.\n", pthread_self());
+	close(client_sock);
+}
+
+int send_num(int client_sock){
+	int num = rand()%1000;
+	char message[B_SIZE];
+	memset(message, 0, sizeof(message));
+	sprintf(message,"NUM:%d\n", num);
+	printf("[Thread:%ld] Sending number msg: %s\n", pthread_self(), message);
+	send(client_sock, message, strlen(message),0);
+	return num;
+}
+
+/**
+ * @return 1 if client num is OK, 0 if NOK, -100 on error
+*/
+int check_num(int client_sock, int num){
+	char buffer[B_SIZE];
+	char* ok = "OK\n";
+	char* wrong = "WRONG\n";
+	int client_num;
+	if (get_line(client_sock, buffer, sizeof(buffer))==0){
+		printf("[Thread:%ld] Error on getting 'HELLO'\n", pthread_self());
+		return -100;
+	}
+	printf("[Thread:%ld] Got [%s] from client\n",pthread_self(), buffer);
+	client_num = atoi(buffer);
+	if (client_num == 2 * num){
+		printf("[Thread:%ld] Numer [%d] is OK\n",pthread_self(), client_num);
+		send(client_sock, ok, strlen(ok), 0);
+		return 1;
+	}else{
+		printf("[Thread:%ld] Numer [%d] is WRONG\n",pthread_self(), client_num);
+		send(client_sock, wrong, strlen(wrong), 0);
+		return 0;
+	}
+}
+
+void send_error(int client_sock){
+	char* error = "ERROR\n";
+	printf("[Thread:%ld] HELLO is not accepted!\n", pthread_self());\
+	send(client_sock, error, strlen(error), 0);
+}
 
 
 // telo vlakna co obsluhuje prichozi spojeni
@@ -101,7 +148,7 @@ void* serve_request(void *arg)
 {
 	int client_sock;
     char buffer[B_SIZE];
-	int got_bytes = 0;
+	int got_bytes = 0, hello_flag, num, num_flag;
 
 
     // pretypujem parametr z netypoveho ukazate na ukazatel na int a dereferujeme
@@ -111,15 +158,17 @@ void* serve_request(void *arg)
     printf("[Thread:%ld] New connection\n", pthread_self());
 	print_connection_info(client_sock);
 
-	memset(buffer, 0, sizeof(buffer));
-	// int got_bytes = recv(client_sock, buffer, sizeof(buffer), 0);
-	fgets(buffer, sizeof(buffer), client_sock);
-	// buffer[got_bytes] = 0;
-	printf("[Thread:%ld] Received: %s, Bytes: %d\n",pthread_self(), buffer, got_bytes);
-	// printf("(Vlakno:%ld) Received: %c, Bytes: %d\n",pthread_self(), cbuf, got_bytes);
-	printf("[Thread:%ld] Closing connection.\n", pthread_self());
-	close(client_sock);
-
+	hello_flag = validate_hello(client_sock);
+	if (hello_flag == 1){
+		printf("[Thread:%ld] HELLO is accepted!\n", pthread_self());
+		num = send_num(client_sock);
+		check_num(client_sock, num);
+	}else if (hello_flag == 0){
+		send_error(client_sock);
+	}else{
+		printf(" [Thread:%ld] Error!\n" , pthread_self());
+	}
+	close_connection(client_sock);
 	// uvolnime pamet
 	free(arg);
 
@@ -137,6 +186,8 @@ int main (void)
 	struct sockaddr_in remote_addr;
 	socklen_t remote_addr_len;
 	pthread_t thread_id;
+
+	srand(RAND_SEED);
 	
 	server_sock = socket(AF_INET, SOCK_STREAM, 0);
 

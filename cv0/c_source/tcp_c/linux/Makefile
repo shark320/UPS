@@ -3,7 +3,7 @@ CC=gcc
 all:	clean client server
 
 client:	client.c
-	${CC} -o client client.c
+	${CC} -o client client.c -lpthread
 
 server: server.c
 	${CC} -o server server.c -lpthread
