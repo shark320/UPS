@@ -64,10 +64,6 @@
 			{
 				"fragment" : "-lpthread",
 				"role" : "libraries"
-			},
-			{
-				"fragment" : "-llog4cxx",
-				"role" : "libraries"
 			}
 		],
 		"language" : "CXX"

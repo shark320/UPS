@@ -77,9 +77,9 @@ build CMakeFiles/testapp.dir/main.cpp.o: CXX_COMPILER__testapp ../main.cpp || cm
 
 build testapp: CXX_EXECUTABLE_LINKER__testapp CMakeFiles/testapp.dir/main.cpp.o
   FLAGS = -g
-  LINK_LIBRARIES = -lpthread  -llog4cxx
+  LINK_LIBRARIES = -lpthread
   OBJECT_DIR = CMakeFiles/testapp.dir
-  POST_BUILD = cd /mnt/c/FAV/UPS/sandboxes/sb2/build && /usr/bin/cmake -E copy /mnt/c/FAV/UPS/sandboxes/sb2/config/log4cxx.properties /mnt/c/FAV/UPS/sandboxes/sb2/build/config/log4cxx.properties
+  POST_BUILD = cd /mnt/c/FAV/UPS/sandboxes/sb2/build && /usr/bin/cmake -E copy /mnt/c/FAV/UPS/sandboxes/sb2/config/log4cxx.properties /mnt/c/FAV/UPS/sandboxes/sb2/build/bin/config/log4cxx.properties
   PRE_LINK = :
   TARGET_FILE = testapp
   TARGET_PDB = testapp.dbg
