@@ -8,7 +8,6 @@
 #include <string.h>
 #include <pthread.h>
 #include <stdlib.h>
-#include <openssl/sha.h>
 
 #define OUT_BYTES 1
 #define OUT_CHARS 2

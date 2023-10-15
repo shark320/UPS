@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/mnt/c/FAV/UPS/sandboxes/sb2/build",
+  "command": "/usr/bin/g++    -g   -std=gnu++17 -o CMakeFiles/testapp.dir/main.cpp.o -c /mnt/c/FAV/UPS/sandboxes/sb2/main.cpp",
+  "file": "/mnt/c/FAV/UPS/sandboxes/sb2/main.cpp"
+}
+]

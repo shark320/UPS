@@ -46,7 +46,7 @@ void* client_thread(void* arg){
 
 	remote_addr.sin_family = AF_INET;
 	remote_addr.sin_port = htons(PORT);
-	remote_addr.sin_addr.s_addr = inet_addr(ARES);
+	remote_addr.sin_addr.s_addr = inet_addr(LOCALHOST);
 
 	return_value = connect(client_sock, (struct sockaddr *)&remote_addr, sizeof(struct sockaddr_in));
 

@@ -1,0 +1,3 @@
+/mnt/c/FAV/UPS/sandboxes/sb2/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/FAV/UPS/sandboxes/sb2/build/CMakeFiles/edit_cache.dir
+/mnt/c/FAV/UPS/sandboxes/sb2/build/CMakeFiles/testapp.dir
