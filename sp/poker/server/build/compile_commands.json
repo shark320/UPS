@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/mnt/c/FAV/UPS/sp/poker/server/build",
+  "command": "/usr/bin/g++    -g   -o CMakeFiles/server.dir/src/server.cpp.o -c /mnt/c/FAV/UPS/sp/poker/server/src/server.cpp",
+  "file": "/mnt/c/FAV/UPS/sp/poker/server/src/server.cpp"
+}
+]

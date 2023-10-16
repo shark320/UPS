@@ -1,0 +1,12 @@
+{
+    "name": "Linux-GCC",
+    "generator": "Unix Makefiles",
+    "cmakeCommand": "cmake",
+    "buildRoot": "${workspaceFolder}/build",
+    "installRoot": "${workspaceFolder}/install",
+    "configurationType": "Release",
+    "cacheVariables": {
+        "CMAKE_C_COMPILER": "/usr/bin/gcc",
+        "CMAKE_CXX_COMPILER": "/usr/bin/g++"
+    }
+}
