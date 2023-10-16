@@ -1,3 +1,0 @@
-/mnt/c/FAV/UPS/sp/poker/server/build/CMakeFiles/rebuild_cache.dir
-/mnt/c/FAV/UPS/sp/poker/server/build/CMakeFiles/edit_cache.dir
-/mnt/c/FAV/UPS/sp/poker/server/build/CMakeFiles/server.dir
