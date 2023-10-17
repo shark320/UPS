@@ -1,13 +1,13 @@
 package com.vpavlov;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vpavlov.connection.Connection;
-import com.vpavlov.connection.request.Request;
+
+import com.vpavlov.connection.Status;
+import com.vpavlov.connection.header.Header;
 import com.vpavlov.connection.type.Subtype;
 import com.vpavlov.connection.type.Type;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.JsonUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -26,42 +26,20 @@ public class Main {
     }
     public static final Logger LOGGER = LogManager.getLogger();
 
-    public static void sendMessage( Socket socket) throws IOException {
-        LOGGER.debug("Connected: " + socket.isConnected());
-        OutputStream outputStream = socket.getOutputStream();
-        BufferedOutputStream bos = new BufferedOutputStream(outputStream);
-        ObjectMapper objectMapper = new ObjectMapper();
-        Request request = new Request(Type.GET, Subtype.PING);
-        String json = objectMapper.writeValueAsString(request);
-        LOGGER.debug("Request: " + json);
-        bos.write(json.getBytes());
-        bos.flush();
-    }
+//    public static void sendMessage( Socket socket) throws IOException {
+//        LOGGER.debug("Connected: " + socket.isConnected());
+//        OutputStream outputStream = socket.getOutputStream();
+//        BufferedOutputStream bos = new BufferedOutputStream(outputStream);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        Request request = new Request(Type.GET, Subtype.PING);
+//        String json = objectMapper.writeValueAsString(request);
+//        LOGGER.debug("Request: " + json);
+//        bos.write(json.getBytes());
+//        bos.flush();
+//    }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        Connection connection = new Connection("127.0.0.1", 10000);
-        Socket socket = connection.connect();
-
-        // Get the output stream from the socket
-
-
-        TimerTask timerTask = new TimerTask(){
-
-            @Override
-            public void run() {
-
-            }
-        };
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-        // Schedule a task to run every 2 seconds
-        scheduler.scheduleAtFixedRate(()-> {
-            try {
-                sendMessage(socket);
-            } catch (IOException e) {
-                LOGGER.error(e);
-            }
-        }, 0, 5, TimeUnit.SECONDS);
-
+        Header header = new Header(10 , Type.GET, Subtype.PING, Status.NO_STATUS);
+        System.out.println(header.construct());
     }
 }
