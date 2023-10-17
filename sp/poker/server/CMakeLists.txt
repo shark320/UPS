@@ -8,7 +8,8 @@ add_subdirectory("libs/json")
 
 add_executable(server src/server.cpp
         src/api/type.hpp
-        src/api/request/Request.hpp
-        src/api/payload/payload.hpp)
+        src/api/request/request.hpp
+        src/api/payload/payload.hpp
+        src/api/payload/payload.cpp)
 
-target_link_libraries(server PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(server PRIVATE nlohmann_json::nlohmann_json pthread)

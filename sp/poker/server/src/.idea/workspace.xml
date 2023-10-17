@@ -10,40 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10ef15db-0336-4b7a-9ef3-3fcc393b357a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/api/types/type.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.vscode/launch.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.vscode/tasks.json" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/payload/payload.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/.cmake/api/v1/query/client-vscode/query.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/.cmake/api/v1/reply/cache-v2-9fc4de9cce5c48115650.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/.cmake/api/v1/reply/cmakeFiles-v1-69dbff748e11f89e87b2.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/.cmake/api/v1/reply/codemodel-v2-fc4a172ad50f21e0a405.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/.cmake/api/v1/reply/index-2023-10-16T16-02-26-0326.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/.cmake/api/v1/reply/target-server-Debug-08c1aa25c6f9cad48005.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/.ninja_deps" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/.ninja_log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeCache.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/3.16.3/CMakeCCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/3.16.3/CMakeCXXCompiler.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/3.16.3/CMakeDetermineCompilerABI_C.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/3.16.3/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/3.16.3/CMakeSystem.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/3.16.3/CompilerIdC/CMakeCCompilerId.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/3.16.3/CompilerIdC/a.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/3.16.3/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/3.16.3/CompilerIdCXX/a.out" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/CMakeOutput.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/TargetDirectories.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/cmake.check_cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/CMakeFiles/server.dir/src/server.cpp.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/build.ninja" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/cmake_install.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/compile_commands.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/rules.ninja" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/server" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../build/server.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/payload/payload.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/api/payload/payload.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/request/Request.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/api/request/request.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +65,7 @@
       <option name="presentableId" value="Default" />
       <updated>1697474877515</updated>
       <workItem from="1697474878925" duration="209000" />
-      <workItem from="1697475111764" duration="592000" />
+      <workItem from="1697475111764" duration="599000" />
     </task>
     <servers />
   </component>

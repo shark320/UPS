@@ -24,16 +24,18 @@ public class Connection {
         this(null, serverPort);
     }
 
-    public void connect() throws IOException {
+    public Socket connect() throws IOException {
 
         Socket socket = null;
         if (serverName == null){
-            socket = new Socket(InetAddress.getLocalHost(), serverPort);
             LOGGER.debug(String.format(Locale.US,"Connecting to the: '%s:%d'", InetAddress.getLocalHost(), serverPort));
+            socket = new Socket(InetAddress.getLocalHost(), serverPort);
         }else{
-            socket = new Socket(InetAddress.getByName(serverName), serverPort);
             LOGGER.debug(String.format(Locale.US,"Connecting to the: '%s:%d'", serverName, serverPort));
+            socket = new Socket(InetAddress.getByName(serverName), serverPort);
         }
+        LOGGER.debug("Connection successful.");
+        return socket;
     }
 
 
