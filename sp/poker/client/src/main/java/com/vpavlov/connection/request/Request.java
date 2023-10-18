@@ -1,36 +1,33 @@
 package com.vpavlov.connection.request;
 
+import com.vpavlov.connection.header.Header;
 import com.vpavlov.connection.payload.Payload;
-import com.vpavlov.connection.type.Subtype;
-import com.vpavlov.connection.type.Type;
+import com.vpavlov.connection.payload.mapping.PayloadMapper;
 
 public class Request {
 
-    private Type type;
-
-    private Subtype subtype;
-
+    private Header header;
     private Payload payload;
 
-    public Request(Type type, Subtype subtype) {
-        this.type = type;
-        this.subtype = subtype;
+    public Request(Payload payload) {
+       this(null, payload);
     }
 
-    public Type getType() {
-        return type;
+    public Request(Header header) {
+        this(header, null);
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public Request(Header header, Payload payload) {
+        this.header = header;
+        this.payload = payload;
     }
 
-    public Subtype getSubtype() {
-        return subtype;
+    public void setHeader(Header header) {
+        this.header = header;
     }
 
-    public void setSubtype(Subtype subtype) {
-        this.subtype = subtype;
+    public Header getHeader() {
+        return header;
     }
 
     public Payload getPayload() {
@@ -39,5 +36,15 @@ public class Request {
 
     public void setPayload(Payload payload) {
         this.payload = payload;
+    }
+
+    public String construct(){
+        if (this.payload == null){
+            throw new IllegalStateException("Payload is null.");
+        }
+        String payloadConstruct = PayloadMapper.map(this.payload);
+        this.header.setLength(payloadConstruct.length());
+        String headerConstruct = this.header.construct();
+        return headerConstruct+payloadConstruct;
     }
 }
