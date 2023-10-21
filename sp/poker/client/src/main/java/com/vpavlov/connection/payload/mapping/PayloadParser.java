@@ -21,6 +21,8 @@ public class PayloadParser {
 
     protected static final Pattern BOOL_PATTERN = Pattern.compile("^(true|false)$");
 
+    protected static final Pattern NULL_PATTERN = Pattern.compile("^(null)$");
+
     public static List<Integer> parseIntList (String value){
         value = value.substring(1,value.length()-1);
         List<Integer> result = new ArrayList<Integer>();
@@ -84,6 +86,10 @@ public class PayloadParser {
 
     public static Object parseValue(String value){
         value = value.trim();
+        Matcher nullMatcher = NULL_PATTERN.matcher(value);
+        if (nullMatcher.matches()){
+            return null;
+        }
         Matcher listMatcher = LIST_PATTERN.matcher(value);
         if (listMatcher.matches()){
             return parseList(value);
