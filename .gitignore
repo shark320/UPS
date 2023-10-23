@@ -4,3 +4,4 @@ sp/poker/server/cmake-build-debug
 docs
 sp/poker/client/logs
 sp/poker/client/target
+sp/poker/server/.idea

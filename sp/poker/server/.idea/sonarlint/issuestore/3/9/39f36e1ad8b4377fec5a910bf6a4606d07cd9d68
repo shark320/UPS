@@ -1,7 +1,0 @@
-
-Y	cpp:S5028"8Replace this macro by "const", "constexpr" or an "enum".(¾Ï½ùÿÿÿÿ8ÌªÏ³1
-7	cpp:S1481M"unused variable 'cbuf'(æÊ‚Ïşÿÿÿÿ8œ¤ªÏ³1
-S	cpp:S59456"2Use "std::string" instead of a C-style char array.(áõú°úÿÿÿÿ8Ê¯¢Ï³1
-N	cpp:S3630d"-Replace "reinterpret_cast" with a safer cast.(€Œ£âøÿÿÿÿ8’Í§Ï³1
-I	cpp:S3630v"-Replace "reinterpret_cast" with a safer cast.(€ƒŒ’8ÔŠ¨Ï³1
-^	cpp:S5962z"BConsider giving the thread a bigger scope instead of detaching it.(İ—«ß8³¾¨Ï³1

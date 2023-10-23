@@ -7,9 +7,12 @@ add_subdirectory("libs/json")
 # You don't need to manually include log4cxx headers or libraries
 
 add_executable(server src/server.cpp
-        src/api/type.hpp
-        src/api/request/request.hpp
-        src/api/payload/payload.hpp
-        src/api/payload/payload.cpp)
+        src/connection/request/request.hpp
+        src/connection/payload/payload.hpp
+        src/connection/payload/payload.cpp
+        src/connection/status.hpp
+        src/connection/type.cpp
+        src/connection/subtype.cpp
+)
 
 target_link_libraries(server PRIVATE nlohmann_json::nlohmann_json pthread)

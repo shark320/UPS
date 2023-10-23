@@ -34,7 +34,7 @@ namespace detail
 ////////////////
 
 /// @brief general exception of the @ref basic_json class
-/// @sa https://json.nlohmann.me/api/basic_json/exception/
+/// @sa https://json.nlohmann.me/connection/basic_json/exception/
 class exception : public std::exception
 {
   public:
@@ -132,7 +132,7 @@ class exception : public std::exception
 };
 
 /// @brief exception indicating a parse error
-/// @sa https://json.nlohmann.me/api/basic_json/parse_error/
+/// @sa https://json.nlohmann.me/connection/basic_json/parse_error/
 class parse_error : public exception
 {
   public:
@@ -185,7 +185,7 @@ class parse_error : public exception
 };
 
 /// @brief exception indicating errors with iterators
-/// @sa https://json.nlohmann.me/api/basic_json/invalid_iterator/
+/// @sa https://json.nlohmann.me/connection/basic_json/invalid_iterator/
 class invalid_iterator : public exception
 {
   public:
@@ -203,7 +203,7 @@ class invalid_iterator : public exception
 };
 
 /// @brief exception indicating executing a member function with a wrong type
-/// @sa https://json.nlohmann.me/api/basic_json/type_error/
+/// @sa https://json.nlohmann.me/connection/basic_json/type_error/
 class type_error : public exception
 {
   public:
@@ -220,7 +220,7 @@ class type_error : public exception
 };
 
 /// @brief exception indicating access out of the defined range
-/// @sa https://json.nlohmann.me/api/basic_json/out_of_range/
+/// @sa https://json.nlohmann.me/connection/basic_json/out_of_range/
 class out_of_range : public exception
 {
   public:
@@ -237,7 +237,7 @@ class out_of_range : public exception
 };
 
 /// @brief exception indicating other library errors
-/// @sa https://json.nlohmann.me/api/basic_json/other_error/
+/// @sa https://json.nlohmann.me/connection/basic_json/other_error/
 class other_error : public exception
 {
   public:
