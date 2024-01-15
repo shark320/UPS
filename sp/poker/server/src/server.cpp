@@ -1,27 +1,25 @@
 #include <iostream>
-#include <nlohmann/json.hpp>
 #include <string>
 #include <thread>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include "api/payload/payload.hpp"
-
-using json = nlohmann::json;
+#include <memory>
+#include "base/base.hpp"
 
 #define PORT 10000
 
-void testPayload(){
+/*void testPayload(){
     auto payload = std::make_shared<Payload>();
     auto testString1 = std::make_shared<std::string>("Hello, dynamically allocated string!");
     auto testString2 = std::make_shared<std::string>("Hello, dynamically allocated string 2!");
     payload->setData("test1", testString1);
     payload->setData("test2", testString2);
 
-    std::shared_ptr<void> value1 = payload->getData("test1");
-    std::shared_ptr<void> value2 = payload->getData("test2");
-    std::shared_ptr<void> value3 = payload->getData("test3");
+    std::shared_ptr<void> value1 = payload->get_data("test1");
+    std::shared_ptr<void> value2 = payload->get_data("test2");
+    std::shared_ptr<void> value3 = payload->get_data("test3");
 
     if (value1) {
         std::shared_ptr<std::string> strValue1 = std::static_pointer_cast<std::string>(value1);
@@ -43,13 +41,14 @@ void testPayload(){
     } else {
         std::cout << "Value for test3 is null." << std::endl;
     }
-}
+}*/
 
-void close_connection(int client_sock, std::thread::id thread_id) {
+/*void close_connection(int client_sock, std::thread::id thread_id) {
     std::cout << "[Thread:" << thread_id << "] Closing connection." << std::endl;
     close(client_sock);
-}
+}*/
 
+/*
 void serveConnection(int client_socket) {
     char buffer[1024]; // Buffer to store incoming data
 
@@ -69,9 +68,10 @@ void serveConnection(int client_socket) {
 
     close_connection(client_socket, std::this_thread::get_id());
 }
+*/
 
 int main(){
-    int server_sock;
+    /*int server_sock;
     int client_sock;
     int return_value;
     char cbuf;
@@ -124,7 +124,17 @@ int main(){
             std::cout << "Brutal Fatal ERROR" << std::endl;
             return -1;
         }
-    }
+    }*/
+
+    std::shared_ptr<string> str1 = std::make_shared<string>("1234");
+    vector vec;
+
+    vec.push_back(str1);
+    vec.push_back(str1);
+
+
+    std::cout << vec.to_string() << ":" << std::endl;
+
 
     return 0;
 }

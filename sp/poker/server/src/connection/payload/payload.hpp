@@ -3,18 +3,19 @@
 #include <map>
 #include <string>
 #include <memory>
+#include "../../base/base.hpp"
 
-class Payload {
+class payload: public object{
 public:
-    Payload();
+    payload();
 
-    void setValue(const std::string& key, const std::shared_ptr<void*>& value);
-    std::shared_ptr<void*> getValue(const std::string& key);
-    std::map<std::string, std::shared_ptr<void*>> getData();
+    void set_value(const std::string& key, const std::shared_ptr<object>& value);
+    std::shared_ptr<object> get_value(const std::string& key);
+    std::shared_ptr<std::map<std::string, std::shared_ptr<object>>> get_data();
 
-    std::string toString();
+    std::string to_string();
 
 private:
-    std::map<std::string, std::shared_ptr<void*>> data;
+    std::shared_ptr<std::map<std::string, std::shared_ptr<object>>> data;
 };
 
