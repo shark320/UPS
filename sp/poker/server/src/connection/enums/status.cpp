@@ -10,7 +10,7 @@ status::_enum status::get_status(int id) {
     if (it != status_map.end()) {
         return it->second;
     }
-    return _enum::NULL; // Return a default _value when the ID is not found.
+    return _enum::NULL_STATUS; // Return a default _value when the ID is not found.
 }
 
 int status::get_id(status::_enum _status) {

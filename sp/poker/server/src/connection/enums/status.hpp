@@ -5,7 +5,7 @@
 class status {
 public:
     enum class _enum{
-        NULL = 0,
+        NULL_STATUS = 0,
         OK = 200
     };
 

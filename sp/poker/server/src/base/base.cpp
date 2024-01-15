@@ -1,5 +1,6 @@
 #include "base.hpp"
 #include <stdexcept>
+#include <utility>
 
 object::~object() = default;
 
@@ -62,6 +63,8 @@ integer &integer::operator=(const int &_value) {
 int integer::value() {
     return this->_value;
 }
+
+string::string(std::string str): std::string(std::move(str)) {}
 
 
 std::string string::to_string() const {

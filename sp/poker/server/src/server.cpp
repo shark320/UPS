@@ -7,6 +7,11 @@
 #include <netinet/in.h>
 #include <memory>
 #include "base/base.hpp"
+#include "connection/payload/payload.hpp"
+#include "connection/consts/consts.hpp"
+#include "connection/status.hpp"
+#include "connection/enums/type.hpp"
+#include "connection/enums/status.hpp"
 
 #define PORT 10000
 
@@ -126,15 +131,14 @@ int main(){
         }
     }*/
 
-    std::shared_ptr<string> str1 = std::make_shared<string>("1234");
-    vector vec;
+    std:string test_payload_str = "str=\"string\";int=12;int_arr=[1,2,3,4]";
+    char buffer[constants::MSG_MAX_LENGTH];
+    std::sprintf(buffer, "%s%04d%1d%02d%03d%s", "POKR", static_cast<int>(test_payload_str.length()), static_cast<int>(type::_enum::GET), static_cast<int>(subtype::_enum::PING), static_cast<int>(status::_enum::OK), test_payload_str.c_str());
+    std::string test_request(buffer);
 
-    vec.push_back(str1);
-    vec.push_back(str1);
+    auto test_payload = payload::extract(test_request);
 
-
-    std::cout << vec.to_string() << ":" << std::endl;
-
+    std::cout << test_payload->to_string() << std::endl;
 
     return 0;
 }
