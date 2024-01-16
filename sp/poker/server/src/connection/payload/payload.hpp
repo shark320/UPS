@@ -9,16 +9,33 @@ class payload: public object{
 public:
     payload();
 
+    payload(const payload* other);
+
     void set_value(const std::string& key, const std::shared_ptr<object>& value);
+
     std::shared_ptr<object> get_value(const std::string& key);
+
     std::shared_ptr<std::map<std::string, std::shared_ptr<object>>> get_data();
 
     std::string to_string();
 
-    static std::shared_ptr<payload> extract(const std::string& str);
+    //static std::shared_ptr<payload> extract(const std::string& str);
+
+    static std::shared_ptr<payload> parse(const std::string& str);
+
+    [[nodiscard]] std::string construct() const;
+
 
 private:
     std::shared_ptr<std::map<std::string, std::shared_ptr<object>>> data;
+
+    bool validate_value(const std::shared_ptr<object>& value);
+
+    static bool validate_str_value(const std::shared_ptr<string> value);
+
+    static bool validate_str_list_value(const std::shared_ptr<vector>& value);
+
+    static bool validate_list_value(const std::shared_ptr<vector>& value);
 
     static std::shared_ptr<vector> parse_int_list(const std::string& value);
 
@@ -36,13 +53,11 @@ private:
 
     static void parse_token(const std::string& token, const std::shared_ptr<payload>& _payload);
 
-    static std::shared_ptr<payload> parse(const std::string& str);
-
-    static std::string map_string(const std::shared_ptr<object>& str);
+    static std::string map_string(const std::shared_ptr<string> &str);
 
     static std::string map_string_list(const std::shared_ptr<vector>& strings_list);
 
-    static std::string map_int(const std::shared_ptr<object>& value);
+    static std::string map_int(const std::shared_ptr<integer> &value);
 
     static std::string map_ints_list(const std::shared_ptr<vector>& integers_list);
 

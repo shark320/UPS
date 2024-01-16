@@ -20,7 +20,14 @@ payload::payload() {
     this->data = std::make_shared<std::map<std::string, std::shared_ptr<object>>>();
 }
 
+payload::payload(const payload* other){
+    this->data = other->data;
+}
+
 void payload::set_value(const std::string &key, const std::shared_ptr<object> &value) {
+    if (!validate_value(value)){
+        throw std::invalid_argument("Provided value is invalid and can not be set!");
+    }
     (*this->data)[key] = value;
 }
 
@@ -123,7 +130,7 @@ std::shared_ptr<object> payload::parse_value(const std::string& value) {
     } else if (std::regex_search(value, bool_match, BOOL_PATTERN)) {
         return parse_boolean(value);
     } else if (std::regex_search(value, null_match, NULL_PATTERN)) {
-        return std::make_shared<object>();
+        return nullptr;
     } else if (std::regex_search(value, list_match, LIST_PATTERN)){
         return parse_list(value);
     }else {
@@ -151,16 +158,16 @@ std::shared_ptr<payload> payload::parse(const std::string& str) {
     return _payload;
 }
 
-std::shared_ptr<payload> payload::extract(const std::string& str){
-    if (str.length() <= constants::MSG_HEADER_LENGTH){
-        return std::make_shared<payload>();
-    }
+//std::shared_ptr<payload> payload::extract(const std::string& str){
+//    if (str.length() <= constants::MSG_HEADER_LENGTH){
+//        return std::make_shared<payload>();
+//    }
+//
+//    std::string payload_str = str.substr(constants::MSG_HEADER_LENGTH);
+//    return parse(payload_str);
+//}
 
-    std::string payload_str = str.substr(constants::MSG_HEADER_LENGTH);
-    return parse(payload_str);
-}
-
-std::string payload::map_string(const std::shared_ptr<object>& str){
+std::string payload::map_string(const std::shared_ptr<string> &str){
     if (str == nullptr){
         return "null";
     }
@@ -169,19 +176,24 @@ std::string payload::map_string(const std::shared_ptr<object>& str){
 }
 
 std::string payload::map_string_list(const std::shared_ptr<vector>& strings_list){
-    if (strings_list == nullptr){
-        return "null";
+    if (strings_list == nullptr || strings_list->empty()){
+        return "";
     }
     std::ostringstream oss;
 
     for (const auto& str : *strings_list) {
-        oss << map_string(str) << ',';
+        if (std::shared_ptr<string> str_ptr = std::dynamic_pointer_cast<string>(str)){
+            oss << map_string(str_ptr) << ',';
+        }else{
+            throw std::invalid_argument("Vector contains not string type object!");
+        }
     }
-    oss.seekp(-1, std::ios_base::end); // Move back to remove the last comma
-    return oss.str();
+    std::string result = oss.str();
+    result.pop_back();
+    return result;
 }
 
-std::string payload::map_int(const std::shared_ptr<object> &value) {
+std::string payload::map_int(const std::shared_ptr<integer> &value) {
     if (value == nullptr){
         return "null";
     }
@@ -190,30 +202,33 @@ std::string payload::map_int(const std::shared_ptr<object> &value) {
 }
 
 std::string payload::map_ints_list(const std::shared_ptr<vector> &integers_list) {
-    if (integers_list == nullptr){
-        return "null";
+    if (integers_list == nullptr || integers_list->empty()){
+        return "";
     }
     std::ostringstream oss;
 
-    for (const auto& str : *integers_list) {
-        oss << map_int(str) << ',';
+    for (const auto& item : *integers_list) {
+        if (std::shared_ptr<integer> int_ptr = std::dynamic_pointer_cast<integer>(item)){
+            oss << map_int(int_ptr) << ',';
+        }else{
+            throw std::invalid_argument("Vector contains not integer type object!");
+        }
+
     }
-    oss.seekp(-1, std::ios_base::end); // Move back to remove the last comma
-    return oss.str();
+    std::string result = oss.str();
+    result.pop_back();
+    return result;
 }
 
 std::string payload::map_list(const std::shared_ptr<vector>& list){
-    if (list == nullptr) {
+    if (list == nullptr || list->empty()) {
         return "null";
     }
-    if (list->empty()){
-        return "[]";
-    }
     std::string result;
-    const auto& first_element = *(list->at(0));
-    if (typeid(first_element) == typeid(integer)) {
+    const auto& first_element = list->at(0);
+    if (std::shared_ptr<integer> int_ptr = std::dynamic_pointer_cast<integer>(first_element)) {
         result = map_ints_list(list);
-    } else if (typeid(first_element) == typeid(string)) {
+    } else if (std::shared_ptr<string> str_ptr = std::dynamic_pointer_cast<string>(first_element)) {
         result = map_string_list(list);
     }else {
         throw std::invalid_argument("Unknown list items type to map.");
@@ -226,7 +241,93 @@ std::string payload::map_boolean(const std::shared_ptr<boolean> &value) {
 }
 
 std::string payload::map_object(const std::shared_ptr<object>& obj){
+    if (obj == nullptr){
+        return "null";
+    }
+    auto obj_tmp = *obj;
+    if (std::shared_ptr<string> str_ptr = std::dynamic_pointer_cast<string>(obj)){
+        return map_string(str_ptr);
+    }
+    if (std::shared_ptr<integer> int_ptr = std::dynamic_pointer_cast<integer>(obj)){
+        return map_int(int_ptr);
+    }
+    if (std::shared_ptr<vector> vector_ptr = std::dynamic_pointer_cast<vector>(obj)){
+        return map_list(vector_ptr);
+    }
+    if (std::shared_ptr<boolean> bool_ptr = std::dynamic_pointer_cast<boolean>(obj)){
+        return map_boolean(bool_ptr);
+    }
+    return "";
+}
 
+std::string payload::map(const std::shared_ptr<payload> &_payload) {
+    if (_payload->get_data()->empty()){
+        return "";
+    }
+    std::ostringstream oss;
+    for (auto const& it : *(_payload->get_data())){
+        oss << it.first << '=' << map_object(it.second) << SEPARATOR;
+    }
+    oss.seekp(-1, std::ios_base::end); // Move back to remove the last separator
+    return oss.str();
+}
+
+std::string payload::construct() const{
+    //TODO: replace with function overloading
+    return map(std::make_shared<payload>(this));
+}
+
+bool payload::validate_str_value(const std::shared_ptr<string> value) {
+    if (value == nullptr){
+        return true;
+    }
+    return value->find(SEPARATOR) == std::string::npos;
+}
+
+bool payload::validate_str_list_value(const std::shared_ptr<vector>& value){
+    if (value == nullptr || value->empty()){
+        return true;
+    }
+    for (auto str : *value){
+        if (auto str_ptr = std::dynamic_pointer_cast<string>(str)){
+            if (!validate_str_value(str_ptr)){
+                return false;
+            }
+        } else {
+            throw std::invalid_argument("Vector contains not string type object!");
+        }
+    }
+
+    return true;
+}
+
+bool payload::validate_list_value(const std::shared_ptr<vector>& value) {
+    if (value == nullptr || value->empty()){
+        return true;
+    }
+    auto first_item = value->at(0);
+    if (auto str_ptr = std::dynamic_pointer_cast<string>(first_item)){
+        return validate_str_list_value(value);
+    }
+
+    //other types are valid
+    return true;
+}
+
+bool payload::validate_value(const std::shared_ptr<object>& value){
+    if (value == nullptr){
+        return true;
+    }
+
+    if (auto str_ptr = std::dynamic_pointer_cast<string>(value)){
+        return validate_str_value(str_ptr);
+    }
+    if (auto vector_ptr = std::dynamic_pointer_cast<vector>(value)){
+        return validate_list_value(vector_ptr);
+    }
+
+    //other types are valid
+    return true;
 }
 
 

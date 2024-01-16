@@ -76,6 +76,37 @@ void serveConnection(int client_socket) {
 }
 */
 
+void test_payload_construct(){
+    auto test_payload = std::make_shared<payload>();
+    auto test_int_vector = std::make_shared<vector>();
+    auto test_str_vector = std::make_shared<vector>();
+
+    test_int_vector->push_back(std::make_shared<integer>(1));
+    test_int_vector->push_back(std::make_shared<integer>(2));
+    test_int_vector->push_back(std::make_shared<integer>(3));
+
+    test_str_vector->push_back(std::make_shared<string>("str1"));
+    test_str_vector->push_back(std::make_shared<string>("str2"));
+    test_str_vector->push_back(std::make_shared<string>("str3"));
+
+    test_payload->set_value("int_arr", test_int_vector);
+    test_payload->set_value("str_arr", test_str_vector);
+    test_payload->set_value("int", std::make_shared<integer>(111));
+    test_payload->set_value("str", std::make_shared<string>("test_str"));
+    test_payload->set_value("bool", std::make_shared<boolean>(true));
+    test_payload->set_value("test_null", nullptr);
+
+    printf("Test constructed payload: \t%s\n", test_payload->construct().c_str());
+}
+
+void test_payload_parse(){
+    std::string payload_str = "bool=true;int=111;int_arr=[1,2,3];str=\"test_str\";str_arr=[\"str1\",\"str2\",\"str3\"];test_null=null;";
+
+    auto test_payload = payload::parse(payload_str);
+
+    printf("Test parsed payload: \t\t%s\n", test_payload->construct().c_str());
+}
+
 int main(){
     /*int server_sock;
     int client_sock;
@@ -143,20 +174,8 @@ int main(){
 
     //header _header("POKR", type::GET, subtype::PING, status::OK, 10);
     //printf("%s\n", _header.construct().c_str());
-    std::shared_ptr<object> obj1 = std::make_shared<integer>();
 
-    std::shared_ptr<object> obj2 = std::make_shared<string>();
-
-//    std::cout << (typeid(obj1) == typeid(std::shared_ptr<integer>) ? "true" : "false") << std::endl;
-//    std::cout << (typeid(obj1) == typeid(std::shared_ptr<string>) ? "true" : "false") << std::endl;
-//    std::cout << (typeid(obj1) == typeid(std::shared_ptr<object>) ? "true" : "false") << std::endl;
-
-//    std::cout << (typeid(obj1.get()) == typeid(integer*) ? "true" : "false") << std::endl;
-//    std::cout << (typeid(obj1.get()) == typeid(string*) ? "true" : "false") << std::endl;
-//    std::cout << (typeid(obj1.get()) == typeid(object*) ? "true" : "false") << std::endl;
-
-    std::cout << (typeid(*obj1) == typeid(integer) ? "true" : "false") << std::endl;
-    std::cout << (typeid(*obj1) == typeid(string) ? "true" : "false") << std::endl;
-    std::cout << (typeid(*obj1) == typeid(object) ? "true" : "false") << std::endl;
+    test_payload_construct();
+    test_payload_parse();
     return 0;
 }
