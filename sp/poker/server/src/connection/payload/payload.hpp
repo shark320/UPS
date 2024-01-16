@@ -37,5 +37,21 @@ private:
     static void parse_token(const std::string& token, const std::shared_ptr<payload>& _payload);
 
     static std::shared_ptr<payload> parse(const std::string& str);
+
+    static std::string map_string(const std::shared_ptr<object>& str);
+
+    static std::string map_string_list(const std::shared_ptr<vector>& strings_list);
+
+    static std::string map_int(const std::shared_ptr<object>& value);
+
+    static std::string map_ints_list(const std::shared_ptr<vector>& integers_list);
+
+    static std::string map_list(const std::shared_ptr<vector>& list);
+
+    static std::string map_boolean(const std::shared_ptr<boolean>& value);
+
+    static std::string map_object(const std::shared_ptr<object>& obj);
+
+    static std::string map(const std::shared_ptr<payload>& _payload);
 };
 

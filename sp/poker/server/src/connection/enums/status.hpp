@@ -1,21 +1,21 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 
-class status {
-public:
-    enum class _enum{
-        NULL_STATUS = 0,
-        OK = 200
-    };
+enum class status{
+    NULL_STATUS = -1,
+    OK = 200
+};
+
+class status_mapper {
 
 private:
-    static const std::map<int, status::_enum> status_map;
+    static const std::unordered_map<int, status> status_map;
 
 public:
-    static _enum get_status(int id);
+    static status get_status(int id);
 
-    static int get_id(_enum status);
+    static int get_id(status _status);
 };
 
 

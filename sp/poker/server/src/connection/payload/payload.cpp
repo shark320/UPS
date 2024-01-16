@@ -160,6 +160,80 @@ std::shared_ptr<payload> payload::extract(const std::string& str){
     return parse(payload_str);
 }
 
+std::string payload::map_string(const std::shared_ptr<object>& str){
+    if (str == nullptr){
+        return "null";
+    }
+
+    return '"' + str->to_string() + '"';
+}
+
+std::string payload::map_string_list(const std::shared_ptr<vector>& strings_list){
+    if (strings_list == nullptr){
+        return "null";
+    }
+    std::ostringstream oss;
+
+    for (const auto& str : *strings_list) {
+        oss << map_string(str) << ',';
+    }
+    oss.seekp(-1, std::ios_base::end); // Move back to remove the last comma
+    return oss.str();
+}
+
+std::string payload::map_int(const std::shared_ptr<object> &value) {
+    if (value == nullptr){
+        return "null";
+    }
+
+    return value->to_string();
+}
+
+std::string payload::map_ints_list(const std::shared_ptr<vector> &integers_list) {
+    if (integers_list == nullptr){
+        return "null";
+    }
+    std::ostringstream oss;
+
+    for (const auto& str : *integers_list) {
+        oss << map_int(str) << ',';
+    }
+    oss.seekp(-1, std::ios_base::end); // Move back to remove the last comma
+    return oss.str();
+}
+
+std::string payload::map_list(const std::shared_ptr<vector>& list){
+    if (list == nullptr) {
+        return "null";
+    }
+    if (list->empty()){
+        return "[]";
+    }
+    std::string result;
+    const auto& first_element = *(list->at(0));
+    if (typeid(first_element) == typeid(integer)) {
+        result = map_ints_list(list);
+    } else if (typeid(first_element) == typeid(string)) {
+        result = map_string_list(list);
+    }else {
+        throw std::invalid_argument("Unknown list items type to map.");
+    }
+    return "[" + result + "]";
+}
+
+std::string payload::map_boolean(const std::shared_ptr<boolean> &value) {
+    return value->value() ? "true" : "false";
+}
+
+std::string payload::map_object(const std::shared_ptr<object>& obj){
+
+}
+
+
+
+
+
+
 
 
 

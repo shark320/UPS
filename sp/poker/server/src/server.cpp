@@ -12,6 +12,7 @@
 #include "connection/status.hpp"
 #include "connection/enums/type.hpp"
 #include "connection/enums/status.hpp"
+#include "connection/header/header.hpp"
 
 #define PORT 10000
 
@@ -131,14 +132,31 @@ int main(){
         }
     }*/
 
-    std:string test_payload_str = "str=\"string\";int=12;int_arr=[1,2,3,4]";
-    char buffer[constants::MSG_MAX_LENGTH];
-    std::sprintf(buffer, "%s%04d%1d%02d%03d%s", "POKR", static_cast<int>(test_payload_str.length()), static_cast<int>(type::_enum::GET), static_cast<int>(subtype::_enum::PING), static_cast<int>(status::_enum::OK), test_payload_str.c_str());
-    std::string test_request(buffer);
+//    std:string test_payload_str = "str=\"string\";int=12;int_arr=[1,2,3,4]";
+//    char buffer[constants::MSG_MAX_LENGTH];
+//    std::sprintf(buffer, "%s%04d%1d%02d%03d%s", "POKR", static_cast<int>(test_payload_str.length()), static_cast<int>(type::_enum::GET), static_cast<int>(subtype::_enum::PING), static_cast<int>(status::_enum::OK), test_payload_str.c_str());
+//    std::string test_request(buffer);
+//
+//    auto test_payload = payload::extract(test_request);
+//
+//    std::cout << test_payload->to_string() << std::endl;
 
-    auto test_payload = payload::extract(test_request);
+    //header _header("POKR", type::GET, subtype::PING, status::OK, 10);
+    //printf("%s\n", _header.construct().c_str());
+    std::shared_ptr<object> obj1 = std::make_shared<integer>();
 
-    std::cout << test_payload->to_string() << std::endl;
+    std::shared_ptr<object> obj2 = std::make_shared<string>();
 
+//    std::cout << (typeid(obj1) == typeid(std::shared_ptr<integer>) ? "true" : "false") << std::endl;
+//    std::cout << (typeid(obj1) == typeid(std::shared_ptr<string>) ? "true" : "false") << std::endl;
+//    std::cout << (typeid(obj1) == typeid(std::shared_ptr<object>) ? "true" : "false") << std::endl;
+
+//    std::cout << (typeid(obj1.get()) == typeid(integer*) ? "true" : "false") << std::endl;
+//    std::cout << (typeid(obj1.get()) == typeid(string*) ? "true" : "false") << std::endl;
+//    std::cout << (typeid(obj1.get()) == typeid(object*) ? "true" : "false") << std::endl;
+
+    std::cout << (typeid(*obj1) == typeid(integer) ? "true" : "false") << std::endl;
+    std::cout << (typeid(*obj1) == typeid(string) ? "true" : "false") << std::endl;
+    std::cout << (typeid(*obj1) == typeid(object) ? "true" : "false") << std::endl;
     return 0;
 }

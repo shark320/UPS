@@ -1,35 +1,38 @@
 #pragma once
 
 #include <map>
+#include <unordered_map>
 
-class type {
-public:
-    enum class _enum {
-        GET = 1,
-        POST = 2
-    };
+enum class type {
+    GET = 1,
+    POST = 2,
+    NULL_TYPE = -1
+};
 
+class type_mapper {
 private:
-    static const std::map<int, type::_enum> type_map;
+    static const std::unordered_map<int, type> type_map;
 
 public:
-    static _enum get_type(int id);
+    static type get_type(int id);
 
-    static int get_id(_enum type);
+    static int get_id(type _type);
 };
 
 
-class subtype {
-public:
-    enum class _enum {
-        PING = 1
-    };
+enum class subtype {
+    PING = 1,
+    NULL_SUBTYPE = -1
+};
+
+class subtype_mapper {
+
 
 private:
-    static const std::map<int, subtype::_enum> subtype_map;
+    static const std::unordered_map<int, subtype> subtype_map;
 
 public:
-    static _enum get_subtype(int id);
+    static subtype get_subtype(int id);
 
-    static int get_id(_enum subtype);
+    static int get_id(subtype _subtype);
 };
