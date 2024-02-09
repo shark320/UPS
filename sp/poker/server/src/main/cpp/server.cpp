@@ -13,6 +13,9 @@
 #include "connection/enums/type.hpp"
 #include "connection/enums/status.hpp"
 #include "connection/header/header.hpp"
+#include <log4cxx/logger.h>
+#include <log4cxx/basicconfigurator.h>
+#include <log4cxx/xml/domconfigurator.h>
 
 #define PORT 10000
 
@@ -76,6 +79,8 @@ void serveConnection(int client_socket) {
 }
 */
 
+static auto logger = log4cxx::Logger::getLogger("MyApp");
+
 void test_payload_construct(){
     auto test_payload = std::make_shared<payload>();
     auto test_int_vector = std::make_shared<vector>();
@@ -108,6 +113,10 @@ void test_payload_parse(){
 }
 
 int main(){
+    log4cxx::xml::DOMConfigurator::configure("config/logging/log4cxx.xml");
+    LOG4CXX_INFO(logger, "Entering application.");
+    logger->debug("Debug message");
+    logger->info("INFO message");
     /*int server_sock;
     int client_sock;
     int return_value;
@@ -175,7 +184,7 @@ int main(){
     //header _header("POKR", type::GET, subtype::PING, status::OK, 10);
     //printf("%s\n", _header.construct().c_str());
 
-    test_payload_construct();
-    test_payload_parse();
+//    test_payload_construct();
+//    test_payload_parse();
     return 0;
 }
