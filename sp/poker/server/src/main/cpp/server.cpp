@@ -6,15 +6,18 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <memory>
+#include <fmt/core.h>
 #include "base/base.hpp"
 #include "connection/message/payload/payload.hpp"
 #include "connection/consts/consts.hpp"
 #include "connection/message/enums/type.hpp"
 #include "connection/message/enums/status.hpp"
 #include "connection/message/header/header.hpp"
+#include "config/configuration.hpp"
 #include <log4cxx/logger.h>
 #include <log4cxx/basicconfigurator.h>
 #include <log4cxx/xml/domconfigurator.h>
+
 
 #define PORT 10000
 
@@ -78,7 +81,7 @@ void serveConnection(int client_socket) {
 }
 */
 
-static auto logger = log4cxx::Logger::getLogger("MyApp");
+static auto LOGGER = log4cxx::Logger::getLogger("MyApp");
 
 void test_payload_construct(){
     auto test_payload = std::make_shared<payload>();
@@ -111,79 +114,37 @@ void test_payload_parse(){
     printf("Test parsed payload: \t\t%s\n", test_payload->construct().c_str());
 }
 
+void dispatch_connections(){
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+
+    sockaddr_in address{};
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(configuration::get_file("config")->GetLongValue("Connection", "port"));
+
+    int err = bind(server_fd, (struct sockaddr*)&address, sizeof(address));
+    if (err != 0){
+        LOGGER->error(fmt::format("Server socket binding ended with error code: {}", err));
+        return;
+    }
+
+    err = listen(server_fd, 10);
+
+    if (err != 0){
+        LOGGER->error(fmt::format("Server socket listen ended with error code: {}", err));
+        return;
+    }
+
+
+}
+
 int main(){
     log4cxx::xml::DOMConfigurator::configure("config/logging/log4cxx.xml");
-    LOG4CXX_INFO(logger, "Entering application.");
-    logger->debug("Debug message");
-    logger->info("INFO message");
-    /*int server_sock;
-    int client_sock;
-    int return_value;
-    char cbuf;
-    sockaddr_in local_addr{};
-    sockaddr_in remote_addr;
-    socklen_t remote_addr_len;
-
-    server_sock = socket(AF_INET, SOCK_STREAM, 0);
-
-    if (server_sock <= 0) {
-        std::cout << "Socket ERR" << std::endl;
-        return -1;
-    }
-
-    std::memset(&local_addr, 0, sizeof(sockaddr_in));
-    local_addr.sin_family = AF_INET;
-    local_addr.sin_port = htons(PORT);
-    local_addr.sin_addr.s_addr = INADDR_ANY;
-
-    int param = 1;
-    return_value = setsockopt(server_sock, SOL_SOCKET, SO_REUSEADDR, &param, sizeof(int));
-
-    if (return_value == -1)
-        std::cout << "setsockopt ERR" << std::endl;
-
-    return_value = bind(server_sock, reinterpret_cast<sockaddr*>(&local_addr), sizeof(sockaddr_in));
-
-    if (return_value == 0)
-        std::cout << "Bind OK" << std::endl;
-    else {
-        std::cout << "Bind ERR" << std::endl;
-        return -1;
-    }
-
-    return_value = listen(server_sock, 5);
-    if (return_value == 0)
-        std::cout << "Listen OK" << std::endl;
-    else {
-        std::cout << "Listen ERR" << std::endl;
-        return -1;
-    }
-
-    while (true) {
-        client_sock = accept(server_sock, reinterpret_cast<sockaddr*>(&remote_addr), &remote_addr_len);
-
-        if (client_sock > 0) {
-            std::cout << "New connection!" << std::endl;
-            std::thread(serveConnection, client_sock).detach();
-        } else {
-            std::cout << "Brutal Fatal ERROR" << std::endl;
-            return -1;
-        }
-    }*/
-
-//    std:string test_payload_str = "str=\"string\";int=12;int_arr=[1,2,3,4]";
-//    char buffer[constants::MSG_MAX_LENGTH];
-//    std::sprintf(buffer, "%s%04d%1d%02d%03d%s", "POKR", static_cast<int>(test_payload_str.length()), static_cast<int>(type::_enum::GET), static_cast<int>(subtype::_enum::PING), static_cast<int>(status::_enum::OK), test_payload_str.c_str());
-//    std::string test_request(buffer);
-//
-//    auto test_payload = payload::extract(test_request);
-//
-//    std::cout << test_payload->to_string() << std::endl;
-
-    //_header _header("POKR", type::GET, subtype::PING, status::OK, 10);
-    //printf("%s\n", _header.construct().c_str());
-
-//    test_payload_construct();
-//    test_payload_parse();
+    configuration::init({
+                                {"config/config.ini", "config"}
+                        });
+    dispatch_connections();
+    LOGGER->debug(configuration::get_instance()->to_string());
+    LOGGER->debug(std::to_string(configuration::get_file("config")->GetLongValue("Connection", "port")));
     return 0;
 }
