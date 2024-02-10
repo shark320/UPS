@@ -7,12 +7,11 @@
 #include <netinet/in.h>
 #include <memory>
 #include "base/base.hpp"
-#include "connection/payload/payload.hpp"
+#include "connection/message/payload/payload.hpp"
 #include "connection/consts/consts.hpp"
-#include "connection/status.hpp"
-#include "connection/enums/type.hpp"
-#include "connection/enums/status.hpp"
-#include "connection/header/header.hpp"
+#include "connection/message/enums/type.hpp"
+#include "connection/message/enums/status.hpp"
+#include "connection/message/header/header.hpp"
 #include <log4cxx/logger.h>
 #include <log4cxx/basicconfigurator.h>
 #include <log4cxx/xml/domconfigurator.h>
@@ -181,7 +180,7 @@ int main(){
 //
 //    std::cout << test_payload->to_string() << std::endl;
 
-    //header _header("POKR", type::GET, subtype::PING, status::OK, 10);
+    //_header _header("POKR", type::GET, subtype::PING, status::OK, 10);
     //printf("%s\n", _header.construct().c_str());
 
 //    test_payload_construct();

@@ -54,7 +54,7 @@ bool header::check_values() const {
 
 std::shared_ptr<header> header::extract(const std::string &message) {
     if (message.length() < constants::MSG_HEADER_LENGTH){
-        throw std::invalid_argument("Message header is too short!");
+        throw std::invalid_argument("Message _header is too short!");
     }
 
     std::string msg_identifier = message.substr(constants::MSG_IDENTIFIER_FIELD_POS, constants::MSG_IDENTIFIER_FIELD_LENGTH);
@@ -71,7 +71,7 @@ std::shared_ptr<header> header::extract(const std::string &message) {
 
 std::string header::construct() const{
     if (!check_values()) {
-        throw std::logic_error("Incomplete header!");
+        throw std::logic_error("Incomplete _header!");
     }
 
     std::ostringstream oss;

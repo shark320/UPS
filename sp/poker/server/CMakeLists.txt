@@ -19,17 +19,16 @@ message("LOG4CXX_LIBRARIES: ${LOG4CXX_LIBRARIES}")
 add_executable(server src/main/cpp/server.cpp
         src/main/cpp/connection/message/message.hpp
         src/main/cpp/connection/message/message.cpp
-        src/main/cpp/connection/payload/payload.hpp
-        src/main/cpp/connection/payload/payload.cpp
-        src/main/cpp/connection/status.hpp
+        src/main/cpp/connection/message/payload/payload.hpp
+        src/main/cpp/connection/message/payload/payload.cpp
         src/main/cpp/base/base.cpp
         src/main/cpp/base/base.hpp
-        src/main/cpp/connection/header/header.cpp
-        src/main/cpp/connection/header/header.hpp
-        src/main/cpp/connection/enums/type.cpp
-        src/main/cpp/connection/enums/type.hpp
-        src/main/cpp/connection/enums/status.cpp
-        src/main/cpp/connection/enums/status.hpp
+        src/main/cpp/connection/message/header/header.cpp
+        src/main/cpp/connection/message/header/header.hpp
+        src/main/cpp/connection/message/enums/type.cpp
+        src/main/cpp/connection/message/enums/type.hpp
+        src/main/cpp/connection/message/enums/status.cpp
+        src/main/cpp/connection/message/enums/status.hpp
         src/main/cpp/utils/utils.cpp
         src/main/cpp/utils/utils.hpp
         src/main/cpp/connection/consts/consts.cpp

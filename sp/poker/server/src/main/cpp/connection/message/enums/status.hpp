@@ -4,7 +4,10 @@
 
 enum class status{
     NULL_STATUS = -1,
-    OK = 200
+    OK = 200,
+    NOT_FOUND = 404,
+    CONFLICT = 409,
+    NOT_ALLOWED = 405
 };
 
 class status_mapper {
