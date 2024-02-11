@@ -8,12 +8,8 @@
 #include <memory>
 #include <fmt/core.h>
 #include "base/base.hpp"
-#include "connection/message/payload/payload.hpp"
-#include "connection/consts/consts.hpp"
-#include "connection/message/enums/type.hpp"
-#include "connection/message/enums/status.hpp"
-#include "connection/message/header/header.hpp"
 #include "config/configuration.hpp"
+#include "server/server.hpp"
 #include <log4cxx/logger.h>
 #include <log4cxx/basicconfigurator.h>
 #include <log4cxx/xml/domconfigurator.h>
@@ -115,25 +111,7 @@ void test_payload_parse(){
 }
 
 void dispatch_connections(){
-    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
-    sockaddr_in address{};
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(configuration::get_file("config")->GetLongValue("Connection", "port"));
-
-    int err = bind(server_fd, (struct sockaddr*)&address, sizeof(address));
-    if (err != 0){
-        LOGGER->error(fmt::format("Server socket binding ended with error code: {}", err));
-        return;
-    }
-
-    err = listen(server_fd, 10);
-
-    if (err != 0){
-        LOGGER->error(fmt::format("Server socket listen ended with error code: {}", err));
-        return;
-    }
 
 
 }
@@ -143,8 +121,7 @@ int main(){
     configuration::init({
                                 {"config/config.ini", "config"}
                         });
-    dispatch_connections();
-    LOGGER->debug(configuration::get_instance()->to_string());
-    LOGGER->debug(std::to_string(configuration::get_file("config")->GetLongValue("Connection", "port")));
+    std::shared_ptr<server> _server = std::make_shared<server>();
+    _server->start();
     return 0;
 }

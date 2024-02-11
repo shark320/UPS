@@ -36,28 +36,34 @@ FetchContent_MakeAvailable(SimpleIni)
 message("LOG4CXX_INCLUDE_DIRS: ${LOG4CXX_INCLUDE_DIRS}")
 message("LOG4CXX_LIBRARIES: ${LOG4CXX_LIBRARIES}")
 
-add_executable(server src/main/cpp/server.cpp
-        src/main/cpp/connection/message/message.hpp
-        src/main/cpp/connection/message/message.cpp
-        src/main/cpp/connection/message/payload/payload.hpp
-        src/main/cpp/connection/message/payload/payload.cpp
+add_executable(server src/main/cpp/server-main.cpp
+        src/main/cpp/server/connection/message/message.hpp
+        src/main/cpp/server/connection/message/message.cpp
+        src/main/cpp/server/connection/message/payload/payload.hpp
+        src/main/cpp/server/connection/message/payload/payload.cpp
         src/main/cpp/base/base.cpp
         src/main/cpp/base/base.hpp
-        src/main/cpp/connection/message/header/header.cpp
-        src/main/cpp/connection/message/header/header.hpp
-        src/main/cpp/connection/message/enums/type.cpp
-        src/main/cpp/connection/message/enums/type.hpp
-        src/main/cpp/connection/message/enums/status.cpp
-        src/main/cpp/connection/message/enums/status.hpp
+        src/main/cpp/server/connection/message/header/header.cpp
+        src/main/cpp/server/connection/message/header/header.hpp
+        src/main/cpp/server/connection/message/enums/type.cpp
+        src/main/cpp/server/connection/message/enums/type.hpp
+        src/main/cpp/server/connection/message/enums/status.cpp
+        src/main/cpp/server/connection/message/enums/status.hpp
         src/main/cpp/utils/utils.cpp
         src/main/cpp/utils/utils.hpp
-        src/main/cpp/connection/consts/consts.cpp
-        src/main/cpp/connection/consts/consts.hpp
-        src/main/cpp/connection/connection.cpp
-        src/main/cpp/connection/connection.hpp
-        src/main/cpp/connection/connection.hpp
+        src/main/cpp/server/connection/consts/consts.cpp
+        src/main/cpp/server/connection/consts/consts.hpp
+        src/main/cpp/server/connection/connection.cpp
+        src/main/cpp/server/connection/connection.hpp
+        src/main/cpp/server/connection/connection.hpp
         src/main/cpp/config/configuration.cpp
         src/main/cpp/config/configuration.hpp
+        src/main/cpp/server/server.cpp
+        src/main/cpp/server/server.hpp
+        src/main/cpp/async/blocking_queue.hpp
+        src/main/cpp/utils/global.cpp
+        src/main/cpp/utils/global.hpp
+        src/main/cpp/async/safe_queue.hpp
 )
 
 ####Clean assembly dir before build

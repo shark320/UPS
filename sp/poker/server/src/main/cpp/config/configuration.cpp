@@ -12,8 +12,6 @@ configuration::configuration() {
     this->files_map = std::make_shared<std::unordered_map<std::string, std::shared_ptr<CSimpleIniA>>>();
 }
 
-
-
 std::string configuration::to_string() {
     std::string result = "configuration: ";
     if (INSTANCE == nullptr){
