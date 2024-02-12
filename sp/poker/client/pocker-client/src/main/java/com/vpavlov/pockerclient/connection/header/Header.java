@@ -40,6 +40,10 @@ public class Header {
         this(null, type, subtype, status, length);
     }
 
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
     public String getIdentifier() {
         return identifier;
     }

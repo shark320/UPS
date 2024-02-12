@@ -92,6 +92,9 @@ public class PayloadMapper {
     }
 
     public static String map(Payload payload) {
+        if (payload == null){
+            return "";
+        }
         Map<String, Object> data = payload.getData();
         if (data.isEmpty()) {
             return "";

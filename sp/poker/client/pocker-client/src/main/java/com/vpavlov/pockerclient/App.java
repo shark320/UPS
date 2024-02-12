@@ -1,47 +1,71 @@
 package com.vpavlov.pockerclient;
 
+
+import com.vpavlov.pockerclient.connection.Connection;
+import com.vpavlov.pockerclient.connection.Constants;
+import com.vpavlov.pockerclient.connection.Message;
 import com.vpavlov.pockerclient.connection.Status;
 import com.vpavlov.pockerclient.connection.header.Header;
 import com.vpavlov.pockerclient.connection.payload.Payload;
-import com.vpavlov.pockerclient.connection.payload.mapping.PayloadParser;
 import com.vpavlov.pockerclient.connection.type.Subtype;
 import com.vpavlov.pockerclient.connection.type.Type;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import com.vpavlov.pockerclient.ui.cli.CLI;
+import com.vpavlov.pockerclient.ui.i18n.I18n;
+import com.vpavlov.pockerclient.ui.javafx.GUI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.Properties;
 
-public class App extends Application {
+public class App{
+
+    private static final String USE_GUI_PARAM = "gui";
 
     static {
         System.setProperty("log4j.configurationFile",
                 App.class.getResource("config/log4j-config.xml").getPath());
     }
 
-    private static Logger LOGGER = LogManager.getLogger();
-    @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+    private static final Logger LOGGER = LogManager.getLogger(App.class);
+
+    private static I18n i18n;
+
+    private static void loadProps(){
+        i18n = I18n.load(Locale.US);
     }
 
     public static void main(String[] args) {
-        //launch();
-        LOGGER.debug("test");
+        loadProps();
+        LOGGER.debug(Locale.US.toString());
+        Properties prop = new Properties();
+        for (String arg: args){
+            if (USE_GUI_PARAM.equals(arg.toLowerCase())){
+                GUI.launch();
+                break;
+            }
+        }
+        CLI.launch(args);
 
-        String test_payload = "str=\"string\";int=12;int_arr=[1,2,3,4]";
-        String test_response = String.format("%s%04d%1d%02d%03d", "POKR", test_payload.length(), Type.GET.getId(), Subtype.PING.getId(), Status.OK.getCode());
-        //Payload payload = PayloadParser.parse(test_payload);
-        System.out.println(Header.extract(test_response));
-//        String str = "1243";
-//
-//        System.out.println("[" + str.substring(0,10) + "]");
+        Connection conn = new Connection("localhost", 10000);
+        Payload payload = new Payload();
+        payload.setValue("test", 1234);
+        Header header = new Header(Type.POST, Subtype.PING);
+        header.setStatus(Status.NO_STATUS);
+        header.setIdentifier(Constants.IDENTIFIER);
+        try {
+            conn.connect();
+            while(true){
+                conn.sendMessage(new Message(header, payload));
+                Thread.sleep(5000);
+            }
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
+    }
+
+    public static I18n getI18n(){
+        return i18n;
     }
 }
