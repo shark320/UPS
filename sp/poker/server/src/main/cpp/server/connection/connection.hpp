@@ -13,9 +13,9 @@ private:
 
     bool is_alive_ = false;
 
-    std::shared_ptr<blocking_queue<std::string>> received_messages;
+    std::shared_ptr<blocking_queue<std::shared_ptr<message>>> received_messages;
 
-    std::shared_ptr<blocking_queue<std::string>> send_queue;
+    std::shared_ptr<blocking_queue<std::shared_ptr<message>>> send_queue;
 
     std::shared_ptr<std::jthread> receiving_thread;
 
@@ -24,6 +24,8 @@ private:
     void handle_receive();
 
     void handle_send();
+
+    std::shared_ptr<message> receive_message();
 
 public:
     explicit connection(int socket);
@@ -34,9 +36,9 @@ public:
 
     bool is_alive() const;
 
-    const std::shared_ptr<blocking_queue<std::string>> &get_received_messages() const;
+    const std::shared_ptr<blocking_queue<std::shared_ptr<message>>> &get_received_messages() const;
 
-    const std::shared_ptr<blocking_queue<std::string>> &get_send_queue() const;
+    const std::shared_ptr<blocking_queue<std::shared_ptr<message>>> &get_send_queue() const;
 
     const std::shared_ptr<std::jthread> &get_receiving_thread() const;
 
@@ -47,4 +49,6 @@ public:
     void terminate_sending_thread();
 
     void terminate_threads();
+
+    void send_message(std::shared_ptr<message> msg);
 };

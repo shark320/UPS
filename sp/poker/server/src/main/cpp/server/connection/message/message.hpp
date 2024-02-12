@@ -18,6 +18,8 @@ public:
 
     message();
 
+    message(std::shared_ptr<header> header_, std::shared_ptr<payload> payload_);
+
     [[nodiscard]] const std::shared_ptr<header> &get_header() const;
 
     void set_header(const std::shared_ptr<header> &header);
@@ -25,5 +27,9 @@ public:
     [[nodiscard]] const std::shared_ptr<payload> &get_payload() const;
 
     void set_payload(const std::shared_ptr<payload> &payload);
+
+    std::string construct();
+
+    std::string to_string();
 
 };

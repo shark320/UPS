@@ -110,12 +110,6 @@ void test_payload_parse(){
     printf("Test parsed payload: \t\t%s\n", test_payload->construct().c_str());
 }
 
-void dispatch_connections(){
-
-
-
-}
-
 int main(){
     log4cxx::xml::DOMConfigurator::configure("config/logging/log4cxx.xml");
     configuration::init({

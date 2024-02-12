@@ -50,4 +50,13 @@ void server::dispatch_client() {
     auto conn = std::make_shared<connection>(client_socket);
     this->connections->insert(conn);
     conn->dispatch();
+
+    auto test_payload = std::make_shared<payload>();
+    test_payload->set_value("test", std::make_shared<integer>(666));
+    auto test_header = std::make_shared<header>("POKR", type::POST, subtype::PING, status::OK);\
+    auto test_msg = std::make_shared<message>(test_header, test_payload);
+    while(conn->is_alive()){
+        conn->send_message(test_msg);
+        sleep(2);
+    }
 }

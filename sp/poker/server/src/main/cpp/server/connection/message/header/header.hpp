@@ -20,6 +20,10 @@ private:
 
 public:
 
+    header();
+
+    header(const std::string &identifier, type type, subtype subtype, status status);
+
     header(const std::string &identifier, type type, subtype subtype, status status, size_t length);
 
     [[nodiscard]] const std::string &get_identifier() const;

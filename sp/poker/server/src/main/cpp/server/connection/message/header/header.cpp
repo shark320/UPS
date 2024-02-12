@@ -4,6 +4,7 @@
 
 #include "header.hpp"
 #include "../../consts/consts.hpp"
+#include "fmt/format.h"
 
 
 header::header(const std::string &identifier, type type, subtype subtype, status status, size_t length) : identifier(
@@ -83,6 +84,17 @@ std::string header::construct() const{
     oss << std::setw(3) << status_mapper::get_id(get_status());
 
     return oss.str();
+}
+
+header::header() {}
+
+header::header(const std::string &identifier, type type, subtype subtype, status status) : identifier(identifier),
+                                                                                           _type(type),
+                                                                                           _subtype(subtype),
+                                                                                           _status(status) {}
+
+std::string header::to_string() const {
+    return fmt::format("Header [{}, {}, {}, {}]", identifier, type_mapper::get_id(_type), subtype_mapper::get_id(_subtype), status_mapper::get_id(_status));
 }
 
 
