@@ -115,7 +115,9 @@ int main(){
     configuration::init({
                                 {"config/config.ini", "config"}
                         });
-    std::shared_ptr<server> _server = std::make_shared<server>();
-    _server->start();
+
+    LOGGER->debug(std::to_string(configuration::get_instance()->get_file("config")->GetLongValue("Server","port")));
+//    std::shared_ptr<server> _server = std::make_shared<server>();
+//    _server->start();
     return 0;
 }

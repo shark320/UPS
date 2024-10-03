@@ -14,3 +14,5 @@ sp/poker/client/pocker-client/logs
 sp/poker/server/cmake-build-debug-wsl
 sp/poker/server/cmake
 cv/.idea
+sp/reversi/server/cmake-build-debug
+sp/reversi/server/cmake-build-debug-wsl
