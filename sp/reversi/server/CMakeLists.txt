@@ -14,12 +14,12 @@ find_package(log4cxx REQUIRED)
 
 include(FetchContent)
 
-#FetchContent_Declare(
-#        fmt
-#        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-#        GIT_TAG master
-#)
-#FetchContent_MakeAvailable(fmt)
+FetchContent_Declare(
+        fmt
+        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+        GIT_TAG master
+)
+FetchContent_MakeAvailable(fmt)
 
 FetchContent_Declare(
         SimpleIni
@@ -42,6 +42,14 @@ add_executable(server
         src/main/cpp/utils/utils.hpp
         src/main/cpp/utils/global.cpp
         src/main/cpp/utils/global.hpp
+        src/main/cpp/reversi/board/board.hpp
+        src/main/cpp/reversi/board/board.cpp
+        src/main/cpp/reversi/config/game_config.cpp
+        src/main/cpp/reversi/config/game_config.hpp
+        src/main/cpp/reversi/consts/game_consts.hpp
+        src/main/cpp/reversi/consts/game_consts.cpp
+        src/main/cpp/reversi/engine/game_engine.cpp
+        src/main/cpp/reversi/engine/game_engine.hpp
 )
 
 add_custom_target(clean-assembly
@@ -60,4 +68,4 @@ add_custom_command(
 )
 
 include_directories(${LOG4CXX_INCLUDE_DIRS})
-target_link_libraries(server PRIVATE pthread ${LOG4CXX_LIBRARIES} SimpleIni)
+target_link_libraries(server PRIVATE pthread ${LOG4CXX_LIBRARIES} SimpleIni fmt::fmt)

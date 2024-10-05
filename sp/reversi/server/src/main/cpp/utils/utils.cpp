@@ -32,3 +32,16 @@ std::shared_ptr<std::array<std::string, 2>> parse_file_path(const std::string &f
 
     return result;
 }
+
+int count_digits(size_t number) {
+    int count = 0;
+    if (number == 0) {
+        return 1;
+    }
+    while (number > 0) {
+        number /= 10;
+        count++;
+    }
+
+    return count;
+}

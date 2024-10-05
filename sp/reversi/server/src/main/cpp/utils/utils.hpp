@@ -24,3 +24,5 @@ std::shared_ptr<str_vector> split_str(const std::string& str, char delimiter);
      * @return pointer to an array[2] of parsed values. [0] - directory path, [1] - file name.
      */
 static std::shared_ptr<std::array<std::string, 2>> parse_file_path(const std::string& file_path);
+
+int count_digits(size_t number);
