@@ -1,0 +1,57 @@
+#include "Constants.hpp"
+
+const int DATALEN             = 32;
+const int HEADER_SIZE         = 12;
+const int OPCODE_OFFSET       = 6;
+const int DATA_LENGTH_OFFSET  = 8;
+const int VALID_HEADER_LENGTH = 6;
+
+const bool IS_DEBUG           = true;
+
+const char* OPCODE_16                                        = "16";
+const char* VALID_HEADER                                     = "AABJCK";
+const char* START_CMD                                        = "START";
+const char* END_CMD                                          = "END";
+const char* TAKE_CMD                                         = "TAKE";
+const char* PASS_CMD                                         = "PASS";
+const char* DISCONNECT_CMD                                   = "DISCONNECT";
+const char* DISCONNECT_END_CMD                               = "FINISHDISCONNECT";
+const char* GAME_LEAVE_CMD                                   = "GAMELEAVE";
+const char* PING_CMD                                         = "PING";
+const char* PONG_CMD                                         = "PONG";
+const char* LOGOUT_CMD                                       = "LOGOUT";
+const char* EXIT_LOBBY_CMD                                   = "EXITLOBBY";
+const string INVALID_MESSAGE_FORMAT                          = "INVALID_MESSAGE_FORMAT";
+const string USER_NOT_AUTHENTICATED                          = "USER_NOT_AUTHENTICATED";
+const string USER_ALREADY_EXISTS                             = "USER_ALREADY_EXISTS";
+const string USER_ALREADY_LOGGED_IN_BY_ANOTHER_CLIENT        = "USER_ALREADY_LOGGED_IN_BY_ANOTHER_CLIENT";
+const string UNKNOWN_COMMAND                                 = "UNKNOWN_COMMAND";
+const string UNKNOWN_OPERATIONAL_CODE                        = "UNKNOWN_OPERATIONAL_CODE";
+const string NOT_ALL_PLAYERS_HAVE_CONNECTED                  = "NOT_ALL_PLAYERS_HAVE_CONNECTED";
+const string UNKNOWN_SUBCOMMAND                              = "UNKNOWN_SUBCOMMAND";
+const string INVALID_MAX_PLAYERS_SHOULD_BE_BETWEEN_1_AND_26  = "INVALID_MAX_PLAYERS_SHOULD_BE_BETWEEN_1_AND_26";
+const string USER_NOT_FOUND                                  = "USER_NOT_FOUND";
+const string INVALID_LOGIN_CREDENTIALS                       = "INVALID_LOGIN_CREDENTIALS";
+const string YOU_ARE_ALREADY_LOGGED_IN                       = "YOU_ARE_ALREADY_LOGGED_IN";
+const string LOGOUT_SUCCESS                                  = "LOGOUT_SUCCESS";
+const string NOT_IN_A_LOBBY                                  = "NOT_IN_A_LOBBY";
+const string LOBBY_NOT_FOUND                                 = "LOBBY_NOT_FOUND";
+const string NO_USER_LOGGED_IN                               = "NO_USER_LOGGED_IN";
+const string GAME_ALREADY_STARTED                            = "GAME_ALREADY_STARTED";
+const string ITS_NOT_YOUR_TURN                               = "ITS_NOT_YOUR_TURN";
+const string DECK_IS_EMPTY                                   = "DECK_IS_EMPTY";
+const string ONLY_THE_LOBBY_ADMIN_CAN_START_A_GAME           = "ONLY_THE_LOBBY_ADMIN_CAN_START_A_GAME";
+const string INCORRECT_PASSWORD                              = "INCORRECT_PASSWORD";
+const string LOBBY_WITH_THE_SAME_NAME_ALREADY_EXISTS         = "LOBBY_WITH_THE_SAME_NAME_ALREADY_EXISTS";
+const string LOBBY_IS_FULL                                   = "LOBBY_IS_FULL";
+const string PASSWORD_REQUIRED_TO_DELETE_THIS_LOBBY          = "PASSWORD_REQUIRED_TO_DELETE_THIS_LOBBY";
+const string PASSWORD_REQUIRED_TO_JOIN_THIS_LOBBY            = "PASSWORD_REQUIRED_TO_JOIN_THIS_LOBBY";
+const string YOU_ARE_ALREADY_IN_THIS_LOBBY                   = "YOU_ARE_ALREADY_IN_THIS_LOBBY";
+const string YOU_ARE_ALREADY_IN_ANOTHER_LOBBY                = "YOU_ARE_ALREADY_IN_ANOTHER_LOBBY";
+const string ONLY_THE_LOBBY_CREATOR_CAN_DELETE_THE_LOBBY     = "ONLY_THE_LOBBY_CREATOR_CAN_DELETE_THE_LOBBY";
+const string NO_LOBBIES                                      = "NO_LOBBIES";
+const string CANNOT_DELETE_LOBBY_WITH_ACTIVE_GAME            = "CANNOT_DELETE_LOBBY_WITH_ACTIVE_GAME";
+const string CANNOT_ENTER_LOBBY_WITH_ACTIVE_GAME             = "CANNOT_ENTER_LOBBY_WITH_ACTIVE_GAME";
+const string LOBBY_IS_ALREADY_FULL                           = "LOBBY_IS_ALREADY_FULL";
+const string ERROR                                           = "ERROR";
+const string TURN                                            = "TURN";
