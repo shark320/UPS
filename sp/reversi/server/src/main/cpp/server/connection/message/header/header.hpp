@@ -8,7 +8,7 @@
 
 class header {
 private:
-    std::string identifier;
+    std::string identifier = "";
 
     type _type = type::NULL_TYPE;
 
@@ -16,7 +16,7 @@ private:
 
     status _status = status::NULL_STATUS;
 
-    size_t length;
+    size_t length = 0;
 
 public:
 

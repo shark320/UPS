@@ -6,7 +6,7 @@
 enum class type {
     GET = 1,
     POST = 2,
-    NULL_TYPE = -1
+    NULL_TYPE = 0
 };
 
 class type_mapper {
@@ -22,7 +22,7 @@ public:
 
 enum class subtype {
     PING = 1,
-    NULL_SUBTYPE = -1
+    NULL_SUBTYPE = 0
 };
 
 class subtype_mapper {

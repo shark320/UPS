@@ -53,7 +53,7 @@ public:
 };
 
 
-class vector_cst: public object, public std::vector<std::shared_ptr<object>>{
+class objects_vector: public object, public std::vector<std::shared_ptr<object>>{
 public:
     using std::vector<std::shared_ptr<object>>::vector;
 

@@ -24,17 +24,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="827bc3f2-a14c-42aa-b32a-9cb0178221c3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/reversi/board/board.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/reversi/board/board.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/reversi/consts/game_consts.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/reversi/engine/game_engine.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/reversi/engine/game_engine.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-wsl/.cmake/api/v1/reply/index-2024-10-05T14-32-16-0513.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-wsl/CMakeFiles/CMakeConfigureLog.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug-wsl/CMakeFiles/CMakeConfigureLog.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug-wsl/CMakeFiles/clion-Debug-WSL-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug-wsl/CMakeFiles/clion-Debug-WSL-log.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug-wsl/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug-wsl/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/utils/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/utils/utils.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/utils/utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/utils/utils.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,6 +91,8 @@
       <updated>1728138715500</updated>
       <workItem from="1728138717718" duration="389000" />
       <workItem from="1728139130881" duration="594000" />
+      <workItem from="1728152162479" duration="369000" />
+      <workItem from="1728152537997" duration="959000" />
     </task>
     <servers />
   </component>

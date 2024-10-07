@@ -61,8 +61,8 @@ std::string payload::to_string() {
     return result;
 }
 
-std::shared_ptr<vector> payload::parse_int_list(const std::string& value) {
-    auto result = std::make_shared<vector>();
+std::shared_ptr<objects_vector> payload::parse_int_list(const std::string& value) {
+    auto result = std::make_shared<objects_vector>();
     std::smatch match;
     std::regex_search(value, match, LIST_PATTERN);
     std::string tokens = match[1];
@@ -77,8 +77,8 @@ std::shared_ptr<vector> payload::parse_int_list(const std::string& value) {
     return result;
 }
 
-std::shared_ptr<vector> payload::parse_string_list(const std::string& value) {
-    auto result = std::make_shared<vector>();
+std::shared_ptr<objects_vector> payload::parse_string_list(const std::string& value) {
+    auto result = std::make_shared<objects_vector>();
     std::smatch match;
     std::regex_search(value, match, LIST_STRING_PATTERN);
     std::string tokens = match[1];
@@ -93,7 +93,7 @@ std::shared_ptr<vector> payload::parse_string_list(const std::string& value) {
     return result;
 }
 
-std::shared_ptr<vector> payload::parse_list(const std::string& value) {
+std::shared_ptr<objects_vector> payload::parse_list(const std::string& value) {
     std::smatch str_list_match;
     std::smatch int_list_match;
     if (std::regex_search(value, str_list_match, LIST_STRING_PATTERN)) {
@@ -175,7 +175,7 @@ std::string payload::map_string(const std::shared_ptr<string> &str){
     return '"' + str->to_string() + '"';
 }
 
-std::string payload::map_string_list(const std::shared_ptr<vector>& strings_list){
+std::string payload::map_string_list(const std::shared_ptr<objects_vector>& strings_list){
     if (strings_list == nullptr || strings_list->empty()){
         return "";
     }
@@ -201,7 +201,7 @@ std::string payload::map_int(const std::shared_ptr<integer> &value) {
     return value->to_string();
 }
 
-std::string payload::map_ints_list(const std::shared_ptr<vector> &integers_list) {
+std::string payload::map_ints_list(const std::shared_ptr<objects_vector> &integers_list) {
     if (integers_list == nullptr || integers_list->empty()){
         return "";
     }
@@ -220,7 +220,7 @@ std::string payload::map_ints_list(const std::shared_ptr<vector> &integers_list)
     return result;
 }
 
-std::string payload::map_list(const std::shared_ptr<vector>& list){
+std::string payload::map_list(const std::shared_ptr<objects_vector>& list){
     if (list == nullptr || list->empty()) {
         return "null";
     }
@@ -251,7 +251,7 @@ std::string payload::map_object(const std::shared_ptr<object>& obj){
     if (std::shared_ptr<integer> int_ptr = std::dynamic_pointer_cast<integer>(obj)){
         return map_int(int_ptr);
     }
-    if (std::shared_ptr<vector> vector_ptr = std::dynamic_pointer_cast<vector>(obj)){
+    if (std::shared_ptr<objects_vector> vector_ptr = std::dynamic_pointer_cast<objects_vector>(obj)){
         return map_list(vector_ptr);
     }
     if (std::shared_ptr<boolean> bool_ptr = std::dynamic_pointer_cast<boolean>(obj)){
@@ -284,7 +284,7 @@ bool payload::validate_str_value(const std::shared_ptr<string> value) {
     return value->find(SEPARATOR) == std::string::npos;
 }
 
-bool payload::validate_str_list_value(const std::shared_ptr<vector>& value){
+bool payload::validate_str_list_value(const std::shared_ptr<objects_vector>& value){
     if (value == nullptr || value->empty()){
         return true;
     }
@@ -301,7 +301,7 @@ bool payload::validate_str_list_value(const std::shared_ptr<vector>& value){
     return true;
 }
 
-bool payload::validate_list_value(const std::shared_ptr<vector>& value) {
+bool payload::validate_list_value(const std::shared_ptr<objects_vector>& value) {
     if (value == nullptr || value->empty()){
         return true;
     }
@@ -322,7 +322,7 @@ bool payload::validate_value(const std::shared_ptr<object>& value){
     if (auto str_ptr = std::dynamic_pointer_cast<string>(value)){
         return validate_str_value(str_ptr);
     }
-    if (auto vector_ptr = std::dynamic_pointer_cast<vector>(value)){
+    if (auto vector_ptr = std::dynamic_pointer_cast<objects_vector>(value)){
         return validate_list_value(vector_ptr);
     }
 

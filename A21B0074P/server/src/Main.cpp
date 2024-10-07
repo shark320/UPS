@@ -161,7 +161,7 @@ void handle_client(shared_ptr<ClientInfo> client, unordered_map<int, thread>& th
             res = 0;
             log("Header received : " + string(data.data(), HEADER_SIZE));
             do {
-                tmp = recv(skt, data.data() + res, datalen - res, 0);
+                tmp = recv(skt, data.data() + x, datalen - res, 0);
                 if (tmp <= 0) {
                     res = 0;
                     break;

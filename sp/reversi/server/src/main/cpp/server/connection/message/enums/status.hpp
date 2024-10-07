@@ -3,7 +3,7 @@
 #include <unordered_map>
 
 enum class status{
-    NULL_STATUS = -1,
+    NULL_STATUS = 000,
     OK = 200,
     NOT_FOUND = 404,
     CONFLICT = 409,

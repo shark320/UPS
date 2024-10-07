@@ -14,6 +14,6 @@
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
 -- Found Threads: TRUE  
--- Configuring done (4.2s)
+-- Configuring done (3.3s)
 -- Generating done (0.1s)
 -- Build files have been written to: /mnt/c/vpavlov/FAV/UPS/A21B0074P/server/cmake-build-debug-wsl
