@@ -14,6 +14,8 @@ private:
 public:
     game_config(b_size bw, b_size bh, b_size ix, b_size iy);
 
+    game_config();
+
     [[nodiscard]] b_size get_board_width() const;
 
     void set_board_width(b_size bw);

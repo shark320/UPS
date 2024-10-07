@@ -4,12 +4,14 @@
 #include "../board/board.hpp"
 #include "../consts/game_consts.hpp"
 
-class game_engine {
+class reversi_engine {
 
 private:
-    std::shared_ptr<board> game_board;
+    std::shared_ptr<board> game_board = nullptr;
 
 public:
+    void create_board(b_size bw, b_size bh, b_size ix, b_size iy);
+
     void initialize_board(b_size init_x, b_size init_y);
 
     bool no_available_moves();

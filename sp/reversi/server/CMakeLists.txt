@@ -48,8 +48,24 @@ add_executable(server
         src/main/cpp/reversi/config/game_config.hpp
         src/main/cpp/reversi/consts/game_consts.hpp
         src/main/cpp/reversi/consts/game_consts.cpp
-        src/main/cpp/reversi/engine/game_engine.cpp
-        src/main/cpp/reversi/engine/game_engine.hpp
+        src/main/cpp/reversi/engine/reversi_engine.cpp
+        src/main/cpp/reversi/engine/reversi_engine.hpp
+        src/main/cpp/reversi/reversi_game.cpp
+        src/main/cpp/reversi/reversi_game.hpp
+        src/main/cpp/server/connection/consts/consts.hpp
+        src/main/cpp/server/connection/consts/consts.cpp
+        src/main/cpp/server/connection/message/enums/type.hpp
+        src/main/cpp/server/connection/message/enums/type.cpp
+        src/main/cpp/server/connection/message/enums/status.hpp
+        src/main/cpp/server/connection/message/enums/status.cpp
+        src/main/cpp/server/connection/message/header/header.hpp
+        src/main/cpp/server/connection/message/header/header.cpp
+        src/main/cpp/server/connection/message/payload/payload.hpp
+        src/main/cpp/server/connection/message/payload/payload.cpp
+        src/main/cpp/server/connection/message/message.hpp
+        src/main/cpp/server/connection/message/message.cpp
+        src/test/cpp/test_utils/test_utils.hpp
+        src/test/cpp/test_utils/test_utils.cpp
 )
 
 add_custom_target(clean-assembly

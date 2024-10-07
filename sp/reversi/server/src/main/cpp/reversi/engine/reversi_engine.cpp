@@ -1,6 +1,10 @@
-#include "game_engine.hpp"
+#include "reversi_engine.hpp"
 
-void game_engine::initialize_board(b_size init_x, b_size init_y) {
+void reversi_engine::initialize_board(b_size init_x, b_size init_y) {
+    if (game_board == nullptr){
+        //TODO: throw exception on nullptr
+        return;
+    }
     if (game_board->get_cols() <= (init_x + 1) || game_board->get_rows() <= (init_y + 1)) {
         //TODO: exception throwing on invalid init
         return;
@@ -11,13 +15,13 @@ void game_engine::initialize_board(b_size init_x, b_size init_y) {
     game_board->set_at(init_x + 1, init_y + 1, WHITE_PLAYER);
 }
 
-size_t game_engine::get_possible_moves_count(player_code player) {
+size_t reversi_engine::get_possible_moves_count(player_code player) {
     size_t moves_count = 0;
     auto available_moves = _get_possible_moves(moves_count, player);
     return moves_count;
 }
 
-std::vector<bool> game_engine::_get_possible_moves(size_t &moves_count, player_code player) {
+std::vector<bool> reversi_engine::_get_possible_moves(size_t &moves_count, player_code player) {
     size_t x;
     size_t y;
     auto moves = std::vector<bool>(game_board->get_cols() * game_board->get_cols());
@@ -33,11 +37,11 @@ std::vector<bool> game_engine::_get_possible_moves(size_t &moves_count, player_c
     return moves;
 }
 
-player_code game_engine::_get_opponent_code(player_code player) {
+player_code reversi_engine::_get_opponent_code(player_code player) {
     return (player == BLACK_PLAYER) ? WHITE_PLAYER : BLACK_PLAYER;
 }
 
-size_t game_engine::_is_valid_direction(b_size x, b_size y, int dir_x, int dir_y, player_code player) {
+size_t reversi_engine::_is_valid_direction(b_size x, b_size y, int dir_x, int dir_y, player_code player) {
     player_code opponent = _get_opponent_code(player);
     size_t steps = 1;
     b_size pos_x;
@@ -69,7 +73,7 @@ size_t game_engine::_is_valid_direction(b_size x, b_size y, int dir_x, int dir_y
     return 0;
 }
 
-bool game_engine::_is_valid_move(b_size x, b_size y, player_code player) {
+bool reversi_engine::_is_valid_move(b_size x, b_size y, player_code player) {
     int dir_x;
     int dir_y;
     if (x >= this->game_board->get_cols() || y >= this->game_board->get_rows()) {
@@ -89,11 +93,11 @@ bool game_engine::_is_valid_move(b_size x, b_size y, player_code player) {
     return false;
 }
 
-bool game_engine::no_available_moves() {
+bool reversi_engine::no_available_moves() {
     return (get_possible_moves_count(BLACK_PLAYER) == 0) && (get_possible_moves_count(WHITE_PLAYER) == 0);
 }
 
-int game_engine::count_players_scores(b_size &bp_scores, b_size &wp_scores) {
+int reversi_engine::count_players_scores(b_size &bp_scores, b_size &wp_scores) {
     size_t x;
     size_t y;
     char c;
@@ -113,7 +117,7 @@ int game_engine::count_players_scores(b_size &bp_scores, b_size &wp_scores) {
     return 0;
 }
 
-size_t game_engine::_make_move(size_t x, size_t y, char player) {
+size_t reversi_engine::_make_move(size_t x, size_t y, char player) {
     int dir_x;
     int dir_y;
     size_t i;
@@ -132,12 +136,17 @@ size_t game_engine::_make_move(size_t x, size_t y, char player) {
     return count;
 }
 
-bool game_engine::process_move(b_size x, b_size y, player_code player) {
+bool reversi_engine::process_move(b_size x, b_size y, player_code player) {
     if (!_is_valid_move(x, y, player)) {
         return false;
     }
     _make_move( x, y, player);
     return true;
+}
+
+void reversi_engine::create_board(b_size bw, b_size bh, b_size ix, b_size iy) {
+    this->game_board = std::make_shared<board>(bw, bh);
+    initialize_board(ix,iy);
 }
 
 
