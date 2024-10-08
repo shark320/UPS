@@ -11,6 +11,7 @@ set(CONFIG_SRC_DIR "${SRC_RES_DIR}/config")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/assembly)
 
 find_package(log4cxx REQUIRED)
+find_package(Threads REQUIRED)
 
 include(FetchContent)
 
@@ -73,6 +74,20 @@ add_executable(server
         src/test/cpp/server/connection/message/message_test.hpp
         src/test/cpp/server/connection/message/header/header_test.hpp
         src/test/cpp/server/connection/message/header/header_test.cpp
+        src/main/cpp/server/server.cpp
+        src/main/cpp/server/server.hpp
+        src/main/cpp/server/managers/client_manager.cpp
+        src/main/cpp/server/managers/client_manager.hpp
+        src/main/cpp/server/managers/lobby_manager.cpp
+        src/main/cpp/server/managers/lobby_manager.hpp
+        src/main/cpp/server/connection/client_info.cpp
+        src/main/cpp/server/connection/client_info.hpp
+        src/main/cpp/game/lobby/lobby.cpp
+        src/main/cpp/game/lobby/lobby.hpp
+        src/main/cpp/server/connection/client/client.cpp
+        src/main/cpp/server/connection/client/client.hpp
+        src/main/cpp/server/config/server_config.cpp
+        src/main/cpp/server/config/server_config.hpp
 )
 
 add_custom_target(clean-assembly
@@ -91,4 +106,4 @@ add_custom_command(
 )
 
 include_directories(${LOG4CXX_INCLUDE_DIRS})
-target_link_libraries(server PRIVATE pthread ${LOG4CXX_LIBRARIES} SimpleIni fmt::fmt)
+target_link_libraries(server PRIVATE pthread ${LOG4CXX_LIBRARIES} SimpleIni fmt::fmt Threads::Threads)
