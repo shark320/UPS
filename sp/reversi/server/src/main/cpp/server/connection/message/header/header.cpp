@@ -94,7 +94,7 @@ header::header(const std::string &identifier, type type, subtype subtype, status
                                                                                            _status(status) {}
 
 std::string header::to_string() const {
-    return fmt::format("Header [{}, {}, {}, {}]", identifier, type_mapper::get_id(_type), subtype_mapper::get_id(_subtype), status_mapper::get_id(_status));
+    return fmt::format("Header [identifier={}, type={}, subtype={}, status={}, length={}]", identifier, type_mapper::get_id(_type), subtype_mapper::get_id(_subtype), status_mapper::get_id(_status), this->length);
 }
 
 

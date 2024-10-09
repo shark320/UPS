@@ -48,9 +48,9 @@ public:
 
     [[nodiscard]] bool check_values() const;
 
-    std::string construct() const;
+    [[nodiscard]] std::string construct() const;
 
     static std::shared_ptr<header> extract(const std::string& message);
 
-    std::string to_string() const;
+    [[nodiscard]] std::string to_string() const;
 };

@@ -45,20 +45,20 @@ std::shared_ptr<std::map<std::string, std::shared_ptr<object>>> payload::get_dat
 }
 
 std::string payload::to_string() {
-    std::string result = "payload={";
+    std::string result = "";
     for (auto const& item : *this->data){
         result += item.first + "=" + item.second->to_string() + ", ";
     }
 
     if (result.length() > 1){
-        result.replace(result.length()-2, 1, "}");
+        result.replace(result.length()-2, 1, "]");
         result.replace(result.length()-1, 1, "");
     } else{
-        result += "}";
+        result += "]";
     }
 
 
-    return result;
+    return "Payload: [" + result;
 }
 
 std::shared_ptr<objects_vector> payload::parse_int_list(const std::string& value) {

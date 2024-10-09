@@ -7,7 +7,7 @@ static const char PATH_DELIMITER = '/';
 static const char REVERSE_PATH_DELIMITER = '\\';
 
 
-std::shared_ptr<str_vector> split_str(const std::string& str, char delimiter){
+std::shared_ptr<str_vector> split_str(const std::string &str, char delimiter) {
     auto tokens = std::make_shared<str_vector>();
     std::istringstream str_stream(str);
     std::string token;
@@ -44,4 +44,8 @@ int count_digits(size_t number) {
     }
 
     return count;
+}
+
+bool is_whitespaces_only(const std::string &str) {
+    return std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); });
 }

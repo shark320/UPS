@@ -1,6 +1,6 @@
 #include "consts.hpp"
 
-const std::string constants::IDENTIFIER = "POKR";
+const std::string constants::IDENTIFIER = "RVSI";
 const int constants::MSG_MAX_LENGTH = 9999;
 const int constants::MSG_IDENTIFIER_FIELD_POS = 0;
 const int constants::MSG_IDENTIFIER_FIELD_LENGTH = 4;

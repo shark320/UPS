@@ -11,6 +11,7 @@
 #include "../game/lobby/lobby.hpp"
 #include "connection/client/client.hpp"
 #include "config/server_config.hpp"
+#include "connection/message/header/header.hpp"
 
 class server {
 public:
@@ -21,8 +22,8 @@ public:
     void start();
 
 private:
-    std::shared_ptr<client_manager> _client_manager;
-    std::shared_ptr<lobby_manager> _lobby_manager;
+    std::shared_ptr<client_manager> _client_manager = std::make_shared<client_manager>();
+    std::shared_ptr<lobby_manager> _lobby_manager = std::make_shared<lobby_manager>();
     std::shared_ptr<server_config> _server_config;
     std::shared_ptr<std::unordered_map<int, std::shared_ptr<std::thread>>> _client_threads = std::make_shared<std::unordered_map<int, std::shared_ptr<std::thread>>>();
     std::shared_ptr<std::thread> _client_timeouts_thread;
@@ -36,7 +37,7 @@ private:
 
     void close_client_connection(std::shared_ptr<client_info> client_connection);
 
-    void process_client_connection(std::shared_ptr<client_info> client_connection);
+    void process_client_connection(const std::shared_ptr<client_info>& client_connection);
 
     void player_disconnected(std::shared_ptr<lobby> _lobby, std::shared_ptr<client> _client);
 
@@ -51,6 +52,8 @@ private:
     void start_check_client_timeouts_thread();
 
     void join_timeout_thread();
+
+    bool check_header(std::shared_ptr<header> _header);
 
     [[noreturn]] void handle_incoming_connections();
 };
