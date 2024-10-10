@@ -148,6 +148,8 @@ void server::process_client_connection(const std::shared_ptr<client_connection> 
             auto _message = std::make_shared<message>(_header, _payload);
             client_logger->debug(fmt::format("Received message: {}", _message->to_string()));
 
+
+
         } while (received > 0);
 
         detach_client_thread(client_connection);

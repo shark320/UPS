@@ -88,6 +88,10 @@ add_executable(server
         src/main/cpp/server/connection/client/client.hpp
         src/main/cpp/server/config/server_config.cpp
         src/main/cpp/server/config/server_config.hpp
+        src/main/cpp/server/managers/message_manager.cpp
+        src/main/cpp/server/managers/message_manager.hpp
+        src/main/cpp/server/connection/connection_config/connection_config.cpp
+        src/main/cpp/server/connection/connection_config/connection_config.hpp
 )
 
 add_custom_target(clean-assembly

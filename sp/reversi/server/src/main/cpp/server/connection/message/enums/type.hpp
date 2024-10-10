@@ -22,7 +22,8 @@ public:
 
 enum class subtype {
     PING = 1,
-    NULL_SUBTYPE = 0
+    NULL_SUBTYPE = 0,
+    HANDSHAKE = 12
 };
 
 class subtype_mapper {

@@ -24,19 +24,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="827bc3f2-a14c-42aa-b32a-9cb0178221c3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_connection.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/connection_config/connection_config.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/message_manager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/message_manager.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/MessageProcessor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/MessageProcessor.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/config/server_config.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/config/server_config.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/config/server_config.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/config/server_config.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_info.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_info.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_connection.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/client_manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/client_manager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/client_manager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/client_manager.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/message/enums/type.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/message/enums/type.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/resources/config/config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/resources/config/config.ini" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -112,7 +108,7 @@
       <workItem from="1728476278573" duration="6071000" />
       <workItem from="1728487026752" duration="46000" />
       <workItem from="1728573940079" duration="1083000" />
-      <workItem from="1728575129614" duration="4306000" />
+      <workItem from="1728575129614" duration="7067000" />
     </task>
     <servers />
   </component>

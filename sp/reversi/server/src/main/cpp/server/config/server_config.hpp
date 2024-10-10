@@ -32,6 +32,6 @@ public:
 
     void init(const std::shared_ptr<CSimpleIniA>& ini_config);
 
-    std::string to_string() const;
+    [[nodiscard]] std::string to_string() const;
 };
 
