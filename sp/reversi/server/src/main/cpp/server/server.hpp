@@ -1,17 +1,18 @@
 #pragma once
 
-
+#include <logger.h>
 #include <memory>
 #include <thread>
 #include <unordered_map>
 #include "managers/client_manager.hpp"
 #include "managers/lobby_manager.hpp"
-#include "connection/client_info.hpp"
+#include "connection/client_connection.hpp"
 #include "SimpleIni.h"
 #include "../game/lobby/lobby.hpp"
 #include "connection/client/client.hpp"
 #include "config/server_config.hpp"
 #include "connection/message/header/header.hpp"
+#include "connection/message/payload/payload.hpp"
 
 class server {
 public:
@@ -35,13 +36,13 @@ private:
 
     void bind_socket();
 
-    void close_client_connection(std::shared_ptr<client_info> client_connection);
+    void close_client_connection(const std::shared_ptr<client_connection>& client_connection);
 
-    void process_client_connection(const std::shared_ptr<client_info>& client_connection);
+    void process_client_connection(const std::shared_ptr<client_connection>& client_connection);
 
     void player_disconnected(std::shared_ptr<lobby> _lobby, std::shared_ptr<client> _client);
 
-    void client_connection_timeout(std::shared_ptr<client> _client);
+    void client_timeout(std::shared_ptr<client> _client);
 
     void client_disconnected(std::shared_ptr<client> _client, std::shared_ptr<lobby> _lobby);
 
@@ -54,6 +55,10 @@ private:
     void join_timeout_thread();
 
     bool check_header(std::shared_ptr<header> _header);
+
+    void detach_client_thread(const std::shared_ptr<client_connection> &client_connection);
+
+    std::shared_ptr<payload> receive_payload(int socket, size_t &received, size_t payload_length, const std::shared_ptr<log4cxx::Logger>& client_logger);
 
     [[noreturn]] void handle_incoming_connections();
 };

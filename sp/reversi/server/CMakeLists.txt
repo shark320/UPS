@@ -80,8 +80,8 @@ add_executable(server
         src/main/cpp/server/managers/client_manager.hpp
         src/main/cpp/server/managers/lobby_manager.cpp
         src/main/cpp/server/managers/lobby_manager.hpp
-        src/main/cpp/server/connection/client_info.cpp
-        src/main/cpp/server/connection/client_info.hpp
+        src/main/cpp/server/connection/client_connection.cpp
+        src/main/cpp/server/connection/client_connection.hpp
         src/main/cpp/game/lobby/lobby.cpp
         src/main/cpp/game/lobby/lobby.hpp
         src/main/cpp/server/connection/client/client.cpp

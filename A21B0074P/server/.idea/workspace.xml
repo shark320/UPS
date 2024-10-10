@@ -24,29 +24,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="827bc3f2-a14c-42aa-b32a-9cb0178221c3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/resources/requests.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_connection.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug-wsl/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug-wsl/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/config/server_config.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/config/server_config.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/config/server_config.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/config/server_config.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_info.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_info.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_info.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_info.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/consts/consts.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/consts/consts.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/message/header/header.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/message/header/header.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/message/header/header.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/message/header/header.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/message/payload/payload.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/message/payload/payload.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_info.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_info.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client_connection.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/client_manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/client_manager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/client_manager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/client_manager.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/utils/utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/utils/utils.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/utils/utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/utils/utils.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/resources/config/config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/resources/config/config.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/test/cpp/server/connection/message/header/header_test.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/test/cpp/server/connection/message/header/header_test.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/test/cpp/test_utils/test_utils.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/test/cpp/test_utils/test_utils.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/test/cpp/test_utils/test_utils.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/test/cpp/test_utils/test_utils.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,25 +65,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "develop",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "structure.view.defaults.are.configured": "true",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="BlackjackServer" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="server2" TARGET_NAME="BlackjackServer" CONFIG_NAME="Debug-WSL" RUN_TARGET_PROJECT_NAME="server2" RUN_TARGET_NAME="BlackjackServer">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -113,7 +109,10 @@
       <workItem from="1728152537997" duration="959000" />
       <workItem from="1728409766081" duration="32000" />
       <workItem from="1728409812594" duration="5062000" />
-      <workItem from="1728476278573" duration="5766000" />
+      <workItem from="1728476278573" duration="6071000" />
+      <workItem from="1728487026752" duration="46000" />
+      <workItem from="1728573940079" duration="1083000" />
+      <workItem from="1728575129614" duration="4306000" />
     </task>
     <servers />
   </component>

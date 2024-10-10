@@ -2,7 +2,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <logger.h>
 #include "server.hpp"
 #include "fmt/format.h"
 #include "connection/consts/consts.hpp"
@@ -24,7 +23,7 @@ void server::start() {
     bind_socket();
 
     if (listen(this->_socket, this->_server_config->get_client_queue_size()) != 0) {
-        throw std::runtime_error("Error during socket listener creation.");
+        throw std::runtime_error("Error during _socket listener creation.");
     }
     LOGGER->debug(fmt::format("Server is listening to port: {}. Clients connection queue size: {}.",
                               this->_server_config->get_port(), this->_server_config->get_client_queue_size()));
@@ -41,19 +40,19 @@ void server::check_start_preconditions() {
 }
 
 void server::create_socket() {
-    LOGGER->debug("Creating server socket.");
+    LOGGER->debug("Creating server _socket.");
     this->_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (_socket == -1) {
         throw std::runtime_error("Socket creation failed");
     }
     int reuse_address = 1;
     if (setsockopt(this->_socket, SOL_SOCKET, SO_REUSEADDR, &reuse_address, sizeof(int)) != 0) {
-        throw std::runtime_error("Error during socket options setting.");
+        throw std::runtime_error("Error during _socket options setting.");
     }
 }
 
 void server::bind_socket() {
-    LOGGER->debug("Binding server socket.");
+    LOGGER->debug("Binding server _socket.");
     sockaddr_in addr_in{};
     auto port = this->_server_config->get_port();
     addr_in.sin_family = AF_INET;
@@ -66,6 +65,7 @@ void server::bind_socket() {
 }
 
 void server::start_check_client_timeouts_thread() {
+    LOGGER->debug("Starting timeouts checker thread.");
     this->_client_timeouts_thread = std::make_shared<std::thread>(&server::check_client_timeouts_thread, this);
 }
 
@@ -100,21 +100,21 @@ server::~server() {
     }
 }
 
-void server::process_client_connection(const std::shared_ptr<client_info> &client_connection) {
+void server::process_client_connection(const std::shared_ptr<client_connection> &client_connection) {
     int socket = client_connection->get_socket();
     auto client_logger = log4cxx::Logger::getLogger(fmt::format("client({})", socket));
 
     try {
         client_logger->debug(fmt::format("New client connection established!"));
         //TODO: set to 0
-        size_t result = 1;
-        size_t tmp_result = 0;
+        size_t received = 0;
+        size_t tmp_received = 0;
         do {
             std::vector<char> header_data(constants::MSG_HEADER_LENGTH + 1, 0);
-            tmp_result = recv(socket, header_data.data(), constants::MSG_HEADER_LENGTH, 0);
+            tmp_received = recv(socket, header_data.data(), constants::MSG_HEADER_LENGTH, 0);
 
             //Connection closed
-            if (tmp_result == 0) {
+            if (tmp_received == 0) {
                 //TODO: refactor message
                 client_logger->debug("Connection closed.");
                 close_client_connection(client_connection);
@@ -122,7 +122,7 @@ void server::process_client_connection(const std::shared_ptr<client_info> &clien
             }
 
             //Connection error
-            if (tmp_result == -1) {
+            if (tmp_received == -1) {
                 //TODO: refactor message
                 client_logger->debug("Error receiving data: " + std::string(strerror(errno)));
                 close_client_connection(client_connection);
@@ -136,7 +136,6 @@ void server::process_client_connection(const std::shared_ptr<client_info> &clien
                 continue;
             }
             auto _header = header::extract(header_str);
-            client_logger->debug(fmt::format("Received: {}",  _header->to_string()));
 
             //Check header values
             if (!check_header(_header)) {
@@ -145,31 +144,13 @@ void server::process_client_connection(const std::shared_ptr<client_info> &clien
                 break;
             }
 
-            std::shared_ptr<payload> _payload = std::make_shared<payload>();
-            //Load payload
-            if (_header->get_length() != 0){
-                std::vector<char> payload_data(_header->get_length() + 1, 0);
-                result = 0;
-                do{
-                    //loading packages
-                    tmp_result = recv(socket, payload_data.data() + result, _header->get_length() - result, 0);
-                    client_logger->debug(fmt::format("Received {} bytes.", tmp_result));
-                    client_logger->debug(std::to_string(tmp_result));
-                    result += tmp_result;
-                }while(result < _header->get_length() && tmp_result > 0);
-                auto payload_str = std::string(payload_data.data());
-                _payload = payload::parse(payload_str);
-                client_logger->debug(fmt::format("Received payload: {}", _payload->to_string()));
-            } else{
-                client_logger->debug(fmt::format("Received payload is empty."));
-            }
-            _payload->set_value("int", std::make_shared<integer>(10));
-            client_logger->debug(_payload->construct());
+            std::shared_ptr<payload> _payload = receive_payload(socket, received, _header->get_length(), client_logger);
             auto _message = std::make_shared<message>(_header, _payload);
             client_logger->debug(fmt::format("Received message: {}", _message->to_string()));
 
-        } while (result > 0);
+        } while (received > 0);
 
+        detach_client_thread(client_connection);
 
     } catch (const std::exception &e) {
         client_logger->error(fmt::format("An error occurred during client connection processing: {}", e.what()));
@@ -177,18 +158,106 @@ void server::process_client_connection(const std::shared_ptr<client_info> &clien
     }
 }
 
-void server::close_client_connection(std::shared_ptr<client_info> client_connection) {
+void server::close_client_connection(const std::shared_ptr<client_connection>& client_connection) {
+    if  (!client_connection->is_alive()){
+        return;
+    }
     int socket = client_connection->get_socket();
+    LOGGER->debug(fmt::format("Closing client connection for socket: {}", socket));
     shutdown(socket, SHUT_RDWR);
     close(socket);
+    auto _client_thread = (*this->_client_threads)[socket];
+    client_connection->disconnect();
+    client_disconnected(client_connection->get_client());
 }
 
 void server::check_client_timeouts_thread() {
-    //TODO: implement
+    auto logger = log4cxx::Logger::getLogger("timeout-checker");
+    logger->debug("Timeouts checker thread started.");
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::microseconds(this->_server_config->get_timeout_check_interval()));
+        this->_client_manager->client_manager_mutex->lock();
+
+        auto _clients = this->_client_manager->get_clients();
+        for (auto _client_connection_it = _clients->begin(); _client_connection_it != _clients->end();) {
+            bool timeout = false;
+            auto _client_connection = *_client_connection_it;
+            if (_client_connection == nullptr){
+                continue;
+            }
+            if (!_client_connection->is_handshake() &&
+                _client_connection->is_timeout(this->_server_config->get_handshake_timeout())){
+                logger->debug(fmt::format("Client on socket {}: Handshake timeout reached.", _client_connection->get_socket()));
+                timeout = true;
+            } else if (!_client_connection->is_logged_in() && _client_connection->is_timeout(this->_server_config->get_login_timeout())){
+                logger->debug(fmt::format("Client on socket {}: Login timeout reached.", _client_connection->get_socket()));
+                timeout = true;
+            } else if (_client_connection->is_handshake() && _client_connection->is_ping_timeout(this->_server_config->get_ping_timeout())) {
+                logger->debug(
+                        fmt::format("Client on socket {}: Ping timeout reached.", _client_connection->get_socket()));
+                timeout = true;
+            }
+            if (timeout){
+                close_client_connection(_client_connection);
+                _client_connection_it = _clients->erase(_client_connection_it);
+            } else{
+                ++_client_connection_it;
+            }
+        }
+        this->_client_manager->client_manager_mutex->unlock();
+    }
 }
 
 bool server::check_header(std::shared_ptr<header> _header) {
     return _header->check_values() && _header->get_identifier() == constants::IDENTIFIER;
+}
+
+void server::detach_client_thread(const std::shared_ptr<client_connection> &client_connection) {
+    int socket = client_connection->get_socket();
+    this->_client_manager->client_manager_mutex->lock();
+    auto client_thread = (*this->_client_threads)[socket];
+    if (client_thread != nullptr) {
+        if (client_thread->joinable()) {
+            client_thread->detach();
+        }
+        this->_client_threads->erase(socket);
+    }
+    this->_client_manager->client_manager_mutex->unlock();
+}
+
+std::shared_ptr<payload> server::receive_payload(int socket, size_t &received, size_t payload_length,
+                                                 const std::shared_ptr<log4cxx::Logger> &client_logger) {
+    std::shared_ptr<payload> _payload = std::make_shared<payload>();
+    size_t tmp_received = 0;
+    if (payload_length != 0) {
+        std::vector<char> payload_data(payload_length + 1, 0);
+        received = 0;
+        do {
+            //loading packages
+            tmp_received = recv(socket, payload_data.data() + received, payload_length - received, 0);
+            client_logger->debug(fmt::format("Received {} bytes.", tmp_received));
+            client_logger->debug(std::to_string(tmp_received));
+            received += tmp_received;
+        } while (received < payload_length && tmp_received > 0);
+        auto payload_str = std::string(payload_data.data());
+        _payload = payload::parse(payload_str);
+        client_logger->debug(fmt::format("Received payload: {}", _payload->to_string()));
+    } else {
+        client_logger->debug(fmt::format("Received payload is empty."));
+    }
+    return _payload;
+}
+
+void server::client_timeout(std::shared_ptr<client> _client) {
+
+}
+
+void server::client_disconnected(std::shared_ptr<client> _client) {
+    if (_client == nullptr){
+        return;
+    }
+    //TODO: update game lobby
+    _client->disconnected();
 }
 
 
