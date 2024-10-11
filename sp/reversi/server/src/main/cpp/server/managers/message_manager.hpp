@@ -29,5 +29,11 @@ public:
     std::shared_ptr<message>
     process(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
+    explicit message_manager(const std::shared_ptr<connection_config>& connection_config);
+
+    void set_client_manager(const std::shared_ptr<client_manager>& client_manager);
+
+    void set_lobby_manager(const std::shared_ptr<lobby_manager>& lobby_manager);
+
 };
 

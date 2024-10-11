@@ -13,10 +13,11 @@
 #include "config/server_config.hpp"
 #include "connection/message/header/header.hpp"
 #include "connection/message/payload/payload.hpp"
+#include "managers/message_manager.hpp"
 
 class server {
 public:
-    server(const std::shared_ptr<server_config>& _server_config);
+    explicit server(const std::shared_ptr<server_config>& _server_config, std::shared_ptr<message_manager> _message_manager);
 
     ~server();
 
@@ -28,6 +29,7 @@ private:
     std::shared_ptr<server_config> _server_config;
     std::shared_ptr<std::unordered_map<int, std::shared_ptr<std::thread>>> _client_threads = std::make_shared<std::unordered_map<int, std::shared_ptr<std::thread>>>();
     std::shared_ptr<std::thread> _client_timeouts_thread;
+    std::shared_ptr<message_manager> _message_manager;
     int _socket;
 
     void check_start_preconditions();
@@ -58,7 +60,7 @@ private:
 
     void detach_client_thread(const std::shared_ptr<client_connection> &client_connection);
 
-    std::shared_ptr<payload> receive_payload(int socket, size_t &received, size_t payload_length, const std::shared_ptr<log4cxx::Logger>& client_logger);
+    std::shared_ptr<payload> receive_payload(int socket, ssize_t &received, size_t payload_length, const std::shared_ptr<log4cxx::Logger>& client_logger);
 
     [[noreturn]] void handle_incoming_connections();
 };

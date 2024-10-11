@@ -10,7 +10,7 @@ private:
 
     std::shared_ptr<header> _header;
 
-    std::shared_ptr<payload> _payload;
+    std::shared_ptr<payload> _payload = std::make_shared<payload>();
 
 public:
 

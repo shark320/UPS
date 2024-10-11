@@ -33,3 +33,5 @@ std::string message::construct() {
 
     return header_str + payload_str;
 }
+
+message::message() = default;

@@ -26,6 +26,8 @@ public:
 
     header(const std::string &identifier, type type, subtype subtype, status status, size_t length);
 
+    explicit header(const std::shared_ptr<header>& other);
+
     [[nodiscard]] const std::string &get_identifier() const;
 
     [[nodiscard]] const type &get_type() const;

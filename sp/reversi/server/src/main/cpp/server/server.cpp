@@ -12,8 +12,10 @@
 
 static auto LOGGER = log4cxx::Logger::getLogger("server");
 
-server::server(const std::shared_ptr<server_config> &_server_config) : _server_config(_server_config) {
-
+server::server(const std::shared_ptr<server_config> &_server_config, std::shared_ptr<message_manager> _message_manager) : _server_config(_server_config),
+                                                                                                                          _message_manager(_message_manager) {
+    this->_message_manager->set_client_manager(this->_client_manager);
+    this->_message_manager->set_lobby_manager(this->_lobby_manager);
 }
 
 void server::start() {
@@ -107,8 +109,8 @@ void server::process_client_connection(const std::shared_ptr<client_connection> 
     try {
         client_logger->debug(fmt::format("New client connection established!"));
         //TODO: set to 0
-        size_t received = 0;
-        size_t tmp_received = 0;
+        ssize_t received = 0;
+        ssize_t tmp_received = 0;
         do {
             std::vector<char> header_data(constants::MSG_HEADER_LENGTH + 1, 0);
             tmp_received = recv(socket, header_data.data(), constants::MSG_HEADER_LENGTH, 0);
@@ -145,10 +147,20 @@ void server::process_client_connection(const std::shared_ptr<client_connection> 
             }
 
             std::shared_ptr<payload> _payload = receive_payload(socket, received, _header->get_length(), client_logger);
-            auto _message = std::make_shared<message>(_header, _payload);
-            client_logger->debug(fmt::format("Received message: {}", _message->to_string()));
+            auto request = std::make_shared<message>(_header, _payload);
+            client_logger->debug(fmt::format("Received message: {}", request->to_string()));
 
+            auto response = this->_message_manager->process(request, client_connection);
+            if (response == nullptr){
+                client_logger->error("Invalid identifier received, closing connection.");
+                close_client_connection(client_connection);
+                break;
+            }
 
+            std::string response_str = response->construct();
+            if (!response_str.empty()){
+                send(socket, response_str.c_str(), response_str.size(), MSG_NOSIGNAL);
+            }
 
         } while (received > 0);
 
@@ -227,7 +239,7 @@ void server::detach_client_thread(const std::shared_ptr<client_connection> &clie
     this->_client_manager->client_manager_mutex->unlock();
 }
 
-std::shared_ptr<payload> server::receive_payload(int socket, size_t &received, size_t payload_length,
+std::shared_ptr<payload> server::receive_payload(int socket, ssize_t &received, size_t payload_length,
                                                  const std::shared_ptr<log4cxx::Logger> &client_logger) {
     std::shared_ptr<payload> _payload = std::make_shared<payload>();
     size_t tmp_received = 0;
