@@ -14,13 +14,30 @@ private:
     std::shared_ptr<lobby_manager> _lobby_manager = std::make_shared<lobby_manager>();
 
 
-    std::shared_ptr<message> process_handshake(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
+    //Get requests
     std::shared_ptr<message> process_get(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
+    std::shared_ptr<message> process_ping(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+
+    std::shared_ptr<message> process_get_games_list(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+
+    std::shared_ptr<message> process_get_lobby_state(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+
+    //Post requests
     std::shared_ptr<message> process_post(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
-    bool check_identifier(const std::shared_ptr<message>& request) const;
+    std::shared_ptr<message> process_handshake(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+
+    std::shared_ptr<message> process_login(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+
+    std::shared_ptr<message> process_create_new_game(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+
+    std::shared_ptr<message> process_start_the_game(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+
+    std::shared_ptr<message> process_connect_to_the_game(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+
+    [[nodiscard]] bool check_identifier(const std::shared_ptr<message>& request) const;
 
 //    std::shared_ptr<message> process_unknown_type(std::shared_ptr<message> request, std::shared_ptr<client_connection> client_connection);
 //

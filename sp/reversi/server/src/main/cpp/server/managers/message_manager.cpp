@@ -44,6 +44,7 @@ std::shared_ptr<message> message_manager::process_handshake(const std::shared_pt
     _response->set_header(_header);
 
     client_connection->set_handshake(true);
+    client_connection->update_ping_timestamp();
 
     return _response;
 }
