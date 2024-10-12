@@ -130,6 +130,7 @@ void server::process_client_connection(const std::shared_ptr<client_connection> 
                 close_client_connection(client_connection);
                 break;
             }
+            received = tmp_received;
             auto header_str = std::string(header_data.data());
 
             //Check if header is not empty
@@ -153,6 +154,7 @@ void server::process_client_connection(const std::shared_ptr<client_connection> 
             auto response = this->_message_manager->process(request, client_connection);
             if (response == nullptr){
                 client_logger->error("Invalid identifier received, closing connection.");
+                //TODO: remove client from client_manager
                 close_client_connection(client_connection);
                 break;
             }
@@ -188,34 +190,37 @@ void server::close_client_connection(const std::shared_ptr<client_connection>& c
 void server::check_client_timeouts_thread() {
     auto logger = log4cxx::Logger::getLogger("timeout-checker");
     logger->debug("Timeouts checker thread started.");
+    auto handshake_timeout = this->_server_config->get_handshake_timeout();
+    auto login_timeout = this->_server_config->get_login_timeout();
+    auto ping_timeout = this->_server_config->get_ping_timeout();
     while (true) {
         std::this_thread::sleep_for(std::chrono::microseconds(this->_server_config->get_timeout_check_interval()));
         this->_client_manager->client_manager_mutex->lock();
 
-        auto _clients = this->_client_manager->get_clients();
-        for (auto _client_connection_it = _clients->begin(); _client_connection_it != _clients->end();) {
+        auto _clients = this->_client_manager->get_client_connections();
+        for (auto _client_connection_pair_it = _clients->begin(); _client_connection_pair_it != _clients->end();) {
             bool timeout = false;
-            auto _client_connection = *_client_connection_it;
+            auto _client_connection = _client_connection_pair_it->second;
             if (_client_connection == nullptr){
                 continue;
             }
-            if (!_client_connection->is_handshake() &&
-                _client_connection->is_timeout(this->_server_config->get_handshake_timeout())){
+            if (handshake_timeout > 0 && !_client_connection->is_handshake() &&
+                _client_connection->is_timeout(handshake_timeout)){
                 logger->debug(fmt::format("Client on socket {}: Handshake timeout reached.", _client_connection->get_socket()));
                 timeout = true;
-            } else if (!_client_connection->is_logged_in() && _client_connection->is_timeout(this->_server_config->get_login_timeout())){
+            } else if (login_timeout>0 && !_client_connection->is_logged_in() && _client_connection->is_timeout(login_timeout)){
                 logger->debug(fmt::format("Client on socket {}: Login timeout reached.", _client_connection->get_socket()));
                 timeout = true;
-            } else if (_client_connection->is_handshake() && _client_connection->is_ping_timeout(this->_server_config->get_ping_timeout())) {
+            } else if (ping_timeout > 0 && _client_connection->is_handshake() && _client_connection->is_ping_timeout(ping_timeout)) {
                 logger->debug(
                         fmt::format("Client on socket {}: Ping timeout reached.", _client_connection->get_socket()));
                 timeout = true;
             }
             if (timeout){
                 close_client_connection(_client_connection);
-                _client_connection_it = _clients->erase(_client_connection_it);
+                _client_connection_pair_it = _clients->erase(_client_connection_pair_it);
             } else{
-                ++_client_connection_it;
+                ++_client_connection_pair_it;
             }
         }
         this->_client_manager->client_manager_mutex->unlock();

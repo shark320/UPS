@@ -1,5 +1,6 @@
 #include <chrono>
 #include "client_connection.hpp"
+#include "fmt/format.h"
 
 int client_connection::get_socket() const {
     return this->_socket;
@@ -8,6 +9,7 @@ int client_connection::get_socket() const {
 client_connection::client_connection(int socket) {
     this->_socket = socket;
     this->_connection_time = std::chrono::steady_clock::now();
+    this->_client_logger = log4cxx::Logger::getLogger(fmt::format("client({})", socket));
 }
 
 bool client_connection::is_timeout(int timeout) {

@@ -26,6 +26,7 @@ int type_mapper::get_id(type _type) {
 
 const std::unordered_map<int, subtype> subtype_mapper::subtype_map = {
         {1, subtype::PING},
+        {12, subtype::HANDSHAKE},
         {-1, subtype::NULL_SUBTYPE}
 };
 

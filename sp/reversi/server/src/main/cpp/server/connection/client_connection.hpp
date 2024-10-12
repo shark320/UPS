@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <logger.h>
 #include "client/client.hpp"
 
 class client;
@@ -12,6 +13,8 @@ private:
     std::chrono::steady_clock::time_point _connection_time;
     std::chrono::steady_clock::time_point _last_ping_timestamp;
     bool _handshake = false;
+
+    std::shared_ptr<log4cxx::Logger> _client_logger;
 
 public:
     explicit client_connection(int socket);

@@ -330,6 +330,15 @@ bool payload::validate_value(const std::shared_ptr<object>& value){
     return true;
 }
 
+std::shared_ptr<string> payload::get_string(const std::string &key) {
+    auto value_obj = get_value(key);
+    if (std::shared_ptr<string> value_str = std::dynamic_pointer_cast<string>(value_obj)){
+        return value_str;
+    }
+
+    return nullptr;
+}
+
 
 
 
