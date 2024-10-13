@@ -21,8 +21,9 @@ public:
 
 
 enum class subtype {
-    PING = 1,
     NULL_SUBTYPE = 0,
+    PING = 1,
+    LOGIN = 2,
     HANDSHAKE = 12
 };
 

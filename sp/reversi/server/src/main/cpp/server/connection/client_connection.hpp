@@ -40,5 +40,7 @@ public:
     void disconnect();
 
     [[nodiscard]] bool is_alive() const;
+
+    std::shared_ptr<log4cxx::Logger> get_logger();
 };
 

@@ -1,2 +1,3 @@
-RVSI0000101200
+RVSI0000101200  - ping
 RVSI0000212200  - handshake
+RVSI0015202200username="max";  - login username=max

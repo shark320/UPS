@@ -55,3 +55,7 @@ void client_connection::disconnect() {
 bool client_connection::is_alive() const {
     return this->_socket != -1;
 }
+
+std::shared_ptr<log4cxx::Logger> client_connection::get_logger() {
+    return this->_client_logger;
+}

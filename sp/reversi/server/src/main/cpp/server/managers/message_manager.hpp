@@ -31,7 +31,9 @@ private:
 
     std::shared_ptr<message> process_login(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
-    std::shared_ptr<message> bad_request(const std::shared_ptr<message>& request);
+    static std::shared_ptr<message> bad_request(const std::shared_ptr<message>& request);
+
+    static std::shared_ptr<message> bad_request(const std::shared_ptr<message>& request, const std::string& msg);
 
     std::shared_ptr<message> process_create_new_game(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 

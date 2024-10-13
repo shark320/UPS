@@ -19,11 +19,17 @@ public:
 
     std::shared_ptr<client_connection> add_client_connection(int client_socket, const std::string &client_address);
 
+    void remove_client_connection(int client_socket);
+
     [[nodiscard]] std::shared_ptr<client_conenctions_map_t> get_client_connections() const;
 
     [[nodiscard]] std::shared_ptr<clients_map_t> get_clients() const;
 
     [[nodiscard]] bool is_login_taken (const std::string& login);
+
+    [[nodiscard]] std::shared_ptr<client> get_client_by_login(const std::string& login) const;
+
+    [[nodiscard]] std::shared_ptr<client> login_client(const std::string username, const std::shared_ptr<client_connection> conenction);
 
 };
 

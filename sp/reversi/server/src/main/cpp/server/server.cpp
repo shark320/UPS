@@ -96,6 +96,7 @@ server::~server() {
             }
 
             auto client_info = this->_client_manager->add_client_connection(incoming_connection, client_addr);
+            //TODO: investigate multiple clients connection
             (*this->_client_threads)[incoming_connection] = std::make_shared<std::thread>(
                     &server::process_client_connection, this, client_info);
         }
@@ -154,7 +155,7 @@ void server::process_client_connection(const std::shared_ptr<client_connection> 
             auto response = this->_message_manager->process(request, client_connection);
             if (response == nullptr){
                 client_logger->error("Invalid identifier received, closing connection.");
-                //TODO: remove client from client_manager
+                this->_client_manager->remove_client_connection(socket);
                 close_client_connection(client_connection);
                 break;
             }
