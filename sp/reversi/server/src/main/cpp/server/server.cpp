@@ -95,10 +95,10 @@ server::~server() {
                 continue;
             }
 
-            auto client_info = this->_client_manager->add_client_connection(incoming_connection, client_addr);
+            auto client_connection = this->_client_manager->add_client_connection(incoming_connection, client_addr);
             //TODO: investigate multiple clients connection
             (*this->_client_threads)[incoming_connection] = std::make_shared<std::thread>(
-                    &server::process_client_connection, this, client_info);
+                    &server::process_client_connection, this, client_connection);
         }
     }
 }
@@ -176,14 +176,16 @@ void server::process_client_connection(const std::shared_ptr<client_connection> 
 }
 
 void server::close_client_connection(const std::shared_ptr<client_connection>& client_connection) {
+
     if  (!client_connection->is_alive()){
         return;
     }
     int socket = client_connection->get_socket();
-    LOGGER->debug(fmt::format("Closing client connection for socket: {}", socket));
+    client_connection->get_logger()->debug(fmt::format("Closing client connection for socket: {}", socket));
     shutdown(socket, SHUT_RDWR);
     close(socket);
     auto _client_thread = (*this->_client_threads)[socket];
+    detach_client_thread(client_connection);
     client_connection->disconnect();
     client_disconnected(client_connection->get_client());
 }
