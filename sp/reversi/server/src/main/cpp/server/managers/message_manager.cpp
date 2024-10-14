@@ -4,47 +4,44 @@
 
 std::shared_ptr<message> message_manager::process(const std::shared_ptr<message> &request,
                                                   const std::shared_ptr<client_connection> &client_connection) {
-    std::shared_ptr<message> response = nullptr;
     if (!check_identifier(request)) {
-        return response;
+        return nullptr;
+    }
+    if (!client_connection->is_handshake() && (request->get_header()->get_type() != type::POST || request->get_header()->get_subtype()  != subtype::HANDSHAKE)){
+        client_connection->get_logger()->error("The client handshake was not performed.");
+        return bad_request(request, "The client handshake was not performed.");
     }
     switch (request->get_header()->get_type()) {
         case type::GET:
-            //TODO: process GET actions
-            break;
+            return process_get(request, client_connection);
         case type::POST:
-            response = process_post(request, client_connection);
-            break;
+            return process_post(request, client_connection);
         default:
-            //TODO: error message
-            response = nullptr;
-            break;
+            return bad_request(request);
     }
-    return response;
 }
 
 std::shared_ptr<message>
 message_manager::process_post(const std::shared_ptr<message> &request,
                               const std::shared_ptr<client_connection> &client_connection) {
-    std::shared_ptr<message> response = nullptr;
     switch (request->get_header()->get_subtype()) {
         case subtype::HANDSHAKE:
-            response = process_handshake(request, client_connection);
-            break;
+            return process_handshake(request, client_connection);
         case subtype::LOGIN:
-            response = process_login(request, client_connection);
-            break;
+            return process_login(request, client_connection);
         default:
-            response = bad_request(request);
-            break;
+            return bad_request(request);
     }
-    return response;
 }
 
 std::shared_ptr<message> message_manager::process_handshake(const std::shared_ptr<message> &request,
                                                             const std::shared_ptr<client_connection> &client_connection) {
     auto client_logger = client_connection->get_logger();
     client_logger->debug("Processing client handshake.");
+    if (client_connection->is_handshake()){
+        client_logger->error("The client handshake is already done.");
+        return bad_request(request,"The client handshake is already done.");
+    }
     auto _response = std::make_shared<message>();
     auto _header = std::make_shared<header>(request->get_header());
     _header->set_length(0);
@@ -81,19 +78,23 @@ std::shared_ptr<message> message_manager::process_login(const std::shared_ptr<me
     auto client_logger = client_connection->get_logger();
     client_logger->debug("Processing login.");
     if (auto client = client_connection->get_client()) {
-        return bad_request(request, "The client is already logged in");
+        client_logger->error("The client is already logged in.");
+        return bad_request(request, "The client is already logged in.");
     }
     auto _response = std::make_shared<message>();
     auto response_header = std::make_shared<header>(request->get_header());
     auto request_payload = request->get_payload();
     auto response_payload = std::make_shared<payload>();
     auto login = request_payload->get_string("username");
+
     if (login == nullptr || login->empty()) {
         return bad_request(request);
     }
 
-    if (auto logged_client = this->_client_manager->get_client_by_login(*login)) {
-        if (logged_client->is_connected()) {
+    auto _client = this->_client_manager->get_client_by_login(*login);
+
+    if (_client != nullptr) {
+        if (_client->is_connected()) {
             client_logger->debug(fmt::format("Client with the username '{}' is already connected!", *login));
             response_header->set_status(status::CONFLICT);
             response_payload->set_value("msg", std::make_shared<string>(
@@ -102,16 +103,17 @@ std::shared_ptr<message> message_manager::process_login(const std::shared_ptr<me
 
         } else {
             client_logger->debug(fmt::format("Found client with the username '{}' in cache.", *login));
-            logged_client->connect(client_connection);
-            //TODO: transition to the previous state in case of found client
+            _client->connect(client_connection);
         }
 
     } else {
         client_logger->debug(fmt::format("New client with the name '{}' is logged in", *login));
-        auto client = this->_client_manager->login_client(*login, client_connection);
-        client_connection->set_client(client);
+        _client = this->_client_manager->login_client(*login, client_connection);
+        client_connection->set_client(_client);
     }
 
+    response_header->set_status(status::OK);
+    response_payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(_client->get_flow_state())));
 
     return std::make_shared<message>(response_header, response_payload);
 }
@@ -127,4 +129,12 @@ std::shared_ptr<message> message_manager::bad_request(const std::shared_ptr<mess
     _payload->set_value("msg", std::make_shared<string>(msg));
 
     return std::make_shared<message>(_header, _payload);
+}
+
+std::shared_ptr<message> message_manager::process_get(const std::shared_ptr<message> &request,
+                                                      const std::shared_ptr<client_connection> &client_connection) {
+    const auto request_subtype = request->get_header()->get_subtype();
+    switch (request_subtype) {
+        default: return bad_request(request);
+    }
 }

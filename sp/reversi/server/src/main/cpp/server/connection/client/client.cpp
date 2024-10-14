@@ -25,3 +25,7 @@ client::client(std::string username, const std::shared_ptr<client_connection> &c
 std::shared_ptr<client_connection> client::get_connection() {
     return this->_connection;
 }
+
+flow_state client::get_flow_state() const {
+    return this->_flow_state;
+}
