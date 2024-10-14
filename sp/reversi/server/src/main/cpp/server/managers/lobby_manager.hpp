@@ -16,4 +16,6 @@ public:
     std::shared_ptr<std::mutex> mutex = std::make_shared<std::mutex>();
 
     std::shared_ptr<lobby> create_lobby(const std::string& name, const std::shared_ptr<client>& creator);
+
+    void exit_lobby(const std::shared_ptr<client>& player);
 };

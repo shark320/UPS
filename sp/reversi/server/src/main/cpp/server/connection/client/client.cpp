@@ -41,3 +41,7 @@ std::string client::get_username() const {
 std::shared_ptr<lobby> client::get_lobby() const {
     return this->_lobby;
 }
+
+bool client::operator==(const client &other) const {
+    return this->_username == other._username;
+}

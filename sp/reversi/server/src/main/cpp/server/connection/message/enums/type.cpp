@@ -28,6 +28,7 @@ const std::unordered_map<int, subtype> subtype_mapper::subtype_map = {
         {1, subtype::PING},
         {2, subtype::LOGIN},
         {3, subtype::CREATE_GAME},
+        {4, subtype::LOBBY_EXIT},
         {12, subtype::HANDSHAKE},
         {-1, subtype::NULL_SUBTYPE}
 };

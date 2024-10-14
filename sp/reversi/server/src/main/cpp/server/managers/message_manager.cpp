@@ -194,3 +194,8 @@ std::shared_ptr<message> message_manager::process_create_new_game(const std::sha
     return std::make_shared<message>(response_header, response_payload);
 }
 
+std::shared_ptr<message> message_manager::process_lobby_exit(const std::shared_ptr<message> &request,
+                                                             const std::shared_ptr<client_connection> &client_connection) {
+    return std::shared_ptr<message>();
+}
+

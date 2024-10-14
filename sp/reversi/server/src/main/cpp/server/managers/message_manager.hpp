@@ -37,6 +37,8 @@ private:
 
     std::shared_ptr<message> process_create_new_game(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
+    std::shared_ptr<message> process_lobby_exit(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+
     std::shared_ptr<message> process_start_the_game(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
     std::shared_ptr<message> process_connect_to_the_game(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);

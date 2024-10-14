@@ -25,6 +25,7 @@ enum class subtype {
     PING = 1,
     LOGIN = 2,
     CREATE_GAME = 3,
+    LOBBY_EXIT = 4,
     HANDSHAKE = 12
 };
 

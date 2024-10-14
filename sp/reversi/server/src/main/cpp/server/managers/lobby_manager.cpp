@@ -15,3 +15,11 @@ std::shared_ptr<lobby> lobby_manager::create_lobby(const std::string &name, cons
 bool lobby_manager::is_name_taken_unsafe(const std::string &name) {
     return this->_lobbies->contains(name);
 }
+
+void lobby_manager::exit_lobby(const std::shared_ptr<client> &player) {
+    auto lobby = player->get_lobby();
+    if (lobby == nullptr){
+        return;
+    }
+
+}

@@ -38,5 +38,7 @@ public:
     [[nodiscard]] std::string get_username() const;
 
     [[nodiscard]] std::shared_ptr<lobby> get_lobby() const;
+
+    bool operator==(const client &other) const;
 };
 
