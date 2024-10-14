@@ -29,3 +29,7 @@ std::shared_ptr<client_connection> client::get_connection() {
 flow_state client::get_flow_state() const {
     return this->_flow_state;
 }
+
+void client::set_lobby(std::shared_ptr<lobby> lobby) {
+    this->_lobby = lobby;
+}

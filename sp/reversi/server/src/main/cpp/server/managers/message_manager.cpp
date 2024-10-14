@@ -7,9 +7,19 @@ std::shared_ptr<message> message_manager::process(const std::shared_ptr<message>
     if (!check_identifier(request)) {
         return nullptr;
     }
-    if (!client_connection->is_handshake() && (request->get_header()->get_type() != type::POST || request->get_header()->get_subtype()  != subtype::HANDSHAKE)){
-        client_connection->get_logger()->error("The client handshake was not performed.");
-        return bad_request(request, "The client handshake was not performed.");
+    //Check preconditions: if handshake is performed
+    if (!client_connection->is_handshake() && (request->get_header()->get_type() != type::POST ||
+                                               request->get_header()->get_subtype() != subtype::HANDSHAKE)) {
+        const std::string msg ="The client handshake was not performed.";
+        client_connection->get_logger()->error(msg);
+        return bad_request(request, msg);
+    }
+    //Check preconditions: if login is performed
+    if (client_connection->get_client() == nullptr && (request->get_header()->get_type() != type::POST ||
+                                                       request->get_header()->get_subtype() != subtype::LOGIN)){
+        const std::string msg = "The client login was not performed.";
+        client_connection->get_logger()->error(msg);
+        return bad_request(request, msg);
     }
     switch (request->get_header()->get_type()) {
         case type::GET:
@@ -29,6 +39,17 @@ message_manager::process_post(const std::shared_ptr<message> &request,
             return process_handshake(request, client_connection);
         case subtype::LOGIN:
             return process_login(request, client_connection);
+        case subtype::CREATE_GAME:
+            process_create_new_game(request, client_connection);
+        default:
+            return bad_request(request);
+    }
+}
+
+std::shared_ptr<message> message_manager::process_get(const std::shared_ptr<message> &request,
+                                                      const std::shared_ptr<client_connection> &client_connection) {
+    const auto request_subtype = request->get_header()->get_subtype();
+    switch (request_subtype) {
         default:
             return bad_request(request);
     }
@@ -38,9 +59,9 @@ std::shared_ptr<message> message_manager::process_handshake(const std::shared_pt
                                                             const std::shared_ptr<client_connection> &client_connection) {
     auto client_logger = client_connection->get_logger();
     client_logger->debug("Processing client handshake.");
-    if (client_connection->is_handshake()){
+    if (client_connection->is_handshake()) {
         client_logger->error("The client handshake is already done.");
-        return bad_request(request,"The client handshake is already done.");
+        return bad_request(request, "The client handshake is already done.");
     }
     auto _response = std::make_shared<message>();
     auto _header = std::make_shared<header>(request->get_header());
@@ -113,7 +134,8 @@ std::shared_ptr<message> message_manager::process_login(const std::shared_ptr<me
     }
 
     response_header->set_status(status::OK);
-    response_payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(_client->get_flow_state())));
+    response_payload->set_value("state",
+                                std::make_shared<string>(flow_state_mapper::get_string(_client->get_flow_state())));
 
     return std::make_shared<message>(response_header, response_payload);
 }
@@ -131,10 +153,22 @@ std::shared_ptr<message> message_manager::bad_request(const std::shared_ptr<mess
     return std::make_shared<message>(_header, _payload);
 }
 
-std::shared_ptr<message> message_manager::process_get(const std::shared_ptr<message> &request,
-                                                      const std::shared_ptr<client_connection> &client_connection) {
-    const auto request_subtype = request->get_header()->get_subtype();
-    switch (request_subtype) {
-        default: return bad_request(request);
+std::shared_ptr<message> message_manager::process_create_new_game(const std::shared_ptr<message> &request,
+                                                                  const std::shared_ptr<client_connection> &client_connection) {
+    auto client_logger = client_connection->get_logger();
+    if(!client_connection->is_logged_in()){
+        return bad_request(request, "Cannot create a game: Client is no logged in!");
     }
+    auto request_payload = request->get_payload();
+    auto name_str_ptr = request_payload->get_string("name");
+    if (name_str_ptr == nullptr || name_str_ptr->empty()){
+        return bad_request(request, "Cannot create a game: Invalid game name!");
+    }
+    client_logger->debug(fmt::format("Performing game creation with name {}", *name_str_ptr));
+    auto response_header = std::make_shared<header>(request->get_header());
+    auto response_payload = std::make_shared<payload>();
+
+    auto new_lobby = this->_lobby_manager->create_lobby(*name_str_ptr, client_connection->get_client());
+    return std::shared_ptr<message>();
 }
+

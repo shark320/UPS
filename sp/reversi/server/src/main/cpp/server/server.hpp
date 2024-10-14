@@ -17,7 +17,7 @@
 
 class server {
 public:
-    explicit server(const std::shared_ptr<server_config>& _server_config, std::shared_ptr<message_manager> _message_manager);
+    explicit server(const std::shared_ptr<server_config>& _server_config, const std::shared_ptr<message_manager>& _message_manager);
 
     ~server();
 

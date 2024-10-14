@@ -10,8 +10,8 @@
 class message_manager {
 private:
     std::shared_ptr<connection_config> _config;
-    std::shared_ptr<client_manager> _client_manager = std::make_shared<client_manager>();
-    std::shared_ptr<lobby_manager> _lobby_manager = std::make_shared<lobby_manager>();
+    std::shared_ptr<client_manager> _client_manager;
+    std::shared_ptr<lobby_manager> _lobby_manager;
 
 
 

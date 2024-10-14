@@ -12,7 +12,7 @@
 
 static auto LOGGER = log4cxx::Logger::getLogger("server");
 
-server::server(const std::shared_ptr<server_config> &_server_config, std::shared_ptr<message_manager> _message_manager) : _server_config(_server_config),
+server::server(const std::shared_ptr<server_config> &_server_config, const std::shared_ptr<message_manager>& _message_manager) : _server_config(_server_config), // NOLINT(*-pro-type-member-init)
                                                                                                                           _message_manager(_message_manager) {
     this->_message_manager->set_client_manager(this->_client_manager);
     this->_message_manager->set_lobby_manager(this->_lobby_manager);

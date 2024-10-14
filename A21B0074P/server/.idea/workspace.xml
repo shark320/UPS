@@ -25,8 +25,13 @@
   <component name="ChangeListManager">
     <list default="true" id="827bc3f2-a14c-42aa-b32a-9cb0178221c3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/game/lobby/lobby.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/game/lobby/lobby.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/game/lobby/lobby.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/game/lobby/lobby.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/connection/client/client.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/lobby_manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/lobby_manager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/lobby_manager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/lobby_manager.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/message_manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/message_manager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/message_manager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/message_manager.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +45,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "shark320"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/shark320/UPS.git",
+    "accountId": "abe72951-f3ca-49e2-a69e-1aca6097c798"
+  }
+}]]></component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
     <option name="majorVersion" value="2024" />
@@ -101,6 +118,7 @@
       <workItem from="1728637118296" duration="1778000" />
       <workItem from="1728643260952" duration="132000" />
       <workItem from="1728643410675" duration="594000" />
+      <workItem from="1728914877731" duration="943000" />
     </task>
     <servers />
   </component>

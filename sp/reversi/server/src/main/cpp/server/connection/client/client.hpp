@@ -30,5 +30,7 @@ public:
     void connect(const std::shared_ptr<client_connection>& connection);
 
     [[nodiscard]] flow_state get_flow_state() const;
+
+    void set_lobby(std::shared_ptr<lobby> lobby);
 };
 
