@@ -15,7 +15,7 @@ std::shared_ptr<message> message_manager::process(const std::shared_ptr<message>
         return bad_request(request, msg);
     }
     //Check preconditions: if login is performed
-    if (client_connection->get_client() == nullptr && (request->get_header()->get_type() != type::POST ||
+    if (client_connection->is_handshake() && client_connection->get_client() == nullptr && (request->get_header()->get_type() != type::POST ||
                                                        request->get_header()->get_subtype() != subtype::LOGIN)){
         const std::string msg = "The client login was not performed.";
         client_connection->get_logger()->error(msg);
@@ -40,7 +40,7 @@ message_manager::process_post(const std::shared_ptr<message> &request,
         case subtype::LOGIN:
             return process_login(request, client_connection);
         case subtype::CREATE_GAME:
-            process_create_new_game(request, client_connection);
+            return process_create_new_game(request, client_connection);
         default:
             return bad_request(request);
     }
@@ -156,19 +156,41 @@ std::shared_ptr<message> message_manager::bad_request(const std::shared_ptr<mess
 std::shared_ptr<message> message_manager::process_create_new_game(const std::shared_ptr<message> &request,
                                                                   const std::shared_ptr<client_connection> &client_connection) {
     auto client_logger = client_connection->get_logger();
-    if(!client_connection->is_logged_in()){
-        return bad_request(request, "Cannot create a game: Client is no logged in!");
+    auto client = client_connection->get_client();
+    if(!client_connection->is_logged_in() || client == nullptr){
+        auto msg =  "Cannot create a game: Client is no logged in!";
+        client_logger->error(msg);
+        return bad_request(request, msg);
     }
+
     auto request_payload = request->get_payload();
     auto name_str_ptr = request_payload->get_string("name");
     if (name_str_ptr == nullptr || name_str_ptr->empty()){
-        return bad_request(request, "Cannot create a game: Invalid game name!");
+        auto msg = "Cannot create a game: Invalid game name!";
+        client_logger->error(msg);
+        return bad_request(request, msg);
     }
-    client_logger->debug(fmt::format("Performing game creation with name {}", *name_str_ptr));
+    client_logger->debug(fmt::format("Performing game creation with name '{}'.", *name_str_ptr));
     auto response_header = std::make_shared<header>(request->get_header());
     auto response_payload = std::make_shared<payload>();
+    if (client->get_flow_state() != flow_state::MENU || client->get_lobby() != nullptr){
+        auto msg = "Cannot create a game: the client is in invalid state!";
+        client_logger->error(msg);
+        return bad_request(request, msg);
+    }
 
-    auto new_lobby = this->_lobby_manager->create_lobby(*name_str_ptr, client_connection->get_client());
-    return std::shared_ptr<message>();
+    auto new_lobby = this->_lobby_manager->create_lobby(*name_str_ptr, client);
+    if (new_lobby == nullptr){
+        //Name is already taken
+        response_header->set_status(status::CONFLICT);
+        response_payload->set_value("msg", std::make_shared<string>("Provided game name is already in use. Choose another one, please."));
+        client_logger->debug(fmt::format("Cannot create a game: the name '{}' is already taken.", *name_str_ptr));
+    }else{
+        response_header->set_status(status::OK);
+        response_payload->set_value("game", std::make_shared<string>(*name_str_ptr));
+        response_payload->set_value("user", std::make_shared<string>(client->get_username()));
+        client_logger->debug(fmt::format("Game with the name '{}' is created!", *name_str_ptr));
+    }
+    return std::make_shared<message>(response_header, response_payload);
 }
 

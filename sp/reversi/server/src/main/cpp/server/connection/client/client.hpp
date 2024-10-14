@@ -9,6 +9,8 @@
 
 class client_connection;
 
+class lobby;
+
 class client {
 private:
     std::string _username;
@@ -31,6 +33,10 @@ public:
 
     [[nodiscard]] flow_state get_flow_state() const;
 
-    void set_lobby(std::shared_ptr<lobby> lobby);
+    void set_lobby(const std::shared_ptr<lobby>& lobby);
+
+    [[nodiscard]] std::string get_username() const;
+
+    [[nodiscard]] std::shared_ptr<lobby> get_lobby() const;
 };
 

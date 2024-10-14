@@ -3,6 +3,8 @@
 #include "../../server/connection/client/client.hpp"
 #include "../../reversi/reversi_game.hpp"
 
+class client;
+
 class lobby {
 private:
     std::shared_ptr<client> _first_player;

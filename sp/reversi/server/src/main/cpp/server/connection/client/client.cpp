@@ -30,6 +30,14 @@ flow_state client::get_flow_state() const {
     return this->_flow_state;
 }
 
-void client::set_lobby(std::shared_ptr<lobby> lobby) {
+void client::set_lobby(const std::shared_ptr<lobby>& lobby) {
     this->_lobby = lobby;
+}
+
+std::string client::get_username() const {
+    return this->_username;
+}
+
+std::shared_ptr<lobby> client::get_lobby() const {
+    return this->_lobby;
 }
