@@ -20,11 +20,13 @@ private:
 public:
     std::shared_ptr<std::shared_mutex> shared_mutex = std::make_shared<std::shared_mutex>();
 
-    std::shared_ptr<lobby> create_lobby(const std::string& name, const std::shared_ptr<client>& host);
+    [[nodiscard]] std::shared_ptr<lobby> create_lobby(const std::string& name, const std::shared_ptr<client>& host);
 
     void exit_lobby(const std::shared_ptr<client>& player);
 
     [[nodiscard]] std::shared_ptr<hosts_map_t> get_hosts() const;
 
-    [[nodiscard]] std::shared_ptr<std::unordered_map<std::string, std::string>> get_lobby_names_and_hosts() const;
+    [[nodiscard]] std::shared_ptr<lobby> get_lobby(const std::string& name) const;
+
+    [[nodiscard]] std::shared_ptr<std::unordered_map<std::string, std::string>> get_available_lobby_names_and_hosts() const;
 };

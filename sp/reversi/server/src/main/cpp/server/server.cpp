@@ -274,11 +274,11 @@ std::shared_ptr<payload> server::receive_payload(int socket, ssize_t &received, 
     return _payload;
 }
 
-void server::client_timeout(std::shared_ptr<client> _client) {
+void server::client_timeout(const std::shared_ptr<client>& _client) {
 
 }
 
-void server::client_disconnected(std::shared_ptr<client> _client) {
+void server::client_disconnected(const std::shared_ptr<client>& _client) {
     if (_client == nullptr){
         return;
     }

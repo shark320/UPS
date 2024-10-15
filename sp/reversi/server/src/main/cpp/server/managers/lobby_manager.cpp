@@ -52,13 +52,24 @@ std::shared_ptr<hosts_map_t> lobby_manager::get_hosts() const {
     return this->_hosts;
 }
 
-std::shared_ptr<std::unordered_map<std::string, std::string>> lobby_manager::get_lobby_names_and_hosts() const {
+std::shared_ptr<std::unordered_map<std::string, std::string>> lobby_manager::get_available_lobby_names_and_hosts() const {
     std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
     auto map = std::make_shared<std::unordered_map<std::string, std::string>>();
     for (const auto& host_pair: *this->_hosts){
-        (*map)[host_pair.first->get_name()] = host_pair.second->get_username();
+        if (host_pair.first->is_available()){
+            (*map)[host_pair.first->get_name()] = host_pair.second->get_username();
+        }
     }
     return map;
+}
+
+std::shared_ptr<lobby> lobby_manager::get_lobby(const std::string &name) const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
+    auto lobby_it = this->_lobbies->find(name);
+    if (lobby_it == this->_lobbies->end()){
+        return nullptr;
+    }
+    return lobby_it->second;
 }
 
 

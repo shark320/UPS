@@ -41,7 +41,7 @@ private:
 
     std::shared_ptr<message> process_start_the_game(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
-    std::shared_ptr<message> process_connect_to_the_game(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+    std::shared_ptr<message> process_connect_to_the_lobby(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
     [[nodiscard]] bool check_identifier(const std::shared_ptr<message>& request) const;
 

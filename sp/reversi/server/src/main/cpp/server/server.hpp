@@ -44,11 +44,11 @@ private:
 
     void player_disconnected(std::shared_ptr<lobby> _lobby, std::shared_ptr<client> _client);
 
-    void client_timeout(std::shared_ptr<client> _client);
+    void client_timeout(const std::shared_ptr<client>& _client);
 
     void client_disconnected(std::shared_ptr<client> _client, std::shared_ptr<lobby> _lobby);
 
-    void client_disconnected(std::shared_ptr<client> _client);
+    void client_disconnected(const std::shared_ptr<client>& _client);
 
     void check_client_timeouts_thread();
 

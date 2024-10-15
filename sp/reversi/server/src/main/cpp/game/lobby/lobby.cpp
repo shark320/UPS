@@ -18,7 +18,7 @@ bool lobby::remove_player(const std::shared_ptr<client> &player) {
             this->_second_player = nullptr;
         }
     }
-    return _first_player != nullptr || _second_player != nullptr;
+    return _first_player != nullptr;
 }
 
 void lobby::clear_lobby() {
@@ -58,4 +58,40 @@ std::string lobby::get_name() const {
 std::shared_ptr<client> lobby::get_host() const {
     std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
     return this->_first_player;
+}
+
+bool lobby::is_available() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
+    return is_available_unsafe();
+}
+
+bool lobby::is_started() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
+    return is_started_unsafe();
+}
+
+bool lobby::connect_player(const std::shared_ptr<client>& player) {
+    std::unique_lock<std::shared_mutex> unique_lock(*this->shared_mutex);
+    if (!is_available_unsafe()){
+        return false;
+    }
+    this->_second_player = player;
+    player->set_lobby(std::shared_ptr<lobby>(this));
+    return true;
+}
+
+std::shared_ptr<std::vector<std::shared_ptr<client>>> lobby::get_players() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
+    auto vector = std::make_shared<std::vector<std::shared_ptr<client>>>();
+    vector->push_back(this->_first_player);
+    vector->push_back(this->_second_player);
+    return vector;
+}
+
+bool lobby::is_available_unsafe() const {
+    return this->_first_player != nullptr && this->_second_player == nullptr && !is_started_unsafe();
+}
+
+bool lobby::is_started_unsafe() const {
+    return this->_game != nullptr;
 }
