@@ -49,3 +49,24 @@ int count_digits(size_t number) {
 bool is_whitespaces_only(const std::string &str) {
     return std::all_of(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); });
 }
+
+std::string format_timestamp(const std::shared_ptr<std::chrono::steady_clock::time_point>& timestamp){
+    // Obtain the current time from system_clock
+    auto now_system = std::chrono::system_clock::now();
+    auto now_steady = std::chrono::steady_clock::now();
+
+    // Calculate the time difference between now on steady clock and given steady time point
+    auto diff = *timestamp - now_steady;
+
+    // Get the corresponding system_clock::time_point
+    auto system_tp = now_system + diff;
+
+    // Convert to time_t for use with std::put_time
+    std::time_t time = std::chrono::system_clock::to_time_t(system_tp);
+
+    // Format the time into a string
+    std::stringstream ss;
+    ss << std::put_time(std::localtime(&time), "%Y-%m-%d %H:%M:%S");
+
+    return ss.str();
+}

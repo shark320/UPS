@@ -2,3 +2,4 @@ RVSI0000101200  - ping
 RVSI0000212200  - handshake
 RVSI0015202200username="max";  - login username=max
 RVSI0012203200name="test";  - create a game name='test'
+RVSI0000204200

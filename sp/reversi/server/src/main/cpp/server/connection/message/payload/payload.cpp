@@ -168,6 +168,9 @@ std::shared_ptr<payload> payload::parse(const std::string& str) {
 //}
 
 std::string payload::map_string(const std::shared_ptr<string> &str){
+    if (str->find(SEPARATOR) != std::string::npos){
+        throw std::logic_error("Payload string contains unsupportable characters.");
+    }
     if (str == nullptr){
         return "null";
     }

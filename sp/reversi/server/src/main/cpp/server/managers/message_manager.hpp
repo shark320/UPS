@@ -18,7 +18,7 @@ private:
     //Get requests
     std::shared_ptr<message> process_get(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
-    std::shared_ptr<message> process_ping(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+    static std::shared_ptr<message> process_ping(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
     std::shared_ptr<message> process_get_games_list(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
@@ -44,6 +44,12 @@ private:
     std::shared_ptr<message> process_connect_to_the_game(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
     [[nodiscard]] bool check_identifier(const std::shared_ptr<message>& request) const;
+
+    static bool is_handshake_request(const std::shared_ptr<header>& header);
+
+    static bool is_login_request(const std::shared_ptr<header>& header);
+
+    static bool is_ping_request(const std::shared_ptr<header>& header);
 
 //    std::shared_ptr<message> process_unknown_type(std::shared_ptr<message> request, std::shared_ptr<client_connection> client_connection);
 //

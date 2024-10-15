@@ -12,6 +12,8 @@ private:
 
     bool is_name_taken_unsafe(const std::string& name);
 
+    void remove_lobby(const std::string& name);
+
 public:
     std::shared_ptr<std::mutex> mutex = std::make_shared<std::mutex>();
 
