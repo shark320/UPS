@@ -81,10 +81,10 @@ std::string header::construct() const {
 
     std::ostringstream oss;
     oss << identifier;
-    oss << std::setw(4) << std::setfill('0') << get_length();
-    oss << std::setw(1) << type_mapper::get_id(get_type());
-    oss << std::setw(2) << subtype_mapper::get_id(get_subtype());
-    oss << std::setw(3) << status_mapper::get_id(get_status());
+    oss << std::setw(constants::MSG_LENGTH_FIELD_LENGTH) << std::setfill('0') << get_length();
+    oss << std::setw(constants::MSG_TYPE_FIELD_LENGTH) << type_mapper::get_id(get_type());
+    oss << std::setw(constants::MSG_SUBTYPE_FIELD_LENGTH) << subtype_mapper::get_id(get_subtype());
+    oss << std::setw(constants::MSG_STATUS_FIELD_LENGTH) << status_mapper::get_id(get_status());
 
     return oss.str();
 }
