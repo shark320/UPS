@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <logger.h>
+#include <shared_mutex>
 #include "client/client.hpp"
 
 class client;
@@ -15,6 +16,8 @@ private:
     bool _handshake = false;
 
     std::shared_ptr<log4cxx::Logger> _client_logger;
+
+    std::shared_ptr<std::shared_mutex> shared_mutex = std::make_shared<std::shared_mutex>();
 
 public:
     explicit client_connection(int socket);

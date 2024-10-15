@@ -8,7 +8,7 @@ std::shared_ptr<message> message_manager::process(const std::shared_ptr<message>
         return nullptr;
     }
     //Check preconditions: if handshake is performed
-    if (!client_connection->is_handshake() && !is_handshake_request(request->get_header())) {
+    if (_config->is_handshake_required() && !client_connection->is_handshake() && !is_handshake_request(request->get_header())) {
         const std::string msg = "The client handshake was not performed.";
         client_connection->get_logger()->error(msg);
         return bad_request(request, msg);
@@ -54,6 +54,8 @@ std::shared_ptr<message> message_manager::process_get(const std::shared_ptr<mess
     switch (request_subtype) {
         case subtype::PING:
             return process_ping(request, client_connection);
+        case subtype::LOBBIES_LIST:
+            return process_get_lobbies_list(request, client_connection);
         default:
             return bad_request(request);
     }
@@ -187,9 +189,10 @@ std::shared_ptr<message> message_manager::process_create_new_game(const std::sha
         client_logger->debug(fmt::format("Cannot create a game: the name '{}' is already taken.", *name_str_ptr));
     } else {
         response_header->set_status(status::OK);
+        client->update_flow_state(flow_state::LOBBY);
+        response_payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
         response_payload->set_value("game", std::make_shared<string>(*name_str_ptr));
         response_payload->set_value("user", std::make_shared<string>(client->get_username()));
-        client->update_flow_state(flow_state::LOBBY);
         client_logger->debug(fmt::format("Game with the name '{}' is created!", *name_str_ptr));
     }
     return std::make_shared<message>(response_header, response_payload);
@@ -212,6 +215,7 @@ std::shared_ptr<message> message_manager::process_lobby_exit(const std::shared_p
 
     this->_lobby_manager->exit_lobby(client);
     client->update_flow_state(flow_state::MENU);
+    response_payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
     response_header->set_status(status::OK);
 
     return std::make_shared<message>(response_header, response_payload);
@@ -227,9 +231,9 @@ std::shared_ptr<message> message_manager::process_ping(const std::shared_ptr<mes
     if (client == nullptr) {
         response_header->set_status(status::OK);
     } else {
-        response_payload->set_value("username", std::make_shared<string>(client->get_username()));
         response_payload->set_value("state",
                                     std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
+        response_payload->set_value("username", std::make_shared<string>(client->get_username()));
         auto lobby = client->get_lobby();
         response_payload->set_value("lobby", lobby == nullptr ? nullptr : std::make_shared<string>(lobby->get_name()));
     }
@@ -248,5 +252,37 @@ bool message_manager::is_login_request(const std::shared_ptr<header> &header) {
 
 bool message_manager::is_ping_request(const std::shared_ptr<header> &header) {
     return header->get_type() == type::GET && header->get_subtype() == subtype::PING;
+}
+
+std::shared_ptr<message> message_manager::process_get_lobbies_list(const std::shared_ptr<message> &request,
+                                                                   const std::shared_ptr<client_connection> &client_connection) {
+    auto client_logger = client_connection->get_logger();
+    auto client = client_connection->get_client();
+    auto response_header = std::make_shared<header>(request->get_header());
+    auto response_payload = std::make_shared<payload>();
+
+    client_logger->debug("Processing get lobbies request.");
+
+    if (client->get_flow_state() != flow_state::MENU){
+        std::string msg = "Can not get games list: client is in invalid state.";
+        client_logger->error(msg);
+        return bad_request(request, msg);
+    }
+
+    auto hosts_map = this->_lobby_manager->get_lobby_names_and_hosts();
+    auto lobby_names = std::make_shared<objects_vector>();
+    auto host_usernames = std::make_shared<objects_vector>();
+
+    for (const auto& host_pair: *hosts_map){
+        lobby_names->push_back(std::make_shared<string>(host_pair.first));
+        host_usernames->push_back(std::make_shared<string>(host_pair.second));
+    }
+
+    response_header->set_status(status::OK);
+    response_payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
+    response_payload->set_value("lobbies", lobby_names);
+    response_payload->set_value("lobby_hosts", host_usernames);
+
+    return std::make_shared<message>(response_header, response_payload);
 }
 

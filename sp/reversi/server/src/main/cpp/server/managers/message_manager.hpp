@@ -20,7 +20,7 @@ private:
 
     static std::shared_ptr<message> process_ping(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
-    std::shared_ptr<message> process_get_games_list(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
+    std::shared_ptr<message> process_get_lobbies_list(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 
     std::shared_ptr<message> process_get_lobby_state(const std::shared_ptr<message>& request, const std::shared_ptr<client_connection>& client_connection);
 

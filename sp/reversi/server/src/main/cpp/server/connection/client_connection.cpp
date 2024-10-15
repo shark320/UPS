@@ -3,6 +3,7 @@
 #include "fmt/format.h"
 
 int client_connection::get_socket() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
     return this->_socket;
 }
 
@@ -13,46 +14,56 @@ client_connection::client_connection(int socket) {
 }
 
 bool client_connection::is_timeout(int timeout) {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
     auto _now = std::chrono::steady_clock::now();
     auto _elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(_now - this->_connection_time).count();
     return _elapsed_time > timeout;
 }
 
 void client_connection::set_client(const std::shared_ptr<client>& client) {
+    std::unique_lock<std::shared_mutex> unique_lock(*this->shared_mutex);
     this->_client = client;
 }
 
 std::shared_ptr<client> client_connection::get_client() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
     return this->_client;
 }
 
 bool client_connection::is_logged_in() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
     return this->_client != nullptr;
 }
 
 bool client_connection::is_handshake() const {
+    std::unique_lock<std::shared_mutex> unique_lock(*this->shared_mutex);
     return this->_handshake;
 }
 
 void client_connection::set_handshake(bool handshake) {
+    std::unique_lock<std::shared_mutex> unique_lock(*this->shared_mutex);
     this->_handshake = handshake;
 }
 
 void client_connection::update_ping_timestamp() {
+    std::unique_lock<std::shared_mutex> unique_lock(*this->shared_mutex);
     this->_last_ping_timestamp = std::chrono::steady_clock::now();
 }
 
 bool client_connection::is_ping_timeout(int timeout) {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
     auto _now = std::chrono::steady_clock::now();
     auto _elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(_now - this->_last_ping_timestamp).count();
     return _elapsed_time > timeout;
 }
 
 void client_connection::disconnect() {
+    std::unique_lock<std::shared_mutex> unique_lock(*this->shared_mutex);
     this->_socket = -1;
 }
 
 bool client_connection::is_alive() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
     return this->_socket != -1;
 }
 

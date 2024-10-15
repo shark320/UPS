@@ -13,7 +13,7 @@ private:
     std::string _name;
 
 public:
-    lobby(std::string  name, const std::shared_ptr<client>& creator);
+    lobby(std::string  name, const std::shared_ptr<client>& host);
 
     bool remove_player(const std::shared_ptr<client>& player);
 
@@ -25,5 +25,7 @@ public:
 
     [[nodiscard]] std::string to_string() const;
 
-    std::shared_ptr<std::mutex> mutex = std::make_shared<std::mutex>();
+    [[nodiscard]] std::shared_ptr<client> get_host() const;
+
+    std::shared_ptr<std::shared_mutex> shared_mutex = std::make_shared<std::shared_mutex>();
 };

@@ -19,7 +19,7 @@ private:
     std::shared_ptr<std::chrono::steady_clock::time_point> _disconnection_timestamp;
     flow_state _flow_state = flow_state::MENU;
 
-    std::shared_ptr<std::mutex> _client_mutex = std::make_shared<std::mutex>();
+    std::shared_ptr<std::shared_mutex> shared_mutex = std::make_shared<std::shared_mutex>();
 public:
     client(std::string  login, const std::shared_ptr<client_connection>& connection);
 

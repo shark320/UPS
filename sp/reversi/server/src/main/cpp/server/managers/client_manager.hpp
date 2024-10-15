@@ -15,7 +15,7 @@ private:
     std::shared_ptr<clients_map_t> _clients = std::make_shared<clients_map_t>();
 public:
 
-    std::shared_ptr<std::mutex> client_manager_mutex = std::make_shared<std::mutex>();
+    std::shared_ptr<std::shared_mutex> shared_mutex = std::make_shared<std::shared_mutex>();
 
     std::shared_ptr<client_connection> add_client_connection(int client_socket, const std::string &client_address);
 
@@ -23,13 +23,15 @@ public:
 
     [[nodiscard]] std::shared_ptr<client_conenctions_map_t> get_client_connections() const;
 
+    [[nodiscard]] std::shared_ptr<client_conenctions_map_t> get_client_connections_unsafe() const;
+
     [[nodiscard]] std::shared_ptr<clients_map_t> get_clients() const;
 
     [[nodiscard]] bool is_login_taken (const std::string& login);
 
     [[nodiscard]] std::shared_ptr<client> get_client_by_login(const std::string& login) const;
 
-    [[nodiscard]] std::shared_ptr<client> login_client(const std::string username, const std::shared_ptr<client_connection> conenction);
+    [[nodiscard]] std::shared_ptr<client> login_client(const std::string& username, const std::shared_ptr<client_connection>& connection);
 
 };
 

@@ -198,35 +198,40 @@ void server::check_client_timeouts_thread() {
     auto ping_timeout = this->_server_config->get_ping_timeout();
     while (true) {
         std::this_thread::sleep_for(std::chrono::microseconds(this->_server_config->get_timeout_check_interval()));
-        this->_client_manager->client_manager_mutex->lock();
+        std::shared_lock<std::shared_mutex> shared_lock(*this->_client_manager->shared_mutex);
 
-        auto _clients = this->_client_manager->get_client_connections();
-        for (auto _client_connection_pair_it = _clients->begin(); _client_connection_pair_it != _clients->end();) {
-            bool timeout = false;
-            auto _client_connection = _client_connection_pair_it->second;
-            if (_client_connection == nullptr){
+        auto clients = this->_client_manager->get_client_connections();
+        // First pass: identify clients to be removed
+        std::vector<int> clients_to_remove;
+        for (const auto& [id, client] : *clients) {
+            if (client == nullptr) {
                 continue;
             }
-            if (handshake_timeout > 0 && !_client_connection->is_handshake() &&
-                _client_connection->is_timeout(handshake_timeout)){
-                logger->debug(fmt::format("Client on socket {}: Handshake timeout reached.", _client_connection->get_socket()));
+            bool timeout = false;
+            if (handshake_timeout > 0 && !client->is_handshake() && client->is_timeout(handshake_timeout)) {
+                logger->debug(std::string("Client on socket ").append(std::to_string(client->get_socket())).append(": Handshake timeout reached."));
                 timeout = true;
-            } else if (login_timeout>0 && !_client_connection->is_logged_in() && _client_connection->is_timeout(login_timeout)){
-                logger->debug(fmt::format("Client on socket {}: Login timeout reached.", _client_connection->get_socket()));
+            } else if (login_timeout > 0 && !client->is_logged_in() && client->is_timeout(login_timeout)) {
+                logger->debug(std::string("Client on socket ").append(std::to_string(client->get_socket())).append(": Login timeout reached."));
                 timeout = true;
-            } else if (ping_timeout > 0 && _client_connection->is_handshake() && _client_connection->is_ping_timeout(ping_timeout)) {
-                logger->debug(
-                        fmt::format("Client on socket {}: Ping timeout reached.", _client_connection->get_socket()));
+            } else if (ping_timeout > 0 && client->is_handshake() && client->is_ping_timeout(ping_timeout)) {
+                logger->debug(std::string("Client on socket ").append(std::to_string(client->get_socket())).append(": Ping timeout reached."));
                 timeout = true;
             }
-            if (timeout){
-                close_client_connection(_client_connection);
-                _client_connection_pair_it = _clients->erase(_client_connection_pair_it);
-            } else{
-                ++_client_connection_pair_it;
+            if (timeout) {
+                close_client_connection(client);
+                clients_to_remove.push_back(id);
             }
         }
-        this->_client_manager->client_manager_mutex->unlock();
+        shared_lock.unlock(); // Release the shared lock before acquiring the unique lock
+
+        // Second pass: remove identified clients
+        {
+            std::unique_lock<std::shared_mutex> unique_lock(*this->_client_manager->shared_mutex);
+            for (int id : clients_to_remove) {
+                clients->erase(id);
+            }
+        }
     }
 }
 
@@ -236,7 +241,7 @@ bool server::check_header(std::shared_ptr<header> _header) {
 
 void server::detach_client_thread(const std::shared_ptr<client_connection> &client_connection) {
     int socket = client_connection->get_socket();
-    this->_client_manager->client_manager_mutex->lock();
+    std::unique_lock<std::shared_mutex> unique_lock(*this->_client_manager->shared_mutex);
     auto client_thread = (*this->_client_threads)[socket];
     if (client_thread != nullptr) {
         if (client_thread->joinable()) {
@@ -244,7 +249,6 @@ void server::detach_client_thread(const std::shared_ptr<client_connection> &clie
         }
         this->_client_threads->erase(socket);
     }
-    this->_client_manager->client_manager_mutex->unlock();
 }
 
 std::shared_ptr<payload> server::receive_payload(int socket, ssize_t &received, size_t payload_length,
