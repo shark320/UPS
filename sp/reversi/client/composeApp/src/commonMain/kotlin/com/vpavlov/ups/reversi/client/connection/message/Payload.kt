@@ -12,22 +12,22 @@ private val ALLOWED_TYPES = setOf(
     List::class
 )
 
-private val LIST_START = '['
+private const val LIST_START = '['
 
-private val LIST_END = ']'
+private const val LIST_END = ']'
 
-private val SEPARATOR = ';'
+private const val SEPARATOR = ';'
 
 private var KEY_SEPARATOR = "="
 
 private var LIST_SEPARATOR = ","
 
 
-val LIST_PATTERN: Pattern = Pattern.compile("^\\[((\"[^\"]*(?:\",\"[^\"]*)*\")|\\d+(?:,\\d+)*)\\]$")
+val LIST_PATTERN: Pattern = Pattern.compile("^\\[((\"[^\"]*(?:\",\"[^\"]*)*\")|\\d+(?:,\\d+)*)]$")
 
-val LIST_INT_PATTERN: Pattern = Pattern.compile("^\\[(\\d+(?:,\\d+)*)\\]$")
+val LIST_INT_PATTERN: Pattern = Pattern.compile("^\\[(\\d+(?:,\\d+)*)]$")
 
-val LIST_STRING_PATTERN: Pattern = Pattern.compile("^\\[(\"[^\"]*(?:\",\"[^\"]*)*\")\\]$")
+val LIST_STRING_PATTERN: Pattern = Pattern.compile("^\\[(\"[^\"]*(?:\",\"[^\"]*)*\")]$")
 
 val STRING_PATTERN: Pattern = Pattern.compile("^\"([^\"]*)\"$")
 
