@@ -80,14 +80,20 @@ add_executable(server
         src/main/cpp/server/managers/client_manager.hpp
         src/main/cpp/server/managers/lobby_manager.cpp
         src/main/cpp/server/managers/lobby_manager.hpp
-        src/main/cpp/server/connection/client_info.cpp
-        src/main/cpp/server/connection/client_info.hpp
+        src/main/cpp/server/connection/client_connection.cpp
+        src/main/cpp/server/connection/client_connection.hpp
         src/main/cpp/game/lobby/lobby.cpp
         src/main/cpp/game/lobby/lobby.hpp
         src/main/cpp/server/connection/client/client.cpp
         src/main/cpp/server/connection/client/client.hpp
         src/main/cpp/server/config/server_config.cpp
         src/main/cpp/server/config/server_config.hpp
+        src/main/cpp/server/managers/message_manager.cpp
+        src/main/cpp/server/managers/message_manager.hpp
+        src/main/cpp/server/connection/connection_config/connection_config.cpp
+        src/main/cpp/server/connection/connection_config/connection_config.hpp
+        src/main/cpp/server/connection/client/enums/flow_state.cpp
+        src/main/cpp/server/connection/client/enums/flow_state.hpp
 )
 
 add_custom_target(clean-assembly

@@ -103,7 +103,11 @@ boolean::boolean(bool _value){
 }
 
 std::string boolean::to_string() const {
-    return std::to_string(this->_value);
+    if (this->_value){
+        return "true";
+    }else{
+        return "false";
+    }
 }
 
 bool boolean::operator==(const boolean &other) const {

@@ -19,6 +19,8 @@ namespace test_suit {
 
     void assert_throw(const std::function<void()>& function, const std::string &message = "");
 
+    template<typename T>
+    void assert_equals_enums(const T expected, const T actual, const std::string &message = "");
 
     template<typename T>
     void assert_equals(const T &expected, const T &actual, const std::string &message = "");

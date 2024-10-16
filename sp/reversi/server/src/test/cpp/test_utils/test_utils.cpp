@@ -64,6 +64,14 @@ namespace test_suit {
         }
     }
 
+    template<typename T>
+    void assert_equals_enums(const T expected, const T actual, const std::string &message) {
+        if (expected != actual) {
+            throw std::runtime_error(
+                    fmt::format("Assertion failed: expected: {}, but got: {}. {}", expected, actual, message));
+        }
+    }
+
     void assert_equals_base(unsigned long const& expected, unsigned long const& actual, const std::string &message) {
         if (expected != actual) {
             throw std::runtime_error(

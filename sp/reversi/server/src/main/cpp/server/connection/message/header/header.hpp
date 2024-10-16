@@ -26,6 +26,8 @@ public:
 
     header(const std::string &identifier, type type, subtype subtype, status status, size_t length);
 
+    explicit header(const std::shared_ptr<header>& other);
+
     [[nodiscard]] const std::string &get_identifier() const;
 
     [[nodiscard]] const type &get_type() const;
@@ -48,9 +50,9 @@ public:
 
     [[nodiscard]] bool check_values() const;
 
-    std::string construct() const;
+    [[nodiscard]] std::string construct() const;
 
     static std::shared_ptr<header> extract(const std::string& message);
 
-    std::string to_string() const;
+    [[nodiscard]] std::string to_string() const;
 };

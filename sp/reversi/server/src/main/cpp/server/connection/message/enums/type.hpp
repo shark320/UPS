@@ -21,8 +21,14 @@ public:
 
 
 enum class subtype {
+    NULL_SUBTYPE = 0,
     PING = 1,
-    NULL_SUBTYPE = 0
+    LOGIN = 2,
+    CREATE_GAME = 3,
+    LOBBY_EXIT = 4,
+    LOBBIES_LIST = 7,
+    LOBBY_CONNECT = 8,
+    HANDSHAKE = 12
 };
 
 class subtype_mapper {

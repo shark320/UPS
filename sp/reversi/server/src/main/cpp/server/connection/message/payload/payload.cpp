@@ -45,20 +45,20 @@ std::shared_ptr<std::map<std::string, std::shared_ptr<object>>> payload::get_dat
 }
 
 std::string payload::to_string() {
-    std::string result = "payload={";
+    std::string result = "";
     for (auto const& item : *this->data){
         result += item.first + "=" + item.second->to_string() + ", ";
     }
 
     if (result.length() > 1){
-        result.replace(result.length()-2, 1, "}");
+        result.replace(result.length()-2, 1, "]");
         result.replace(result.length()-1, 1, "");
     } else{
-        result += "}";
+        result += "]";
     }
 
 
-    return result;
+    return "Payload: [" + result;
 }
 
 std::shared_ptr<objects_vector> payload::parse_int_list(const std::string& value) {
@@ -168,6 +168,9 @@ std::shared_ptr<payload> payload::parse(const std::string& str) {
 //}
 
 std::string payload::map_string(const std::shared_ptr<string> &str){
+    if (str->find(SEPARATOR) != std::string::npos){
+        throw std::logic_error("Payload string contains unsupportable characters.");
+    }
     if (str == nullptr){
         return "null";
     }
@@ -328,6 +331,15 @@ bool payload::validate_value(const std::shared_ptr<object>& value){
 
     //other types are valid
     return true;
+}
+
+std::shared_ptr<string> payload::get_string(const std::string &key) {
+    auto value_obj = get_value(key);
+    if (std::shared_ptr<string> value_str = std::dynamic_pointer_cast<string>(value_obj)){
+        return value_str;
+    }
+
+    return nullptr;
 }
 
 

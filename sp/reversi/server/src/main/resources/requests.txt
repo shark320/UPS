@@ -1,0 +1,15 @@
+RVSI0000000101200  - ping
+RVSI0000000212200  - handshake
+
+RVSI0000015202200username="max";  - login username=max
+RVSI0000015202200username="mas";  - login username=max
+RVSI0000015202200username="mat";  - login username=max
+
+RVSI0000012203200name="test";  - create a game name='test'
+RVSI0000012203200name="tess";  - create a game name='tess'
+
+RVSI0000000204200  - exit lobby
+RVSI0000000107200 - get lobbies list
+
+RVSI0000013208200lobby="test";  - connect to a lobby test
+RVSI0000013208200lobby="tess";  - connect to a lobby tess

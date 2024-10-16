@@ -1,4 +1,5 @@
 #include "message.hpp"
+#include "../consts/consts.hpp"
 
 
 const std::shared_ptr<header> &message::get_header() const {
@@ -28,8 +29,13 @@ std::string message::to_string() {
 
 std::string message::construct() {
     std::string payload_str = _payload->construct();
+    if (payload_str.length() > constants::MSG_MAX_LENGTH){
+        throw std::runtime_error("Message payload is too long.");
+    }
     _header->set_length(payload_str.length());
     std::string header_str = _header->construct();
 
     return header_str + payload_str;
 }
+
+message::message() = default;

@@ -4,6 +4,7 @@
 #include <vector>
 #include <array>
 #include <memory>
+#include <chrono>
 
 /**
  * @brief vector of std::string
@@ -26,3 +27,7 @@ std::shared_ptr<str_vector> split_str(const std::string& str, char delimiter);
 static std::shared_ptr<std::array<std::string, 2>> parse_file_path(const std::string& file_path);
 
 int count_digits(size_t number);
+
+bool is_whitespaces_only(const std::string& str);
+
+std::string format_timestamp(const std::shared_ptr<std::chrono::steady_clock::time_point>& timestamp);

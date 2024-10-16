@@ -15,7 +15,7 @@ class string: public object, public std::string{
 public:
     using std::string::string;
 
-    string(std::string str);
+    explicit string(std::string str);
 
     [[nodiscard]] std::string to_string() const override;
 };
