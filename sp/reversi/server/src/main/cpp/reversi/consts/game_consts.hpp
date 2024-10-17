@@ -4,6 +4,8 @@
 
 using player_code = int8_t;
 
+//TODO: use enums
+
 /**
  * @details Black player code.
  */
