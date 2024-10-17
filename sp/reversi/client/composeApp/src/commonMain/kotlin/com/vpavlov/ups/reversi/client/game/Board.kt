@@ -3,7 +3,13 @@ package com.vpavlov.ups.reversi.client.game
 enum class PlayerCode {
     BLACK_PLAYER,
     WHITE_PLAYER,
-    NO_PLAYER
+    NO_PLAYER;
+
+    fun getOpponent(): PlayerCode = when(this){
+        BLACK_PLAYER -> WHITE_PLAYER
+        WHITE_PLAYER -> BLACK_PLAYER
+        NO_PLAYER -> NO_PLAYER
+    }
 }
 
 data class Board(
@@ -21,4 +27,6 @@ data class Board(
     fun setAt(x: Int, y: Int, player: PlayerCode) {
         cells[y * cols + x] = player
     }
+
+
 }

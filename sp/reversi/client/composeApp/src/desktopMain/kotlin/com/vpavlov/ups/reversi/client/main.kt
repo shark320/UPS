@@ -14,5 +14,7 @@ import com.vpavlov.ups.reversi.client.connection.message.LIST_PATTERN
 //}
 
 fun main(){
-    println(true.toString())
+    for (x in 1..<3){
+        println(x)
+    }
 }
