@@ -14,6 +14,7 @@ bool lobby::remove_player(const std::shared_ptr<client> &player) {
     if (player != nullptr) {
         if (player == _first_player) {
             this->_first_player = this->_second_player;
+            this->_second_player = nullptr;
         } else if (player == _second_player) {
             this->_second_player = nullptr;
         }
@@ -70,13 +71,13 @@ bool lobby::is_started() const {
     return is_started_unsafe();
 }
 
-bool lobby::connect_player(const std::shared_ptr<client>& player) {
-    std::unique_lock<std::shared_mutex> unique_lock(*this->shared_mutex);
-    if (!is_available_unsafe()){
+bool lobby::connect_player(const std::shared_ptr<client>& player, const std::shared_ptr<lobby>& lobby_to_connect) {
+    std::unique_lock<std::shared_mutex> unique_lock(*lobby_to_connect->shared_mutex);
+    if (!lobby_to_connect->is_available_unsafe()){
         return false;
     }
-    this->_second_player = player;
-    player->set_lobby(std::shared_ptr<lobby>(this));
+    lobby_to_connect->_second_player = player;
+    player->set_lobby(lobby_to_connect);
     return true;
 }
 

@@ -21,7 +21,7 @@ private:
 
     std::shared_ptr<std::shared_mutex> shared_mutex = std::make_shared<std::shared_mutex>();
 public:
-    client(std::string  login, const std::shared_ptr<client_connection>& connection);
+    client(std::string login, const std::shared_ptr<client_connection>& connection);
 
     std::shared_ptr<client_connection> get_connection();
 
@@ -45,6 +45,6 @@ public:
 
     bool operator==(const client &other) const;
 
-    std::string to_string() const;
+    [[nodiscard]] std::string to_string() const;
 };
 

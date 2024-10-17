@@ -24,16 +24,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="827bc3f2-a14c-42aa-b32a-9cb0178221c3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../../sp/reversi/client/composeApp/src/commonMain/kotlin/com/vpavlov/ups/reversi/client/connection/message/Enums.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../sp/reversi/client/composeApp/src/commonMain/kotlin/com/vpavlov/ups/reversi/client/connection/message/Header.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/game/lobby/lobby.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/game/lobby/lobby.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/game/lobby/lobby.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/game/lobby/lobby.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/lobby_manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/lobby_manager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/lobby_manager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/lobby_manager.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/message_manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/message_manager.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/message_manager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/managers/message_manager.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/cpp/server/server.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/src/main/resources/requests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/src/main/resources/requests.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../sp/reversi/server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../sp/reversi/server/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,6 +116,7 @@
       <workItem from="1728643410675" duration="594000" />
       <workItem from="1728914877731" duration="1731000" />
       <workItem from="1728926304520" duration="1375000" />
+      <workItem from="1729102660532" duration="9000" />
     </task>
     <servers />
   </component>

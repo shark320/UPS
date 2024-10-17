@@ -212,7 +212,7 @@ std::shared_ptr<message> message_manager::process_lobby_exit(const std::shared_p
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
 
-    const auto lobby = client->get_lobby();
+    auto lobby = client->get_lobby();
 
     if (lobby == nullptr || client->get_flow_state() != flow_state::LOBBY) {
         std::string msg = "Can not process lobby exit: client is not assigned to a lobby or is in invalid state.";
@@ -315,8 +315,8 @@ std::shared_ptr<message> message_manager::process_connect_to_the_lobby(const std
         return bad_request(request, msg);
     }
 
-    const auto lobby = this->_lobby_manager->get_lobby(*lobby_name_ptr);
-    if (lobby == nullptr || !lobby->connect_player(client)) {
+    auto lobby = this->_lobby_manager->get_lobby(*lobby_name_ptr);
+    if (lobby == nullptr || !lobby::connect_player(client, lobby)) {
         std::string msg = fmt::format("Can not connect to a lobby: lobby with the name '{}' is not available.",
                                       *lobby_name_ptr);
         client_logger->error(msg);

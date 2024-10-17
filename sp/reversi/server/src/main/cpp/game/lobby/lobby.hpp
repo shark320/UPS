@@ -35,7 +35,7 @@ public:
 
     [[nodiscard]] bool is_started_unsafe() const;
 
-    [[nodiscard]] bool connect_player(const std::shared_ptr<client>& player);
+    [[nodiscard]] static bool connect_player(const std::shared_ptr<client>& player, const std::shared_ptr<lobby>& lobby_to_connect);
 
     [[nodiscard]] std::shared_ptr<std::vector<std::shared_ptr<client>>>  get_players() const;
 
