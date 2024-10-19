@@ -26,6 +26,7 @@ enum class subtype {
     LOGIN = 2,
     CREATE_GAME = 3,
     LOBBY_EXIT = 4,
+    START_GAME = 6,
     LOBBIES_LIST = 7,
     LOBBY_CONNECT = 8,
     HANDSHAKE = 12

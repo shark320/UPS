@@ -214,7 +214,7 @@ std::shared_ptr<message> message_manager::process_lobby_exit(const std::shared_p
 
     auto lobby = client->get_lobby();
 
-    if (lobby == nullptr || client->get_flow_state() != flow_state::LOBBY) {
+    if (lobby == nullptr || !client->is_in_state({flow_state::LOBBY, flow_state::GAME})) {
         std::string msg = "Can not process lobby exit: client is not assigned to a lobby or is in invalid state.";
         client_logger->error(msg);
         return bad_request(request, msg);

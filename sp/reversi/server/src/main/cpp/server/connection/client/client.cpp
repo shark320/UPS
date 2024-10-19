@@ -77,3 +77,12 @@ void client::update_flow_state(flow_state new_state) {
     std::unique_lock<std::shared_mutex> unique_lock(*this->shared_mutex);
     this->_flow_state = new_state;
 }
+
+bool client::is_in_state(std::initializer_list<flow_state> states) const {
+    for (const auto& state : states){
+        if (state == this->_flow_state){
+            return true;
+        }
+    }
+    return false;
+}

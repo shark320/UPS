@@ -45,6 +45,8 @@ public:
 
     bool operator==(const client &other) const;
 
+    [[nodiscard]] bool is_in_state(std::initializer_list<flow_state> states) const;
+
     [[nodiscard]] std::string to_string() const;
 };
 
