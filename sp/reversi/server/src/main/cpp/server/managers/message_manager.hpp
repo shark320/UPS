@@ -51,6 +51,8 @@ private:
 
     static bool is_ping_request(const std::shared_ptr<header>& header);
 
+    std::shared_ptr<message> invalid_state(flow_state state,const std::shared_ptr<message> &request, const std::shared_ptr<log4cxx::Logger>& client_logger);
+
 //    std::shared_ptr<message> process_unknown_type(std::shared_ptr<message> request, std::shared_ptr<client_connection> client_connection);
 //
 //    std::shared_ptr<message>

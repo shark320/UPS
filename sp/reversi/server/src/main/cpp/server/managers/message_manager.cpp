@@ -60,6 +60,8 @@ std::shared_ptr<message> message_manager::process_get(const std::shared_ptr<mess
             return process_ping(request, client_connection);
         case subtype::LOBBIES_LIST:
             return process_get_lobbies_list(request, client_connection);
+        case subtype::LOBBY_STATE:
+            return process_get_lobby_state(request, client_connection);
         default:
             return bad_request(request);
     }
@@ -181,9 +183,7 @@ std::shared_ptr<message> message_manager::process_create_new_game(const std::sha
     client_logger->debug(fmt::format("Performing game creation with name '{}'.", *name_str_ptr));
 
     if (client->get_flow_state() != flow_state::MENU || client->get_lobby() != nullptr) {
-        auto msg = "Cannot create a game: the client is in invalid state!";
-        client_logger->error(msg);
-        return bad_request(request, msg);
+        return invalid_state(client->get_flow_state(), request, client_logger);
     }
 
     auto new_lobby = this->_lobby_manager->create_lobby(*name_str_ptr, client);
@@ -215,9 +215,7 @@ std::shared_ptr<message> message_manager::process_lobby_exit(const std::shared_p
     auto lobby = client->get_lobby();
 
     if (lobby == nullptr || !client->is_in_state({flow_state::LOBBY, flow_state::GAME})) {
-        std::string msg = "Can not process lobby exit: client is not assigned to a lobby or is in invalid state.";
-        client_logger->error(msg);
-        return bad_request(request, msg);
+        return invalid_state(client->get_flow_state(), request, client_logger);
     }
 
     this->_lobby_manager->exit_lobby(client);
@@ -272,9 +270,7 @@ std::shared_ptr<message> message_manager::process_get_lobbies_list(const std::sh
     client_logger->debug("Processing get lobbies request.");
 
     if (client->get_flow_state() != flow_state::MENU) {
-        std::string msg = "Can not get games list: client is in invalid state.";
-        client_logger->error(msg);
-        return bad_request(request, msg);
+        return invalid_state(client->get_flow_state(), request, client_logger);
     }
 
     const auto hosts_map = this->_lobby_manager->get_available_lobby_names_and_hosts();
@@ -302,10 +298,8 @@ std::shared_ptr<message> message_manager::process_connect_to_the_lobby(const std
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
 
-    if (client->get_flow_state() != flow_state::MENU) {
-        std::string msg = "Can not connect to a lobby: client is in invalid state.";
-        client_logger->error(msg);
-        return bad_request(request, msg);
+    if (!client->is_in_state({flow_state::MENU})) {
+        return invalid_state(client->get_flow_state(), request, client_logger);
     }
 
     const auto lobby_name_ptr = request->get_payload()->get_string("lobby");
@@ -342,5 +336,27 @@ std::shared_ptr<message> message_manager::process_connect_to_the_lobby(const std
 
 
     return std::make_shared<message>(response_header, response_payload);
+}
+
+std::shared_ptr<message> message_manager::process_get_lobby_state(const std::shared_ptr<message> &request,
+                                                                  const std::shared_ptr<client_connection> &client_connection) {
+    const auto client_logger = client_connection->get_logger();
+    const auto client = client_connection->get_client();
+    const auto response_header = std::make_shared<header>(request->get_header());
+    const auto response_payload = std::make_shared<payload>();
+    const auto lobby = client->get_lobby();
+
+    if (lobby == nullptr || !client->is_in_state({flow_state::LOBBY})){
+        return invalid_state(client->get_flow_state(), request, client_logger);
+    }
+
+    return std::make_shared<message>(response_header, response_payload);
+}
+
+std::shared_ptr<message> message_manager::invalid_state(flow_state state, const std::shared_ptr<message> &request,
+                                                        const std::shared_ptr<log4cxx::Logger> &client_logger) {
+    std::string msg = fmt::format("Client is in invalid state ({}).", flow_state_mapper::get_string(state));
+    client_logger->error(msg);
+    return bad_request(request, msg);
 }
 
