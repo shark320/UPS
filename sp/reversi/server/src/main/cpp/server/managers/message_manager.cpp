@@ -322,17 +322,9 @@ std::shared_ptr<message> message_manager::process_connect_to_the_lobby(const std
     }
 
     client->update_flow_state(flow_state::LOBBY);
-    const auto lobby_players = lobby->get_players();
-    auto lobby_players_payload = std::make_shared<objects_vector>();
-    for (const auto &player: *lobby_players) {
-        lobby_players_payload->push_back(std::make_shared<string>(player->get_username()));
-    }
-
     response_payload->set_value("state",
                                 std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
-    response_payload->set_value("host", lobby_players_payload->at(0));
-    response_payload->set_value("lobby", std::make_shared<string>(*lobby_name_ptr));
-    response_payload->set_value("players", lobby_players_payload);
+    add_lobby_info(lobby, response_payload);
 
 
     return std::make_shared<message>(response_header, response_payload);
@@ -350,6 +342,10 @@ std::shared_ptr<message> message_manager::process_get_lobby_state(const std::sha
         return invalid_state(client->get_flow_state(), request, client_logger);
     }
 
+    response_payload->set_value("state",
+                                std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
+    add_lobby_info(lobby, response_payload);
+
     return std::make_shared<message>(response_header, response_payload);
 }
 
@@ -358,5 +354,19 @@ std::shared_ptr<message> message_manager::invalid_state(flow_state state, const 
     std::string msg = fmt::format("Client is in invalid state ({}).", flow_state_mapper::get_string(state));
     client_logger->error(msg);
     return bad_request(request, msg);
+}
+
+void message_manager::add_lobby_info(const std::shared_ptr<lobby>& lobby, const std::shared_ptr<payload>& response_payload) {
+    const auto lobby_players = lobby->get_players();
+    auto lobby_players_payload = std::make_shared<objects_vector>();
+    for (const auto &player: *lobby_players) {
+        if(player != nullptr){
+            lobby_players_payload->push_back(std::make_shared<string>(player->get_username()));
+        }
+    }
+
+    response_payload->set_value("host", lobby_players_payload->at(0));
+    response_payload->set_value("lobby", std::make_shared<string>(lobby->get_name()));
+    response_payload->set_value("players", lobby_players_payload);
 }
 

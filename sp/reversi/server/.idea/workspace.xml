@@ -25,8 +25,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c0b0dfa-103e-4773-a356-64a65d6195fb" name="Changes" comment="[SERVER] lobby exit request fix">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="2c0b0dfa-103e-4773-a356-64a65d6195fb" name="Changes" comment="[SERVER] invalid state method">
+      <change beforePath="$PROJECT_DIR$/src/main/cpp/server/managers/message_manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cpp/server/managers/message_manager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/cpp/server/managers/message_manager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cpp/server/managers/message_manager.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,7 +138,7 @@
       <workItem from="1729186259434" duration="103000" />
       <workItem from="1729186535310" duration="3433000" />
       <workItem from="1729362367152" duration="53000" />
-      <workItem from="1729362429690" duration="703000" />
+      <workItem from="1729362429690" duration="1670000" />
     </task>
     <task id="LOCAL-00001" summary="[SERVER] lobby exit request fix">
       <option name="closed" value="true" />
@@ -147,7 +148,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729188068295</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="[SERVER] invalid state method">
+      <option name="closed" value="true" />
+      <created>1729436027651</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1729436027651</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,7 +170,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="[SERVER] lobby connect request" />
     <MESSAGE value="[SERVER] lobby exit request fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="[SERVER] lobby exit request fix" />
+    <MESSAGE value="[SERVER] invalid state method" />
+    <option name="LAST_COMMIT_MESSAGE" value="[SERVER] invalid state method" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
