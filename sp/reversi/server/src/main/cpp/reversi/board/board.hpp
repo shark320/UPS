@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include "../consts/game_consts.hpp"
+#include "../engine/player_code.hpp"
 
 using b_size = size_t;
 
@@ -18,13 +19,13 @@ public:
 
     board(const board& other);
 
-    player_code get_at(b_size x, b_size y);
+    [[nodiscard]] player_code get_at(b_size x, b_size y);
 
     void set_at(b_size x, b_size y, player_code val);
 
-    b_size get_rows();
+    [[nodiscard]] b_size get_rows() const;
 
-    b_size get_cols();
+    [[nodiscard]] b_size get_cols() const;
 
 //    std::string print();
 };

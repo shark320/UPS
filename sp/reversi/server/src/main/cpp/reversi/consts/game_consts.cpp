@@ -1,7 +1,8 @@
 #include "game_consts.hpp"
 
-const player_code BLACK_PLAYER = -1;
-const player_code WHITE_PLAYER = 1;
-const player_code NO_PLAYER = 0;
+const b_size DEFAULT_BOARD_WIDTH = 8;
+const b_size DEFAULT_BOARD_HEIGHT = 8;
+const b_size DEFAULT_INIT_X = 3;
+const b_size DEFAULT_INIT_Y = 3;
 
 

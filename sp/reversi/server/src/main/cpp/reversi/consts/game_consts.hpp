@@ -1,22 +1,9 @@
 #pragma once
 
 #include <cstdint>
+#include "../board/board.hpp"
 
-using player_code = int8_t;
-
-//TODO: use enums
-
-/**
- * @details Black player code.
- */
-extern const player_code BLACK_PLAYER;
-
-/**
- * @details White player code.
- */
-extern const player_code WHITE_PLAYER;
-
-/**
- * @details No player code.
- */
-extern const player_code NO_PLAYER;
+extern const b_size DEFAULT_BOARD_WIDTH;
+extern const b_size DEFAULT_BOARD_HEIGHT;
+extern const b_size DEFAULT_INIT_X;
+extern const b_size DEFAULT_INIT_Y;

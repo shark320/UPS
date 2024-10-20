@@ -1,18 +1,18 @@
 #include "reversi_engine.hpp"
 
 void reversi_engine::initialize_board(b_size init_x, b_size init_y) {
-    if (game_board == nullptr){
+    if (_game_board == nullptr){
         //TODO: throw exception on nullptr
         return;
     }
-    if (game_board->get_cols() <= (init_x + 1) || game_board->get_rows() <= (init_y + 1)) {
+    if (_game_board->get_cols() <= (init_x + 1) || _game_board->get_rows() <= (init_y + 1)) {
         //TODO: exception throwing on invalid init
         return;
     }
-    game_board->set_at(init_x, init_y, WHITE_PLAYER);
-    game_board->set_at(init_x + 1, init_y, BLACK_PLAYER);
-    game_board->set_at(init_x, init_y + 1, BLACK_PLAYER);
-    game_board->set_at(init_x + 1, init_y + 1, WHITE_PLAYER);
+    _game_board->set_at(init_x, init_y, WHITE_PLAYER);
+    _game_board->set_at(init_x + 1, init_y, BLACK_PLAYER);
+    _game_board->set_at(init_x, init_y + 1, BLACK_PLAYER);
+    _game_board->set_at(init_x + 1, init_y + 1, WHITE_PLAYER);
 }
 
 size_t reversi_engine::get_possible_moves_count(player_code player) {
@@ -24,12 +24,12 @@ size_t reversi_engine::get_possible_moves_count(player_code player) {
 std::vector<bool> reversi_engine::_get_possible_moves(size_t &moves_count, player_code player) {
     size_t x;
     size_t y;
-    auto moves = std::vector<bool>(game_board->get_cols() * game_board->get_cols());
+    auto moves = std::vector<bool>(_game_board->get_cols() * _game_board->get_cols());
     moves_count = 0;
-    for (x = 0; x < this->game_board->get_cols(); ++x) {
-        for (y = 0; y < this->game_board->get_rows(); ++y) {
+    for (x = 0; x < this->_game_board->get_cols(); ++x) {
+        for (y = 0; y < this->_game_board->get_rows(); ++y) {
             if (_is_valid_move(x, y, player)) {
-                moves[y * this->game_board->get_cols() + x] = true;
+                moves[y * this->_game_board->get_cols() + x] = true;
                 ++moves_count;
             }
         }
@@ -48,15 +48,15 @@ size_t reversi_engine::_is_valid_direction(b_size x, b_size y, int dir_x, int di
     b_size pos_y;
     player_code cell;
     /*Check if move is in bounds and an opponent cell*/
-    if ((x + dir_x >= this->game_board->get_cols()) ||
-        (y + dir_y >= this->game_board->get_rows() || this->game_board->get_at(x + dir_x, y + dir_y) != opponent)) {
+    if ((x + dir_x >= this->_game_board->get_cols()) ||
+        (y + dir_y >= this->_game_board->get_rows() || this->_game_board->get_at(x + dir_x, y + dir_y) != opponent)) {
         return 0;
     }
     pos_x = x + steps * dir_x;
     pos_y = y + steps * dir_y;
     /*Check specified direction for a valid sequence of opponent cells*/
-    while ((pos_x < this->game_board->get_cols()) && (pos_y < this->game_board->get_rows())) {
-        cell = this->game_board->get_at(pos_x, pos_y);
+    while ((pos_x < this->_game_board->get_cols()) && (pos_y < this->_game_board->get_rows())) {
+        cell = this->_game_board->get_at(pos_x, pos_y);
         /*Empty cell -> move is invalid*/
         if (cell == NO_PLAYER) {
             return 0;
@@ -76,10 +76,10 @@ size_t reversi_engine::_is_valid_direction(b_size x, b_size y, int dir_x, int di
 bool reversi_engine::_is_valid_move(b_size x, b_size y, player_code player) {
     int dir_x;
     int dir_y;
-    if (x >= this->game_board->get_cols() || y >= this->game_board->get_rows()) {
+    if (x >= this->_game_board->get_cols() || y >= this->_game_board->get_rows()) {
         return false;
     }
-    if (this->game_board->get_at(x, y) != NO_PLAYER) {
+    if (this->_game_board->get_at(x, y) != NO_PLAYER) {
         return false;
     }
     /*Check throw all possible directions*/
@@ -104,9 +104,9 @@ int reversi_engine::count_players_scores(b_size &bp_scores, b_size &wp_scores) {
     bp_scores = 0;
     wp_scores = 0;
 
-    for (y = 0; y < this->game_board->get_rows(); ++y) {
-        for (x = 0; x < this->game_board->get_cols(); ++x) {
-            c = this->game_board->get_at(x, y);
+    for (y = 0; y < this->_game_board->get_rows(); ++y) {
+        for (x = 0; x < this->_game_board->get_cols(); ++x) {
+            c = this->_game_board->get_at(x, y);
             if (c == BLACK_PLAYER) {
                 ++bp_scores;
             } else if (c == WHITE_PLAYER) {
@@ -123,13 +123,13 @@ size_t reversi_engine::_make_move(size_t x, size_t y, char player) {
     size_t i;
     size_t steps;
     size_t count = 0;
-    this->game_board->set_at(x, y, player);
+    this->_game_board->set_at(x, y, player);
     for (dir_x = -1; dir_x <= 1; ++dir_x) {
         for (dir_y = -1; dir_y <= 1; ++dir_y) {
             steps = _is_valid_direction(x, y, dir_x, dir_y, player);
             count += steps;
             for (i = 1; i <= steps; ++i) {
-                this->game_board->set_at(x + i * dir_x, y + i * dir_y, player);
+                this->_game_board->set_at(x + i * dir_x, y + i * dir_y, player);
             }
         }
     }
@@ -145,8 +145,12 @@ bool reversi_engine::process_move(b_size x, b_size y, player_code player) {
 }
 
 void reversi_engine::create_board(b_size bw, b_size bh, b_size ix, b_size iy) {
-    this->game_board = std::make_shared<board>(bw, bh);
+    this->_game_board = std::make_shared<board>(bw, bh);
     initialize_board(ix,iy);
+}
+
+std::shared_ptr<board> reversi_engine::get_board() const {
+    return this->_game_board;
 }
 
 

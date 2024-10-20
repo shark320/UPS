@@ -96,3 +96,8 @@ bool lobby::is_available_unsafe() const {
 bool lobby::is_started_unsafe() const {
     return this->_game != nullptr;
 }
+
+void lobby::start_game() {
+    std::unique_lock<std::shared_mutex> unique_lock(*this->shared_mutex);
+    this->_game = std::make_shared<reversi_game>();
+}

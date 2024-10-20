@@ -1,7 +1,7 @@
 #include "board.hpp"
 
 
-board::board(b_size rows, b_size cols) : rows(rows), cols(cols), cells(rows * cols, 0) {
+board::board(b_size rows, b_size cols) : rows(rows), cols(cols), cells(rows * cols, player_code::NO_PLAYER) {
 
 }
 
@@ -19,11 +19,11 @@ void board::set_at(b_size x, b_size y, player_code val) {
     cells[y * cols + x] = val;
 }
 
-b_size board::get_rows() {
+b_size board::get_rows() const {
     return this->rows;
 }
 
-b_size board::get_cols() {
+b_size board::get_cols() const {
     return this->cols;
 }
 

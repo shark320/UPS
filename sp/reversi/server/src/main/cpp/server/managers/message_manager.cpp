@@ -47,6 +47,8 @@ message_manager::process_post(const std::shared_ptr<message> &request,
             return process_lobby_exit(request, client_connection);
         case subtype::LOBBY_CONNECT:
             return process_connect_to_the_lobby(request, client_connection);
+        case subtype::START_GAME:
+            return process_start_the_game(request, client_connection);
         default:
             return bad_request(request);
     }
@@ -368,5 +370,42 @@ void message_manager::add_lobby_info(const std::shared_ptr<lobby>& lobby, const 
     response_payload->set_value("host", lobby_players_payload->at(0));
     response_payload->set_value("lobby", std::make_shared<string>(lobby->get_name()));
     response_payload->set_value("players", lobby_players_payload);
+}
+
+std::shared_ptr<message> message_manager::process_start_the_game(const std::shared_ptr<message> &request,
+                                                                 const std::shared_ptr<client_connection> &client_connection) {
+    const auto client_logger = client_connection->get_logger();
+    const auto client = client_connection->get_client();
+    const auto response_header = std::make_shared<header>(request->get_header());
+    const auto response_payload = std::make_shared<payload>();
+    const auto lobby = client->get_lobby();
+
+    if (lobby == nullptr || !client->is_in_state({flow_state::LOBBY})){
+        return invalid_state(client->get_flow_state(), request, client_logger);
+    }
+
+    if (client != lobby->get_host()){
+        std::string msg = fmt::format("The client '{}' is not a host of the lobby.", client->get_username());
+        client_logger->error(msg);
+        return unauthorized(request, client->get_flow_state(), msg);
+    }
+
+
+    return std::make_shared<message>(response_header, response_payload);
+}
+
+std::shared_ptr<message>
+message_manager::unauthorized(const std::shared_ptr<message> &request, flow_state state, const std::string &msg) {
+    const auto _header = std::make_shared<header>(request->get_header());
+    const auto _payload = std::make_shared<payload>();
+    _header->set_status(status::UNAUTHORIZED);
+    _payload->set_value("msg", std::make_shared<string>(msg));
+    _payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(state)));
+
+    return std::make_shared<message>(_header, _payload);
+}
+
+std::shared_ptr<message> message_manager::unauthorized(const std::shared_ptr<message> &request, flow_state state) {
+    return unauthorized(request, state, "Unauthorized");
 }
 

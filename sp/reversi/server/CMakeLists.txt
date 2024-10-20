@@ -94,6 +94,10 @@ add_executable(server
         src/main/cpp/server/connection/connection_config/connection_config.hpp
         src/main/cpp/server/connection/client/enums/flow_state.cpp
         src/main/cpp/server/connection/client/enums/flow_state.hpp
+        src/main/cpp/reversi/engine/player_code.hpp
+        src/main/cpp/reversi/engine/player_code.cpp
+        src/main/cpp/game/player/player.cpp
+        src/main/cpp/game/player/player.hpp
 )
 
 add_custom_target(clean-assembly

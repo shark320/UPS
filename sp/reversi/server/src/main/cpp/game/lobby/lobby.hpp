@@ -33,6 +33,8 @@ public:
 
     [[nodiscard]] bool is_started() const;
 
+    void start_game();
+
     [[nodiscard]] bool is_started_unsafe() const;
 
     [[nodiscard]] static bool connect_player(const std::shared_ptr<client>& player, const std::shared_ptr<lobby>& lobby_to_connect);
