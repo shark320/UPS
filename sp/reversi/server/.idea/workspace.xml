@@ -26,13 +26,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2c0b0dfa-103e-4773-a356-64a65d6195fb" name="Changes" comment="[SERVER] create game init">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/cpp/game/lobby/lobby.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cpp/game/lobby/lobby.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/cpp/game/lobby/lobby.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cpp/game/lobby/lobby.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/cpp/reversi/board/board.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cpp/reversi/board/board.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/cpp/reversi/board/board.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cpp/reversi/board/board.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/cpp/reversi/reversi_game.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cpp/reversi/reversi_game.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/cpp/reversi/reversi_game.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cpp/reversi/reversi_game.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/cpp/server/managers/message_manager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cpp/server/managers/message_manager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/cpp/server/managers/message_manager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cpp/server/managers/message_manager.hpp" afterDir="false" />
     </list>
@@ -146,7 +139,7 @@
       <workItem from="1729186535310" duration="3433000" />
       <workItem from="1729362367152" duration="53000" />
       <workItem from="1729362429690" duration="4666000" />
-      <workItem from="1729440945616" duration="3576000" />
+      <workItem from="1729440945616" duration="4751000" />
     </task>
     <task id="LOCAL-00001" summary="[SERVER] lobby exit request fix">
       <option name="closed" value="true" />

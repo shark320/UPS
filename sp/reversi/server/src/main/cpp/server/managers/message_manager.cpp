@@ -185,12 +185,12 @@ std::shared_ptr<message> message_manager::process_create_new_game(const std::sha
     if (name_str_ptr == nullptr || name_str_ptr->empty()) {
         auto msg = "Cannot create a game: Invalid game name!";
         client_logger->error(msg);
-        return bad_request(request,client_connection->get_client(), msg);
+        return bad_request(request, client_connection->get_client(), msg);
     }
     client_logger->debug(fmt::format("Performing game creation with name '{}'.", *name_str_ptr));
 
     if (client->get_flow_state() != flow_state::MENU || client->get_lobby() != nullptr) {
-        return invalid_state(client->get_flow_state(), request, client_logger);
+        return invalid_state(client->get_flow_state(), request, client, client_logger);
     }
 
     auto new_lobby = this->_lobby_manager->create_lobby(*name_str_ptr, client);
@@ -222,7 +222,7 @@ std::shared_ptr<message> message_manager::process_lobby_exit(const std::shared_p
     auto lobby = client->get_lobby();
 
     if (lobby == nullptr || !client->is_in_state({flow_state::LOBBY, flow_state::GAME})) {
-        return invalid_state(client->get_flow_state(), request, client_logger);
+        return invalid_state(client->get_flow_state(), request, client, client_logger);
     }
 
     this->_lobby_manager->exit_lobby(client);
@@ -277,7 +277,7 @@ std::shared_ptr<message> message_manager::process_get_lobbies_list(const std::sh
     client_logger->debug("Processing get lobbies request.");
 
     if (client->get_flow_state() != flow_state::MENU) {
-        return invalid_state(client->get_flow_state(), request, client_logger);
+        return invalid_state(client->get_flow_state(), request,client, client_logger);
     }
 
     const auto hosts_map = this->_lobby_manager->get_available_lobby_names_and_hosts();
@@ -306,14 +306,14 @@ std::shared_ptr<message> message_manager::process_connect_to_the_lobby(const std
     const auto response_payload = std::make_shared<payload>();
 
     if (!client->is_in_state({flow_state::MENU})) {
-        return invalid_state(client->get_flow_state(), request, client_logger);
+        return invalid_state(client->get_flow_state(), request,client, client_logger);
     }
 
     const auto lobby_name_ptr = request->get_payload()->get_string("lobby");
     if (lobby_name_ptr == nullptr || lobby_name_ptr->empty()) {
         std::string msg = "Can not connect to a lobby: lobby name to connect is empty.";
         client_logger->error(msg);
-        return bad_request(request, msg);
+        return bad_request(request, client, msg);
     }
 
     auto lobby = this->_lobby_manager->get_lobby(*lobby_name_ptr);
@@ -346,7 +346,7 @@ std::shared_ptr<message> message_manager::process_get_lobby_state(const std::sha
     const auto lobby = client->get_lobby();
 
     if (lobby == nullptr || !client->is_in_state({flow_state::LOBBY})) {
-        return invalid_state(client->get_flow_state(), request, client_logger);
+        return invalid_state(client->get_flow_state(), request, client, client_logger);
     }
 
     response_payload->set_value("state",
@@ -357,10 +357,11 @@ std::shared_ptr<message> message_manager::process_get_lobby_state(const std::sha
 }
 
 std::shared_ptr<message> message_manager::invalid_state(flow_state state, const std::shared_ptr<message> &request,
+                                                        const std::shared_ptr<client> &client,
                                                         const std::shared_ptr<log4cxx::Logger> &client_logger) {
     std::string msg = fmt::format("Client is in invalid state ({}).", flow_state_mapper::get_string(state));
     client_logger->error(msg);
-    return bad_request(request, msg);
+    return bad_request(request, client, msg);
 }
 
 void
@@ -387,7 +388,7 @@ std::shared_ptr<message> message_manager::process_start_the_game(const std::shar
     const auto lobby = client->get_lobby();
 
     if (lobby == nullptr || !client->is_in_state({flow_state::LOBBY})) {
-        return invalid_state(client->get_flow_state(), request, client_logger);
+        return invalid_state(client->get_flow_state(), request,client, client_logger);
     }
 
     if (client != lobby->get_host()) {
@@ -396,18 +397,20 @@ std::shared_ptr<message> message_manager::process_start_the_game(const std::shar
         return not_allowed(request, client, msg);
     }
 
-    if (!lobby->start_game()){
+    if (!lobby->start_game()) {
         std::string msg = "Not enough players in the lobby.";
         client_logger->error(msg);
         return not_allowed(request, client, msg);
     }
-
+    response_header->set_status(status::OK);
+    add_lobby_info(lobby, response_payload);
 
     return std::make_shared<message>(response_header, response_payload);
 }
 
 std::shared_ptr<message>
-message_manager::unauthorized(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, const std::string &msg) {
+message_manager::unauthorized(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client,
+                              const std::string &msg) {
     const auto _header = std::make_shared<header>(request->get_header());
     const auto _payload = std::make_shared<payload>();
     _header->set_status(status::UNAUTHORIZED);
@@ -419,12 +422,14 @@ message_manager::unauthorized(const std::shared_ptr<message> &request, const std
     return std::make_shared<message>(_header, _payload);
 }
 
-std::shared_ptr<message> message_manager::unauthorized(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client) {
+std::shared_ptr<message>
+message_manager::unauthorized(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client) {
     return unauthorized(request, client, "Unauthorized");
 }
 
 std::shared_ptr<message>
-message_manager::not_allowed(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, const std::string &msg) {
+message_manager::not_allowed(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client,
+                             const std::string &msg) {
     const auto _header = std::make_shared<header>(request->get_header());
     const auto _payload = std::make_shared<payload>();
     _header->set_status(status::UNAUTHORIZED);

@@ -70,7 +70,7 @@ private:
 
     static bool is_ping_request(const std::shared_ptr<header> &header);
 
-    static std::shared_ptr<message> invalid_state(flow_state state, const std::shared_ptr<message> &request,
+    static std::shared_ptr<message> invalid_state(flow_state state, const std::shared_ptr<message> &request,const std::shared_ptr<client>& client,
                                                   const std::shared_ptr<log4cxx::Logger> &client_logger);
 
     static void add_lobby_info(const std::shared_ptr<lobby> &lobby, const std::shared_ptr<payload> &response_payload);
