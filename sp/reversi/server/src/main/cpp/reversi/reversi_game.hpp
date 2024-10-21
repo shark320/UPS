@@ -20,6 +20,6 @@ public:
 
     [[nodiscard]] std::shared_ptr<player> get_current_player() const;
 
-    [[nodiscar]] std::string get_board_representation() const;
+    [[nodiscard]] std::string get_board_representation() const;
 };
 

@@ -31,6 +31,9 @@ std::string reversi_game::get_board_representation() const {
     const auto board = this->engine->get_board();
     const auto board_size = board->get_rows() * board->get_cols();
     std::string board_str = std::string(board_size, '\0');
-
+    const auto cells = board->get_cells();
+    for (size_t i = 0; i < board_size; ++i){
+        board_str.insert(i, std::to_string(static_cast<int>(cells.at(i))));
+    }
     return board_str;
 }

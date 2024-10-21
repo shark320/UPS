@@ -27,6 +27,10 @@ b_size board::get_cols() const {
     return this->cols;
 }
 
+std::vector<player_code> board::get_cells() const {
+    return this->cells;
+}
+
 //
 //std::string board::print() {
 //    b_size i,j,row_digits;

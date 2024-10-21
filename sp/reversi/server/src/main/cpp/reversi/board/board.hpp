@@ -27,5 +27,7 @@ public:
 
     [[nodiscard]] b_size get_cols() const;
 
+    [[nodiscard]] std::vector<player_code> get_cells() const;
+
 //    std::string print();
 };

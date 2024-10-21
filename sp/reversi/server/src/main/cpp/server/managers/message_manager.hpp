@@ -37,14 +37,18 @@ private:
     std::shared_ptr<message>
     process_login(const std::shared_ptr<message> &request, const std::shared_ptr<client_connection> &client_connection);
 
-    static std::shared_ptr<message> bad_request(const std::shared_ptr<message> &request);
+    static std::shared_ptr<message> bad_request(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
 
-    static std::shared_ptr<message> bad_request(const std::shared_ptr<message> &request, const std::string &msg);
+    static std::shared_ptr<message> bad_request(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, const std::string &msg);
 
-    static std::shared_ptr<message> unauthorized(const std::shared_ptr<message> &request, flow_state state);
+    static std::shared_ptr<message> not_allowed(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
+
+    static std::shared_ptr<message> not_allowed(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, const std::string &msg);
+
+    static std::shared_ptr<message> unauthorized(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
 
     static std::shared_ptr<message>
-    unauthorized(const std::shared_ptr<message> &request, flow_state state, const std::string &msg);
+    unauthorized(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, const std::string &msg);
 
     std::shared_ptr<message> process_create_new_game(const std::shared_ptr<message> &request,
                                                      const std::shared_ptr<client_connection> &client_connection);

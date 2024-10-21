@@ -33,7 +33,7 @@ public:
 
     [[nodiscard]] bool is_started() const;
 
-    void start_game();
+    [[nodiscard]] bool start_game();
 
     [[nodiscard]] bool is_started_unsafe() const;
 
