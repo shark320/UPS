@@ -1,6 +1,6 @@
-package com.vpavlov.ups.reversi.client.connection.message
+package com.vpavlov.ups.reversi.client.domains.connection.message
 
-import com.vpavlov.ups.reversi.client.connection.MSG_HEADER_LENGTH
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_HEADER_LENGTH
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -127,7 +127,7 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
     private fun mapBoolean(value: Boolean) = value.toString()
 
     companion object{
-        fun parse(message: String): Payload{
+        fun parse(message: String): Payload {
             if (message.length <= MSG_HEADER_LENGTH){
                 return Payload()
             }
@@ -157,7 +157,7 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
                 "key could not be blank."
             }
             val value = keyValueTokens[1]
-            payload.setValue(key,parseValue(value))
+            payload.setValue(key, parseValue(value))
         }
 
         private fun parseValue(value: String): Any? {

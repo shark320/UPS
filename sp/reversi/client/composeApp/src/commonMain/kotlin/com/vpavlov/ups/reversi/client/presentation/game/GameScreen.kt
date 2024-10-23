@@ -16,6 +16,7 @@ import androidx.navigation.NavHostController
 fun GameScreen(
     navController: NavHostController
 ){
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier

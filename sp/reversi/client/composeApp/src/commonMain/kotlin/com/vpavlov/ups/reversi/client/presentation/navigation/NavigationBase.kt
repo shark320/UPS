@@ -20,11 +20,15 @@ import com.vpavlov.ups.reversi.client.presentation.game.GameScreen
 import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreen
 import com.vpavlov.ups.reversi.client.presentation.login.LoginScreen
 import com.vpavlov.ups.reversi.client.presentation.menu.MenuScreen
+import com.vpavlov.ups.reversi.client.service.api.ConnectionStateService
+import org.koin.core.context.GlobalContext.get
 
 @Composable
 fun NavigationBase(
     navController: NavHostController = rememberNavController()
 ){
+    val connectionStateService: ConnectionStateService = get().get()
+
     Scaffold{ innerPadding ->
         AnimatedContent(
             targetState = navController.currentBackStackEntry?.destination?.route,
@@ -42,7 +46,10 @@ fun NavigationBase(
                     .padding(innerPadding)
             ) {
                 composable(route = ScreenNavigation.ConnectionScreen.toString()){
-                    ConnectionScreen(navController = navController)
+                    ConnectionScreen(
+                        navController = navController,
+                        connectionStateService = connectionStateService
+                    )
                 }
                 composable(route = ScreenNavigation.LoginScreen.toString()){
                     LoginScreen(navController = navController)

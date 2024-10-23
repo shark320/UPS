@@ -1,4 +1,4 @@
-package com.vpavlov.ups.reversi.client.connection
+package com.vpavlov.ups.reversi.client.domains.connection
 
 const val IDENTIFIER = "RVSI"
 

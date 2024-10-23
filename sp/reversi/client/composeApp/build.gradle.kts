@@ -30,6 +30,8 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
 
             implementation(libs.kotlinx.serialization.json)
+
+            implementation(libs.ktor.network)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

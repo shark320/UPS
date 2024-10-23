@@ -1,4 +1,4 @@
-package com.vpavlov.ups.reversi.client.connection.message
+package com.vpavlov.ups.reversi.client.domains.connection.message
 
 
 enum class Type(val id: Int) {

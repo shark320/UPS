@@ -1,6 +1,17 @@
-package com.vpavlov.ups.reversi.client.connection.message
+package com.vpavlov.ups.reversi.client.domains.connection.message
 
-import com.vpavlov.ups.reversi.client.connection.*
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_HEADER_LENGTH
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_IDENTIFIER_FIELD_LENGTH
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_IDENTIFIER_FIELD_POS
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_LENGTH_FIELD_LENGTH
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_LENGTH_FIELD_POS
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_MAX_LENGTH
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_STATUS_FIELD_LENGTH
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_STATUS_FIELD_POS
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_SUBTYPE_FIELD_LENGTH
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_SUBTYPE_FIELD_POS
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_TYPE_FIELD_LENGTH
+import com.vpavlov.ups.reversi.client.domains.connection.MSG_TYPE_FIELD_POS
 
 data class Header(
     var identifier: String,
