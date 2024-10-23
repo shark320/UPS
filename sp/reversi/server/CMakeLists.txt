@@ -66,11 +66,7 @@ add_executable(server
         src/main/cpp/server/connection/message/message.hpp
         src/main/cpp/server/connection/message/message.cpp
 
-        #[[Unit Tests]]
-        src/test/cpp/test_utils/test_utils.hpp
-        src/test/cpp/test_utils/test_utils.cpp
-        src/test/cpp/test.hpp
-        src/test/cpp/test.cpp
+
         src/test/cpp/server/connection/message/message_test.hpp
         src/test/cpp/server/connection/message/header/header_test.hpp
         src/test/cpp/server/connection/message/header/header_test.cpp
@@ -98,6 +94,12 @@ add_executable(server
         src/main/cpp/reversi/engine/player_code.cpp
         src/main/cpp/game/player/player.cpp
         src/main/cpp/game/player/player.hpp
+
+        #[[Unit Tests]]
+        src/test/cpp/test_utils/test_utils.hpp
+        src/test/cpp/test_utils/test_utils.cpp
+        src/test/cpp/test.hpp
+        src/test/cpp/test.cpp
 )
 
 add_custom_target(clean-assembly

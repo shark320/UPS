@@ -14,13 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.vpavlov.ups.reversi.client.presentation.navigation.ScreenNavigation
 import com.vpavlov.ups.reversi.client.service.api.ConnectionStateService
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun ConnectionScreen(
     navController: NavHostController,
-    connectionStateService: ConnectionStateService
+    viewModel: ConnectionViewModel = koinViewModel()
 ) {
-    if (connectionStateService.getConnectionState().isAlive){
+    if (viewModel.connectionStateService.isAlive()){
         navController.navigate(ScreenNavigation.LoginScreen.toString())
     }
     Box(

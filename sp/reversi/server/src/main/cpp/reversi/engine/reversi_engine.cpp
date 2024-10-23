@@ -9,10 +9,10 @@ void reversi_engine::initialize_board(b_size init_x, b_size init_y) {
         //TODO: exception throwing on invalid init
         return;
     }
-    _game_board->set_at(init_x, init_y, WHITE_PLAYER);
-    _game_board->set_at(init_x + 1, init_y, BLACK_PLAYER);
-    _game_board->set_at(init_x, init_y + 1, BLACK_PLAYER);
-    _game_board->set_at(init_x + 1, init_y + 1, WHITE_PLAYER);
+    _game_board->set_at(init_x, init_y, player_code::WHITE_PLAYER);
+    _game_board->set_at(init_x + 1, init_y, player_code::BLACK_PLAYER);
+    _game_board->set_at(init_x, init_y + 1, player_code::BLACK_PLAYER);
+    _game_board->set_at(init_x + 1, init_y + 1, player_code::WHITE_PLAYER);
 }
 
 size_t reversi_engine::get_possible_moves_count(player_code player) {
@@ -38,7 +38,7 @@ std::vector<bool> reversi_engine::_get_possible_moves(size_t &moves_count, playe
 }
 
 player_code reversi_engine::_get_opponent_code(player_code player) {
-    return (player == BLACK_PLAYER) ? WHITE_PLAYER : BLACK_PLAYER;
+    return (player == player_code::BLACK_PLAYER) ? player_code::WHITE_PLAYER : player_code::BLACK_PLAYER;
 }
 
 size_t reversi_engine::_is_valid_direction(b_size x, b_size y, int dir_x, int dir_y, player_code player) {
@@ -58,7 +58,7 @@ size_t reversi_engine::_is_valid_direction(b_size x, b_size y, int dir_x, int di
     while ((pos_x < this->_game_board->get_cols()) && (pos_y < this->_game_board->get_rows())) {
         cell = this->_game_board->get_at(pos_x, pos_y);
         /*Empty cell -> move is invalid*/
-        if (cell == NO_PLAYER) {
+        if (cell == player_code::NO_PLAYER) {
             return 0;
         }
         /*Player cell -> return number of steps (cells) in between*/
@@ -79,7 +79,7 @@ bool reversi_engine::_is_valid_move(b_size x, b_size y, player_code player) {
     if (x >= this->_game_board->get_cols() || y >= this->_game_board->get_rows()) {
         return false;
     }
-    if (this->_game_board->get_at(x, y) != NO_PLAYER) {
+    if (this->_game_board->get_at(x, y) != player_code::NO_PLAYER) {
         return false;
     }
     /*Check throw all possible directions*/
@@ -94,22 +94,22 @@ bool reversi_engine::_is_valid_move(b_size x, b_size y, player_code player) {
 }
 
 bool reversi_engine::no_available_moves() {
-    return (get_possible_moves_count(BLACK_PLAYER) == 0) && (get_possible_moves_count(WHITE_PLAYER) == 0);
+    return (get_possible_moves_count(player_code::BLACK_PLAYER) == 0) && (get_possible_moves_count(player_code::WHITE_PLAYER) == 0);
 }
 
 int reversi_engine::count_players_scores(b_size &bp_scores, b_size &wp_scores) {
     size_t x;
     size_t y;
-    char c;
+    player_code c;
     bp_scores = 0;
     wp_scores = 0;
 
     for (y = 0; y < this->_game_board->get_rows(); ++y) {
         for (x = 0; x < this->_game_board->get_cols(); ++x) {
             c = this->_game_board->get_at(x, y);
-            if (c == BLACK_PLAYER) {
+            if (c == player_code::BLACK_PLAYER) {
                 ++bp_scores;
-            } else if (c == WHITE_PLAYER) {
+            } else if (c == player_code::WHITE_PLAYER) {
                 ++wp_scores;
             }
         }
@@ -117,7 +117,7 @@ int reversi_engine::count_players_scores(b_size &bp_scores, b_size &wp_scores) {
     return 0;
 }
 
-size_t reversi_engine::_make_move(size_t x, size_t y, char player) {
+size_t reversi_engine::_make_move(size_t x, size_t y, player_code player) {
     int dir_x;
     int dir_y;
     size_t i;

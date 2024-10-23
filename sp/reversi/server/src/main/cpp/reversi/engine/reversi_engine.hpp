@@ -34,7 +34,7 @@ private:
 
     std::vector<bool> _get_possible_moves (size_t& moves_count, player_code player);
 
-    size_t _make_move(size_t x, size_t y, char player);
+    size_t _make_move(size_t x, size_t y, player_code player);
 
 
 

@@ -48,7 +48,6 @@ fun NavigationBase(
                 composable(route = ScreenNavigation.ConnectionScreen.toString()){
                     ConnectionScreen(
                         navController = navController,
-                        connectionStateService = connectionStateService
                     )
                 }
                 composable(route = ScreenNavigation.LoginScreen.toString()){

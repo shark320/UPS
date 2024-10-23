@@ -4,6 +4,8 @@
 #include "../server/connection/client/client.hpp"
 #include "../game/player/player.hpp"
 
+class player;
+
 class reversi_game {
 private:
     std::shared_ptr<reversi_engine> engine;

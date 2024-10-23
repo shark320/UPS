@@ -17,15 +17,7 @@ import org.apache.logging.log4j.kotlin.logger
 fun main() = application {
     System.setProperty("log4j.configurationFile", "config/logging/log4j.xml")
     val logger = logger("main")
-    logger.debug("dfdfd")
     initKoin()
-    val connectionService: ConnectionService = koin.get()
-    connectionService.connect()
-//    CoroutineScope(Dispatchers.Default).launch {
-//        delay(5000L)
-//        val connectionStateService: ConnectionStateService = get().get()
-//        connectionStateService.updateConnectionState(isAlive = true)
-//    }
     Window(
         onCloseRequest = ::exitApplication,
         title = "client",

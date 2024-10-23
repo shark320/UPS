@@ -12,10 +12,10 @@ class ConnectionStateServiceImpl : ConnectionStateService {
     private val state: State<ConnectionState> = _state
 
     @Synchronized
-    override fun getConnectionState(): ConnectionState = state.value
+    override fun getConnectionState() = state
 
+    @Synchronized
     override fun updateConnectionState(
-
         isAlive: Boolean, lastPing: Long?, socket: Socket?
     ) {
         _state.value = state.value.copy(
@@ -24,5 +24,8 @@ class ConnectionStateServiceImpl : ConnectionStateService {
             socket = socket
         )
     }
+
+    @Synchronized
+    override fun isAlive(): Boolean = state.value.isAlive && state.value.socket != null
 
 }

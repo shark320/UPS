@@ -4,6 +4,7 @@
 #include "../../reversi/reversi_game.hpp"
 
 class client;
+class reversi_game;
 
 class lobby {
 private:

@@ -3,6 +3,8 @@
 
 #include "../../server/connection/client/client.hpp"
 
+class client;
+
 class player {
 private:
     std::shared_ptr<client> _client;
