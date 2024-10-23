@@ -16,6 +16,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.vpavlov.ups.reversi.client.presentation.connection.ConnectionScreen
+import com.vpavlov.ups.reversi.client.presentation.game.GameScreen
+import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreen
+import com.vpavlov.ups.reversi.client.presentation.login.LoginScreen
+import com.vpavlov.ups.reversi.client.presentation.menu.MenuScreen
 
 @Composable
 fun NavigationBase(
@@ -38,7 +42,19 @@ fun NavigationBase(
                     .padding(innerPadding)
             ) {
                 composable(route = ScreenNavigation.ConnectionScreen.toString()){
-                    ConnectionScreen()
+                    ConnectionScreen(navController = navController)
+                }
+                composable(route = ScreenNavigation.LoginScreen.toString()){
+                    LoginScreen(navController = navController)
+                }
+                composable(route = ScreenNavigation.MenuScreen.toString()){
+                    MenuScreen(navController = navController)
+                }
+                composable(route = ScreenNavigation.LobbyScreen.toString()){
+                    LobbyScreen(navController = navController)
+                }
+                composable(route = ScreenNavigation.GameScreen.toString()){
+                    GameScreen(navController = navController)
                 }
             }
         }

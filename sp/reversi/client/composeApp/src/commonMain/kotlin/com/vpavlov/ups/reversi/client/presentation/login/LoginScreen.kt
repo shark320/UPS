@@ -1,4 +1,4 @@
-package com.vpavlov.ups.reversi.client.presentation.connection
+package com.vpavlov.ups.reversi.client.presentation.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,10 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.vpavlov.ups.reversi.client.presentation.navigation.ScreenNavigation
 
 @Composable
-fun ConnectionScreen(
+fun LoginScreen(
     navController: NavHostController
 ) {
     Box(
@@ -27,12 +26,11 @@ fun ConnectionScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CircularProgressIndicator()
-            Text(text = "Connection...")
+            Text(text = "Login mask")
             Button(
-                onClick = { navController.navigate(ScreenNavigation.LoginScreen.toString()) },
+                onClick = { navController.navigateUp() },
             ) {
-                Text(text = "Go To Login")
+                Text(text = "Back")
             }
         }
 

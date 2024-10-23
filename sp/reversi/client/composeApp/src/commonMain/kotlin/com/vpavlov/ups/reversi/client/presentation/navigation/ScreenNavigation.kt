@@ -13,4 +13,10 @@ sealed interface ScreenNavigation {
     @Serializable
     data object MenuScreen : ScreenNavigation
 
+    @Serializable
+    data object LobbyScreen : ScreenNavigation
+
+    @Serializable
+    data object GameScreen : ScreenNavigation
+
 }
