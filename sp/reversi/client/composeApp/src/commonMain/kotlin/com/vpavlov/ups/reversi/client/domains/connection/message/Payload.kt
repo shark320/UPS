@@ -127,11 +127,7 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
     private fun mapBoolean(value: Boolean) = value.toString()
 
     companion object{
-        fun parse(message: String): Payload {
-            if (message.length <= MSG_HEADER_LENGTH){
-                return Payload()
-            }
-            val payloadStr = message.substring(MSG_HEADER_LENGTH)
+        fun parse(payloadStr: String): Payload {
             return parseHelper(payloadStr)
         }
 
