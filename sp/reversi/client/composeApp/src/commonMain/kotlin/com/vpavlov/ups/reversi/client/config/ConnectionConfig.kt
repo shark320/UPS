@@ -2,21 +2,13 @@ package com.vpavlov.ups.reversi.client.config
 
 import java.util.Properties
 
-private const val CONFIG = "connection.properties"
-
-object ConnectionConfig {
-    private val properties = Properties()
+class ConnectionConfig(prop: Properties): Configuration(prop = prop) {
+    val port: Int
 
     val ip: String
 
-    val port: Int
-
-    init {
-        val file = this::class.java.classLoader.getResourceAsStream(CONFIG)
-        properties.load(file)
-        ip = get("ip")
-        port = get("port").toInt()
+    init{
+        port = get("port")!!.toInt()
+        ip = get("ip")!!
     }
-    
-    fun get(key: String): String = properties.getProperty(key)
 }
