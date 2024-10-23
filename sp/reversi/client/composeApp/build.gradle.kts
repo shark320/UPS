@@ -32,6 +32,10 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
 
             implementation(libs.ktor.network)
+
+            implementation(libs.log4k.api)
+            implementation(libs.log4k.api.kotlin)
+            runtimeOnly(libs.log4k.core)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

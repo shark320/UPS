@@ -2,7 +2,7 @@ package com.vpavlov.ups.reversi.client.config
 
 import java.util.Properties
 
-private const val CONNECTION_CONFIG = "connection.properties"
+private const val CONNECTION_CONFIG = "config/connection.properties"
 
 object ConfigProvider {
 

@@ -10,6 +10,8 @@ koin-cmp = "1.2.0-Beta4"
 lifecycle-view-model = "2.8.2"
 kotlin-serialization = "1.6.3"
 ktor-network = "1.6.0"
+log4j2 = "2.24.0"
+log4j2-kotlin = "1.5.0"
 
 
 [libraries]
@@ -25,6 +27,9 @@ koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-cmp
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin-cmp" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlin-serialization" }
 ktor-network = {group = "io.ktor", name = "ktor-network", version.ref = "ktor-network"}
+log4k-api-kotlin = {group="org.apache.logging.log4j", name = "log4j-api-kotlin", version.ref = "log4j2-kotlin"}
+log4k-api = {group="org.apache.logging.log4j", name = "log4j-api", version.ref = "log4j2"}
+log4k-core = {group="org.apache.logging.log4j", name = "log4j-core", version.ref = "log4j2"}
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

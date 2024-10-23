@@ -11,15 +11,13 @@ import com.vpavlov.ups.reversi.client.di.initKoin
 import com.vpavlov.ups.reversi.client.di.koin
 import com.vpavlov.ups.reversi.client.presentation.navigation.NavigationBase
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
-import com.vpavlov.ups.reversi.client.service.api.ConnectionStateService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.koin.core.context.GlobalContext.get
+import org.apache.logging.log4j.kotlin.logger
 
 
 fun main() = application {
+    System.setProperty("log4j.configurationFile", "config/logging/log4j.xml")
+    val logger = logger("main")
+    logger.debug("dfdfd")
     initKoin()
     val connectionService: ConnectionService = koin.get()
     connectionService.connect()
