@@ -5,11 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.state.ConnectionState
 import io.ktor.network.sockets.Socket
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 
 open class ConnectionStateServiceImpl : ConnectionStateService {
 
-    protected val _state = mutableStateOf(ConnectionState())
-    protected val state: State<ConnectionState> = _state
+    protected val _state = MutableStateFlow(ConnectionState())
+    protected val state: StateFlow<ConnectionState> = _state.asStateFlow()
 
     @Synchronized
     override fun getConnectionState() = state
@@ -26,6 +31,8 @@ open class ConnectionStateServiceImpl : ConnectionStateService {
     }
 
     @Synchronized
-    override fun isAlive(): Boolean = state.value.isAlive && state.value.socket != null
+    override fun isAliveFLow(): Flow<Boolean> = state.map { value ->
+        value.isAlive && value.socket != null
+    }
 
 }

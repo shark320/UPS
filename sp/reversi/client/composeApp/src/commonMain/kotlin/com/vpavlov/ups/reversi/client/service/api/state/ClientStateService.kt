@@ -1,16 +1,16 @@
 package com.vpavlov.ups.reversi.client.service.api.state
 
-import androidx.compose.runtime.State
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import com.vpavlov.ups.reversi.client.state.ClientState
+import kotlinx.coroutines.flow.StateFlow
 
 interface ClientStateService {
 
-    fun getState(): State<ClientState?>
+    fun getStateFlow(): StateFlow<ClientState?>
 
     fun updateState(
-        username: String = getState().value!!.username,
-        flowState: ClientFlowState = getState().value!!.flowState
+        username: String = getStateFlow().value!!.username,
+        flowState: ClientFlowState = getStateFlow().value!!.flowState
     )
 
     fun initState(

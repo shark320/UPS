@@ -21,7 +21,7 @@ fun ConnectionScreen(
     navController: NavHostController,
     viewModel: ConnectionViewModel = koinViewModel()
 ) {
-    if (viewModel.connectionStateService.isAlive()){
+    if (viewModel.connectionStateService.isAliveFLow()){
         navController.navigate(ScreenNavigation.LoginScreen.toString())
     }
     Box(

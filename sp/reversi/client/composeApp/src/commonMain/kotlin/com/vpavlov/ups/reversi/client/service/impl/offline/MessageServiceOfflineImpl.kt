@@ -1,12 +1,17 @@
 package com.vpavlov.ups.reversi.client.service.impl.offline
 
-import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 import com.vpavlov.ups.reversi.client.service.impl.MessageServiceImpl
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
+import org.apache.logging.log4j.kotlin.loggerOf
 
 class MessageServiceOfflineImpl : MessageServiceImpl() {
 
-    override suspend fun processLogin(username: String): Message? {
+    companion object{
+        val LOGGER = loggerOf(MessageServiceOfflineImpl::class.java)
+    }
+
+    override fun processLogin(username: String) {
+        LOGGER.debug("Processing login")
         clientStateService.initState(username = username, flowState = ClientFlowState.MENU)
     }
 

@@ -4,11 +4,11 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 
 interface MessageService {
 
-    suspend fun processLogin(login: String): Message?
+    fun processLogin(username: String)
 
-    suspend fun processHandshake(): Message?
+    fun processHandshake()
 
-    suspend fun processPing(): Message?
+    fun processPing()
 
-    suspend fun processGetLobbies(): Message?
+    fun processGetLobbies()
 }

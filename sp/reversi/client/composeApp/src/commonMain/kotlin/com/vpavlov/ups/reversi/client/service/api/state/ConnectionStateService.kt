@@ -4,9 +4,12 @@ import com.vpavlov.ups.reversi.client.state.ConnectionState
 import io.ktor.network.sockets.Socket
 
 import androidx.compose.runtime.State
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+
 interface ConnectionStateService {
 
-    fun getConnectionState(): State<ConnectionState>
+    fun getConnectionState(): StateFlow<ConnectionState>
 
     fun updateConnectionState(
         isAlive: Boolean = getConnectionState().value.isAlive,
@@ -14,5 +17,5 @@ interface ConnectionStateService {
         socket: Socket? = getConnectionState().value.socket
     )
 
-    fun isAlive(): Boolean
+    fun isAliveFLow(): Flow<Boolean>
 }

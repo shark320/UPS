@@ -1,10 +1,9 @@
 package com.vpavlov.ups.reversi.client.service.impl
 
 import com.vpavlov.ups.reversi.client.di.koin
-import com.vpavlov.ups.reversi.client.domains.connection.message.Message
-import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.MessageService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import kotlinx.coroutines.sync.Mutex
 
 open class MessageServiceImpl : MessageService {
@@ -15,20 +14,19 @@ open class MessageServiceImpl : MessageService {
 
     protected val clientStateService: ClientStateService = koin.get()
 
+    override fun processLogin(username: String) {
 
-    override suspend fun processLogin(login: String): Message? {
-        return null
     }
 
-    override suspend fun processHandshake(): Message? {
-        return null
+    override fun processHandshake() {
+
     }
 
-    override suspend fun processPing(): Message?{
-        return null
+    override fun processPing(){
+
     }
 
-    override suspend fun processGetLobbies(): Message? {
-        return null
+    override fun processGetLobbies() {
+
     }
 }

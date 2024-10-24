@@ -39,7 +39,7 @@ open class ConnectionServiceImpl(private val config: ConnectionConfig) : Connect
 
     @Synchronized
     override fun connect() {
-        if (!connectionStateService.isAlive()) {
+        if (!connectionStateService.isAliveFLow()) {
             CoroutineScope(Dispatchers.Default).launch {
                 try {
                     val socket = aSocket(ActorSelectorManager(Dispatchers.IO)).tcp()

@@ -20,7 +20,7 @@ class ConnectionServiceOfflineImpl(config: ConnectionConfig) :
 
     @Synchronized
     override fun connect() {
-        if (!connectionStateService.isAlive()) {
+        if (!connectionStateService.isAliveFLow()) {
             CoroutineScope(Dispatchers.Default).launch {
                 delay(1000L)
                 connectionStateService.updateConnectionState(isAlive = true)

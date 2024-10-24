@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.vpavlov.ups.reversi.client.presentation.common.CustomOutlinedTextField
 import com.vpavlov.ups.reversi.client.presentation.common.OnTopCircularProgressIndicator
+import com.vpavlov.ups.reversi.client.presentation.navigation.ScreenNavigation
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import org.koin.core.parameter.parametersOf
@@ -29,6 +30,10 @@ fun LoginScreen(
         }
     )
 ) {
+    val state = viewModel.state.value
+    if (state.loggedIn){
+        navController.navigate(ScreenNavigation.MenuScreen.toString())
+    }
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -43,18 +48,19 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.3f),
                 label = { Text(text = "Username") },
-                value = viewModel.state.value.username,
+                value = state.username,
                 onValueChange = { viewModel.onEvent(LoginEvent.UsernameEntered(it)) },
-                isError = viewModel.state.value.usernameError,
+                isError = state.usernameError,
                 errorMessage = "Username is not valid!"
             )
             Button(
                 onClick = { viewModel.onEvent(LoginEvent.ProcessLogin) },
+                enabled = state.validUsername
             ) {
                 Text(text = "Login")
             }
 
-            OnTopCircularProgressIndicator(show = viewModel.state.value.waitingResponse)
+            OnTopCircularProgressIndicator(show = state.waitingResponse)
         }
 
     }
