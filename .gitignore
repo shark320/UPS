@@ -18,3 +18,4 @@ sp/reversi/server/cmake-build-debug
 sp/reversi/server/cmake-build-debug-wsl
 A21B0074P/server/cmake-build-debug-wsl
 sp/reversi/client/composeApp/logs
+sp/reversi/server/.idea
