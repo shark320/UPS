@@ -20,7 +20,7 @@ import com.vpavlov.ups.reversi.client.presentation.game.GameScreen
 import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreen
 import com.vpavlov.ups.reversi.client.presentation.login.LoginScreen
 import com.vpavlov.ups.reversi.client.presentation.menu.MenuScreen
-import com.vpavlov.ups.reversi.client.service.api.ConnectionStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import org.koin.core.context.GlobalContext.get
 
 @Composable

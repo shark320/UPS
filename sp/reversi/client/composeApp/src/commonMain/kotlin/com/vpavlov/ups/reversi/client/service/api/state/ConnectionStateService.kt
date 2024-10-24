@@ -1,4 +1,4 @@
-package com.vpavlov.ups.reversi.client.service.api
+package com.vpavlov.ups.reversi.client.service.api.state
 
 import com.vpavlov.ups.reversi.client.state.ConnectionState
 import io.ktor.network.sockets.Socket

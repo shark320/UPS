@@ -3,7 +3,7 @@ package com.vpavlov.ups.reversi.client.presentation.connection
 import androidx.lifecycle.ViewModel
 import com.vpavlov.ups.reversi.client.di.koin
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
-import com.vpavlov.ups.reversi.client.service.api.ConnectionStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 
 class ConnectionViewModel: ViewModel() {
 

@@ -7,14 +7,13 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Header
 import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
-import com.vpavlov.ups.reversi.client.service.api.ConnectionStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
 import io.ktor.network.sockets.openReadChannel
 import io.ktor.network.sockets.openWriteChannel
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
-import io.ktor.utils.io.read
 import io.ktor.utils.io.writeStringUtf8
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

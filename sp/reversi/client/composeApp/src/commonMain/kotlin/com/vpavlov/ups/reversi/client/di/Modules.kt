@@ -5,14 +5,18 @@ import com.vpavlov.ups.reversi.client.config.ConfigProvider
 import com.vpavlov.ups.reversi.client.presentation.connection.ConnectionViewModel
 import com.vpavlov.ups.reversi.client.presentation.login.LoginViewModel
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
-import com.vpavlov.ups.reversi.client.service.api.ConnectionStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.MessageService
+import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.impl.ConnectionServiceImpl
-import com.vpavlov.ups.reversi.client.service.impl.ConnectionStateServiceImpl
+import com.vpavlov.ups.reversi.client.service.impl.state.ConnectionStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.MessageServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.offline.ConnectionServiceOfflineImpl
-import com.vpavlov.ups.reversi.client.service.impl.offline.ConnectionStateServiceOfflineImpl
+import com.vpavlov.ups.reversi.client.service.impl.offline.state.ConnectionStateServiceOfflineImpl
 import com.vpavlov.ups.reversi.client.service.impl.offline.MessageServiceOfflineImpl
+import com.vpavlov.ups.reversi.client.service.impl.offline.state.ClientStateServiceOfflineImpl
+import com.vpavlov.ups.reversi.client.service.impl.state.ClientStateServiceImpl
+import com.vpavlov.ups.reversi.client.state.ClientState
 import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.Koin
 import org.koin.core.context.GlobalContext.get
@@ -41,6 +45,9 @@ val onlineModules = module {
     single<MessageService> {
         MessageServiceImpl()
     }
+    single<ClientStateService>{
+        ClientStateServiceImpl()
+    }
 }
 
 val offlineModules = module {
@@ -52,6 +59,9 @@ val offlineModules = module {
     }
     single<MessageService> {
         MessageServiceOfflineImpl()
+    }
+    single<ClientStateService>{
+        ClientStateServiceOfflineImpl()
     }
 }
 

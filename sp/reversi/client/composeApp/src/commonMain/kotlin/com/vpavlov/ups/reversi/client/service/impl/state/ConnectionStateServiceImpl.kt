@@ -1,8 +1,8 @@
-package com.vpavlov.ups.reversi.client.service.impl
+package com.vpavlov.ups.reversi.client.service.impl.state
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import com.vpavlov.ups.reversi.client.service.api.ConnectionStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.state.ConnectionState
 import io.ktor.network.sockets.Socket
 
