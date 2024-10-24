@@ -6,10 +6,10 @@ import com.vpavlov.ups.reversi.client.service.api.ConnectionStateService
 import com.vpavlov.ups.reversi.client.state.ConnectionState
 import io.ktor.network.sockets.Socket
 
-class ConnectionStateServiceImpl : ConnectionStateService {
+open class ConnectionStateServiceImpl : ConnectionStateService {
 
-    private val _state = mutableStateOf(ConnectionState())
-    private val state: State<ConnectionState> = _state
+    protected val _state = mutableStateOf(ConnectionState())
+    protected val state: State<ConnectionState> = _state
 
     @Synchronized
     override fun getConnectionState() = state

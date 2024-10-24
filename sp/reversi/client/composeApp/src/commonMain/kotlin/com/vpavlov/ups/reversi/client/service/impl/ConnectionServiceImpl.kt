@@ -24,19 +24,19 @@ import kotlinx.coroutines.sync.withLock
 import org.apache.logging.log4j.kotlin.loggerOf
 import java.net.InetSocketAddress
 
-class ConnectionServiceImpl(private val config: ConnectionConfig) : ConnectionService {
+open class ConnectionServiceImpl(private val config: ConnectionConfig) : ConnectionService {
 
     companion object {
         private val LOGGER = loggerOf(ConnectionServiceImpl::class.java)
     }
 
-    private val connectionStateService: ConnectionStateService = koin.get()
+    protected val connectionStateService: ConnectionStateService = koin.get()
 
-    private var readChannel: ByteReadChannel? = null
+    protected var readChannel: ByteReadChannel? = null
 
-    private var writeChannel: ByteWriteChannel? = null
+    protected var writeChannel: ByteWriteChannel? = null
 
-    private val mutex = Mutex()
+    protected val mutex = Mutex()
 
     @Synchronized
     override fun connect() {
@@ -69,7 +69,7 @@ class ConnectionServiceImpl(private val config: ConnectionConfig) : ConnectionSe
         }
     }
 
-    private suspend fun readHeaderUnsafe(): Header? {
+    protected open suspend fun readHeaderUnsafe(): Header? {
         if (readChannel == null) {
             LOGGER.error("No available write channel fot the socket.")
             return null
@@ -83,7 +83,7 @@ class ConnectionServiceImpl(private val config: ConnectionConfig) : ConnectionSe
         return header
     }
 
-    private suspend fun readPayloadUnsafe(length: Int): Payload? {
+    protected open suspend fun readPayloadUnsafe(length: Int): Payload? {
         if (readChannel == null) {
             LOGGER.error("No available write channel fot the socket.")
             return null
@@ -97,7 +97,7 @@ class ConnectionServiceImpl(private val config: ConnectionConfig) : ConnectionSe
         return payload
     }
 
-    private suspend fun readMessageUnsafe(): Message? {
+    protected open suspend fun readMessageUnsafe(): Message? {
         val header = readHeaderUnsafe() ?: return null
         val payload = readPayloadUnsafe(header.length) ?: return null
         return Message(header = header, payload = payload)

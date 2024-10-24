@@ -8,16 +8,16 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.vpavlov.ups.reversi.client.di.initKoin
-import com.vpavlov.ups.reversi.client.di.koin
 import com.vpavlov.ups.reversi.client.presentation.navigation.NavigationBase
-import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import org.apache.logging.log4j.kotlin.logger
 
 
-fun main() = application {
+fun main(args: Array<String>) = application {
+    val argsSet = args.toSet()
     System.setProperty("log4j.configurationFile", "config/logging/log4j.xml")
     val logger = logger("main")
-    initKoin()
+    logger.debug("Run arguments: $argsSet")
+    initKoin(argsSet.contains("-offline"))
     Window(
         onCloseRequest = ::exitApplication,
         title = "client",
