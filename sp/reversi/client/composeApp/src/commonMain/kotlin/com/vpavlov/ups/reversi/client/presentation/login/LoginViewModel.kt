@@ -6,20 +6,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.vpavlov.ups.reversi.client.di.koin
+import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CustomViewModel
 import com.vpavlov.ups.reversi.client.service.api.MessageService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.utils.isValidUsername
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class LoginViewModel(private val navController: NavHostController): ViewModel() {
+class LoginViewModel(
+    private val navController: NavHostController,
+    private val messageService: MessageService,
+    private val clientStateService: ClientStateService,
+    errorStateService: ErrorStateService
+): CustomViewModel(
+    errorStateService = errorStateService
+) {
 
     private val _state = mutableStateOf(LoginState())
     val state: State<LoginState> = _state
-
-    private val messageService: MessageService = koin.get()
-
-    private val clientStateService: ClientStateService = koin.get()
 
     init{
         clientStateService.getStateFlow().onEach{ clientState ->
@@ -55,6 +60,6 @@ class LoginViewModel(private val navController: NavHostController): ViewModel() 
 
     private fun processLogin() {
         _state.value = state.value.copy(waitingResponse = true)
-        messageService.processLogin("mark")
+        messageService.processLogin(state.value.username)
     }
 }

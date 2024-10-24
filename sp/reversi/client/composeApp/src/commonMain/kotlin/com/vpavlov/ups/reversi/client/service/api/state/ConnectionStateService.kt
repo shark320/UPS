@@ -17,5 +17,9 @@ interface ConnectionStateService {
         socket: Socket? = getConnectionState().value.socket
     )
 
+    fun connectionLost()
+
     fun isAliveFLow(): Flow<Boolean>
+
+    fun isAlive(): Boolean
 }

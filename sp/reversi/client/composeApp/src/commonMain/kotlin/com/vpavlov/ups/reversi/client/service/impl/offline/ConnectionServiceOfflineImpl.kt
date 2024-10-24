@@ -20,7 +20,7 @@ class ConnectionServiceOfflineImpl(config: ConnectionConfig) :
 
     @Synchronized
     override fun connect() {
-        if (!connectionStateService.isAliveFLow()) {
+        if (!connectionStateService.isAlive()) {
             CoroutineScope(Dispatchers.Default).launch {
                 delay(1000L)
                 connectionStateService.updateConnectionState(isAlive = true)
@@ -29,25 +29,25 @@ class ConnectionServiceOfflineImpl(config: ConnectionConfig) :
 
     }
 
-    override suspend fun exchange(message: Message): Message? {
-        LOGGER.debug("Offline message sending is not possible")
-        return null
-    }
-
-    override suspend fun readHeaderUnsafe(): Header? {
-        LOGGER.debug("Offline communication is not possible")
-        return null
-    }
-
-    override suspend fun readPayloadUnsafe(length: Int): Payload? {
-        LOGGER.debug("Offline communication is not possible")
-        return null
-    }
-
-    override suspend fun readMessageUnsafe(): Message? {
-        LOGGER.debug("Offline communication is not possible")
-        return null
-    }
+//    override suspend fun exchange(request: Message): Message {
+//        LOGGER.debug("Offline message sending is not possible")
+//
+//    }
+//
+//    override fun readHeaderUnsafe(){
+//        LOGGER.debug("Offline communication is not possible")
+//
+//    }
+//
+//    override suspend fun readPayloadUnsafe(length: Int): Payload {
+//        LOGGER.debug("Offline communication is not possible")
+//        return null
+//    }
+//
+//    override suspend fun readMessageUnsafe(): Message {
+//        LOGGER.debug("Offline communication is not possible")
+//        return null
+//    }
 
 
 }

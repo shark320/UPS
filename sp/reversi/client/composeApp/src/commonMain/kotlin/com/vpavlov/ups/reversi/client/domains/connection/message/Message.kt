@@ -19,4 +19,6 @@ data class Message(
             return Message(header, payload)
         }
     }
+
+    fun isError() = header.isError()
 }

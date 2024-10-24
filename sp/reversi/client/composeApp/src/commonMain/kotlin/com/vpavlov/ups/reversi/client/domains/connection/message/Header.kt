@@ -17,7 +17,7 @@ data class Header(
     var identifier: String,
     var type: Type,
     var subtype: Subtype,
-    var status: Status,
+    var status: Status = Status.OK,
     private var _length: Int = 0,
 ) {
     var length: Int
@@ -31,7 +31,7 @@ data class Header(
         }
 
     fun construct(): String {
-        val length = java.lang.String.format("%04d", _length)
+        val length = java.lang.String.format("%07d", _length)
         val type = String.format("%1d", type.id)
         val subType = String.format("%02d", subtype.id)
         val status = String.format("%03d", status.code)
@@ -76,5 +76,7 @@ data class Header(
             )
         }
     }
+
+    fun isError() = status.code in 400..499
 
 }

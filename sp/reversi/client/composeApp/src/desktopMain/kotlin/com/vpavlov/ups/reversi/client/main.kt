@@ -32,7 +32,15 @@ fun main(args: Array<String>) = application {
 
     }
 }
-
+//private val ALLOWED_TYPES = setOf(
+//    String::class,
+//    Int::class,
+//    Boolean::class,
+//    List::class
+//)
+//
 //fun main(){
-//    println(ScreenNavigation.ConnectionScreen.toString())
+//    val str = "sdfdsf"
+//
+//    println(str::class in ALLOWED_TYPES)
 //}

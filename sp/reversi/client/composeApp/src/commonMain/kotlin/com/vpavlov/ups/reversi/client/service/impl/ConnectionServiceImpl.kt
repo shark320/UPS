@@ -8,12 +8,15 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
+import com.vpavlov.ups.reversi.client.service.exceptions.ConnectionException
+import com.vpavlov.ups.reversi.client.utils.readExactChars
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
 import io.ktor.network.sockets.openReadChannel
 import io.ktor.network.sockets.openWriteChannel
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
+import io.ktor.utils.io.read
 import io.ktor.utils.io.writeStringUtf8
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +42,7 @@ open class ConnectionServiceImpl(private val config: ConnectionConfig) : Connect
 
     @Synchronized
     override fun connect() {
-        if (!connectionStateService.isAliveFLow()) {
+        if (!connectionStateService.isAlive()) {
             CoroutineScope(Dispatchers.Default).launch {
                 try {
                     val socket = aSocket(ActorSelectorManager(Dispatchers.IO)).tcp()
@@ -57,49 +60,44 @@ open class ConnectionServiceImpl(private val config: ConnectionConfig) : Connect
 
     }
 
-    override suspend fun exchange(message: Message): Message? {
+    override suspend fun exchange(request: Message): Message {
         mutex.withLock(this) {
             if (writeChannel == null || readChannel == null) {
-                LOGGER.error("No available read or write channel fot the socket")
-                return null
+                throw ConnectionException("No available read or write channel fot the socket.")
             }
-            writeChannel!!.writeStringUtf8(message.construct())
+            val constructed = request.construct()
+            LOGGER.debug("Sending message: $request")
+            LOGGER.debug("Constructed: $constructed")
+            //TODO catch error
+            writeChannel!!.writeStringUtf8(constructed)
             return readMessageUnsafe()
         }
     }
 
-    protected open suspend fun readHeaderUnsafe(): Header? {
+    protected open suspend fun readHeaderUnsafe(): Header {
         if (readChannel == null) {
-            LOGGER.error("No available write channel fot the socket.")
-            return null
+            throw ConnectionException("No available write channel fot the socket.")
         }
-        var headerStr: String? = null
-        var header: Header? = null
-        readChannel!!.read(MSG_HEADER_LENGTH) { input ->
-            headerStr = String(input.array())
-        }
-        headerStr?.let{str -> header = Header.parse(str)}
-        return header
+        val headerStr: String = readChannel!!.readExactChars(MSG_HEADER_LENGTH)
+            ?: throw ConnectionException("Read header string is null.")
+        return Header.parse(headerStr)
     }
 
-    protected open suspend fun readPayloadUnsafe(length: Int): Payload? {
+    protected open suspend fun readPayloadUnsafe(length: Int): Payload {
         if (readChannel == null) {
-            LOGGER.error("No available write channel fot the socket.")
-            return null
+            throw ConnectionException("No available write channel fot the socket.")
         }
-        var payloadStr: String? = null
-        var payload: Payload? = null
-        readChannel!!.read(length) { input ->
-            payloadStr = String(input.array())
-        }
-        payloadStr?.let { str -> payload = Payload.parse(str) }
-        return payload
+        val payloadStr: String = readChannel!!.readExactChars(length)
+            ?: throw ConnectionException("Read payload string is null.")
+        return Payload.parse(payloadStr)
     }
 
-    protected open suspend fun readMessageUnsafe(): Message? {
-        val header = readHeaderUnsafe() ?: return null
-        val payload = readPayloadUnsafe(header.length) ?: return null
-        return Message(header = header, payload = payload)
+    protected open suspend fun readMessageUnsafe(): Message {
+        val header = readHeaderUnsafe()
+        val payload = readPayloadUnsafe(header.length)
+        val message = Message(header = header, payload = payload)
+        LOGGER.debug("Read message: $message")
+        return message
     }
 
 

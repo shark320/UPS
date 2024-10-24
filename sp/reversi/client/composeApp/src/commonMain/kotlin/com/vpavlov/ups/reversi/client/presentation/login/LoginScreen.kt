@@ -13,8 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.vpavlov.ups.reversi.client.presentation.common.CustomOutlinedTextField
-import com.vpavlov.ups.reversi.client.presentation.common.OnTopCircularProgressIndicator
+import com.vpavlov.ups.reversi.client.presentation.common.component.CustomOutlinedTextField
+import com.vpavlov.ups.reversi.client.presentation.common.component.ErrorDialog
+import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
+import com.vpavlov.ups.reversi.client.presentation.common.component.OnTopCircularProgressIndicator
+import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonEvent
 import com.vpavlov.ups.reversi.client.presentation.navigation.ScreenNavigation
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -60,8 +63,11 @@ fun LoginScreen(
                 Text(text = "Login")
             }
 
-            OnTopCircularProgressIndicator(show = state.waitingResponse)
-        }
 
+        }
     }
+
+    OnTopCircularProgressIndicator(show = state.waitingResponse)
+
+    HandleErrors(viewModel)
 }

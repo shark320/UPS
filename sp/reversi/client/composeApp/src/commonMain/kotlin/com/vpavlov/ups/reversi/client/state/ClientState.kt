@@ -8,5 +8,13 @@ data class ClientState(
 enum class ClientFlowState{
     MENU,
     LOBBY,
-    GAME
+    GAME;
+
+    companion object{
+        private val entriesMap = entries.associateBy { it.toString() }
+        fun getValueOrNull(key: String?): ClientFlowState?{
+            key ?: return null
+            return entriesMap[key]
+        }
+    }
 }

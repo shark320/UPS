@@ -50,10 +50,7 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
             data[key] = null
             return;
         }
-        require(value::class in ALLOWED_TYPES) {
-            "value should be of type: $ALLOWED_TYPES."
-        }
-        require(value is List<*> && value.all { it in ALLOWED_TYPES }) {
+        require(value::class in ALLOWED_TYPES || value is List<*> && value.all { it in ALLOWED_TYPES }) {
             "value should be of type: $ALLOWED_TYPES."
         }
         data[key] = value
@@ -61,6 +58,15 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
 
     @Synchronized
     fun getValue(key: String): Any? = data[key]
+
+    @Synchronized
+    fun getStringValue(key: String): String? {
+        val value = getValue(key)
+        if (value is String){
+            return value
+        }
+        return null
+    }
 
     @Synchronized
     fun construct(): String {
@@ -144,6 +150,9 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
         }
 
         private fun parseToken(token: String, payload: Payload){
+            if (token.isBlank()){
+                return
+            }
             val keyValueTokens = token.split(KEY_SEPARATOR)
             require (keyValueTokens.size == 2){
                 "Unable to parse token: $token"

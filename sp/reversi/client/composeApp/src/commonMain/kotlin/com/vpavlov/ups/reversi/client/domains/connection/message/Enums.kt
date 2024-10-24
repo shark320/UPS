@@ -49,8 +49,10 @@ enum class Subtype(val id: Int) {
 }
 
 enum class Status(val code: Int) {
-    NO_STATUS(0),
+    NULL_STATUS(0),
     OK(200),
+    BAD_REQUEST(400),
+    UNAUTHORIZED(401),
     NOT_FOUND(404),
     CONFLICT(409),
     NOT_ALLOWED(405);

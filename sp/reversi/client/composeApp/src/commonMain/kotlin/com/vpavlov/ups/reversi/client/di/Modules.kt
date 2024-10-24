@@ -8,6 +8,7 @@ import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.MessageService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.impl.ConnectionServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.ConnectionStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.MessageServiceImpl
@@ -16,11 +17,13 @@ import com.vpavlov.ups.reversi.client.service.impl.offline.state.ConnectionState
 import com.vpavlov.ups.reversi.client.service.impl.offline.MessageServiceOfflineImpl
 import com.vpavlov.ups.reversi.client.service.impl.offline.state.ClientStateServiceOfflineImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.ClientStateServiceImpl
+import com.vpavlov.ups.reversi.client.service.impl.state.ErrorStateServiceImpl
 import com.vpavlov.ups.reversi.client.state.ClientState
 import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.Koin
 import org.koin.core.context.GlobalContext.get
 import org.koin.core.context.startKoin
+import org.koin.core.scope.get
 import org.koin.dsl.module
 
 val koin: Koin
@@ -43,7 +46,13 @@ val onlineModules = module {
         ConnectionStateServiceImpl()
     }
     single<MessageService> {
-        MessageServiceImpl()
+        MessageServiceImpl(
+            config = ConfigProvider.connectionConfig,
+            connectionStateService = get(),
+            clientStateService = get(),
+            connectionService = get(),
+            errorStateService = get()
+        )
     }
     single<ClientStateService>{
         ClientStateServiceImpl()
@@ -58,7 +67,13 @@ val offlineModules = module {
         ConnectionStateServiceOfflineImpl()
     }
     single<MessageService> {
-        MessageServiceOfflineImpl()
+        MessageServiceOfflineImpl(
+            config = ConfigProvider.connectionConfig,
+            connectionStateService = get(),
+            clientStateService = get(),
+            connectionService = get(),
+            errorStateService = get()
+        )
     }
     single<ClientStateService>{
         ClientStateServiceOfflineImpl()
@@ -69,6 +84,15 @@ val offlineModules = module {
 val sharedModules = module {
     viewModel { ConnectionViewModel() }
     viewModel { (navController: NavHostController) ->
-        LoginViewModel(navController)
+        LoginViewModel(
+            navController = navController,
+            messageService = get(),
+            clientStateService = get(),
+            errorStateService = get()
+        )
+    }
+
+    single<ErrorStateService>{
+        ErrorStateServiceImpl()
     }
 }

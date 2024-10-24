@@ -6,4 +6,5 @@ data class LoginState(
     val validUsername: Boolean = false,
     val waitingResponse: Boolean = false,
     val loggedIn: Boolean = false,
+    val errorMsg: String? = null
 )

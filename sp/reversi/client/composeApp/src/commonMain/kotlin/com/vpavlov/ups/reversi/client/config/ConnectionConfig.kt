@@ -7,8 +7,11 @@ class ConnectionConfig(prop: Properties): Configuration(prop = prop) {
 
     val ip: String
 
+    val identifier: String
+
     init{
         port = get("port")!!.toInt()
         ip = get("ip")!!
+        identifier = get("identifier")!!
     }
 }

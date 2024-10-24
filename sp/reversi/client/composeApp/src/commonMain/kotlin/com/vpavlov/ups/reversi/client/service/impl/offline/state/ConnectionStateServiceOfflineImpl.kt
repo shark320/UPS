@@ -11,4 +11,6 @@ class ConnectionStateServiceOfflineImpl : ConnectionStateServiceImpl() {
         value.isAlive
     }
 
+    @Synchronized
+    override fun isAlive(): Boolean = state.value.isAlive
 }

@@ -1,4 +1,4 @@
-package com.vpavlov.ups.reversi.client.presentation.common
+package com.vpavlov.ups.reversi.client.presentation.common.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically

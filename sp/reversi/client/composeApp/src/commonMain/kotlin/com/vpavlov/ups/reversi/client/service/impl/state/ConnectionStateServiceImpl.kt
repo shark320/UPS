@@ -30,9 +30,20 @@ open class ConnectionStateServiceImpl : ConnectionStateService {
         )
     }
 
+    override fun connectionLost() {
+        _state.value = state.value.copy(
+            isAlive = false,
+            lastPing = null,
+            socket = null
+        )
+    }
+
     @Synchronized
     override fun isAliveFLow(): Flow<Boolean> = state.map { value ->
         value.isAlive && value.socket != null
     }
+
+    @Synchronized
+    override fun isAlive(): Boolean = state.value.isAlive && state.value.socket != null
 
 }
