@@ -1,7 +1,9 @@
 package com.vpavlov.ups.reversi.client.di
 
+import androidx.navigation.NavHostController
 import com.vpavlov.ups.reversi.client.config.ConfigProvider
 import com.vpavlov.ups.reversi.client.presentation.connection.ConnectionViewModel
+import com.vpavlov.ups.reversi.client.presentation.login.LoginViewModel
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.MessageService
@@ -22,9 +24,9 @@ val koin: Koin
 
 fun initKoin(offline: Boolean) = startKoin {
     modules(sharedModules)
-    if (offline){
+    if (offline) {
         modules(offlineModules)
-    } else{
+    } else {
         modules(onlineModules)
     }
 }
@@ -56,4 +58,7 @@ val offlineModules = module {
 
 val sharedModules = module {
     viewModel { ConnectionViewModel() }
+    viewModel { (navController: NavHostController) ->
+        LoginViewModel(navController)
+    }
 }

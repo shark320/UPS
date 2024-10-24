@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
@@ -37,11 +37,6 @@ fun ConnectionScreen(
         ) {
             CircularProgressIndicator()
             Text(text = "Connection...")
-            Button(
-                onClick = { navController.navigate(ScreenNavigation.LoginScreen.toString()) },
-            ) {
-                Text(text = "Go To Login")
-            }
         }
 
     }
