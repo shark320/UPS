@@ -7,9 +7,9 @@ interface MessageService {
 
     fun processLogin(username: String): StateFlow<Boolean>
 
-    fun processHandshake()
+    fun processHandshake(): StateFlow<Boolean>
 
-    fun processPing()
+    fun processPing(): StateFlow<Boolean>
 
-    fun processGetLobbies()
+    fun processGetLobbies(): StateFlow<Boolean>
 }
