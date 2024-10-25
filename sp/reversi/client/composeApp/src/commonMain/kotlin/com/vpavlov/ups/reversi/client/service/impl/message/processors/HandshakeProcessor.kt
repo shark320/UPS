@@ -8,20 +8,19 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Type
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
-import com.vpavlov.ups.reversi.client.service.impl.message.process
-import org.apache.logging.log4j.kotlin.loggerOf
 
 class HandshakeProcessor(
     private val config: ConnectionConfig,
-    private val connectionStateService: ConnectionStateService,
-    private val connectionService: ConnectionService,
-    private val errorStateService: ErrorStateService
+    connectionStateService: ConnectionStateService,
+    connectionService: ConnectionService,
+    errorStateService: ErrorStateService
+): CommonProcessor(
+    connectionService = connectionService,
+    errorStateService = errorStateService,
+    connectionStateService = connectionStateService
 ) {
-    companion object {
-        private val LOGGER = loggerOf(HandshakeProcessor::class.java)
-    }
 
-    operator fun invoke() = process(LOGGER) {
+    operator fun invoke() = process{
         LOGGER.debug("Processing handshake with username.")
         val requestHeader = Header(
             type = Type.POST,

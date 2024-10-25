@@ -66,6 +66,7 @@ val messageProcessorsModule = module {
             clientStateService = get(),
             connectionService = get(),
             errorStateService = get(),
+            connectionStateService = get()
         )
     }
 
@@ -83,6 +84,7 @@ val messageProcessorsModule = module {
             config = ConfigProvider.connectionConfig,
             connectionStateService = get(),
             connectionService = get(),
+            errorStateService = get()
         )
     }
 

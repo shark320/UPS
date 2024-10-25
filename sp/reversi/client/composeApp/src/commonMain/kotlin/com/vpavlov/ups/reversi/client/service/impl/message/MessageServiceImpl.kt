@@ -51,13 +51,15 @@ open class MessageServiceImpl(
     }
 }
 
-inline fun process(logger: KotlinLogger ,crossinline exchanger: suspend () -> Unit): StateFlow<Boolean> {
+inline fun process(logger: KotlinLogger, crossinline exchanger: suspend () -> Unit): StateFlow<Boolean> {
     val isComplete = MutableStateFlow(false)
     CoroutineScope(Dispatchers.Default).launch {
         try {
             exchanger()
-        } catch (e: Throwable) {
+        }
+        catch (e: Throwable) {
             //TODO: handle
+
             logger.error("Error during message processing.", e)
         }
         isComplete.value = true

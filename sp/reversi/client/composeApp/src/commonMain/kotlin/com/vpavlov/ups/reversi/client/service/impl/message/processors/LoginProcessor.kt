@@ -9,25 +9,25 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
 import com.vpavlov.ups.reversi.client.domains.connection.message.Type
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.impl.message.malformedResponse
-import com.vpavlov.ups.reversi.client.service.impl.message.process
 import com.vpavlov.ups.reversi.client.service.impl.message.unexpectedErrorStatus
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
-import org.apache.logging.log4j.kotlin.loggerOf
 
 class LoginProcessor(
     private val config: ConnectionConfig,
     private val clientStateService: ClientStateService,
-    private val connectionService: ConnectionService,
-    private val errorStateService: ErrorStateService
+    connectionStateService: ConnectionStateService,
+    connectionService: ConnectionService,
+    errorStateService: ErrorStateService
+): CommonProcessor(
+    connectionService = connectionService,
+    errorStateService = errorStateService,
+    connectionStateService = connectionStateService
 ) {
 
-    companion object {
-        private val LOGGER = loggerOf(LoginProcessor::class.java)
-    }
-
-    operator fun invoke(username: String) = process(LOGGER) {
+    operator fun invoke(username: String) = process {
         LOGGER.debug("Processing login with username '$username'")
         val requestHeader = Header(
             type = Type.POST,
