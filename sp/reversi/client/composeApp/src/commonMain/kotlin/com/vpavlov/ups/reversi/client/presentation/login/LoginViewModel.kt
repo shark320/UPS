@@ -59,7 +59,8 @@ class LoginViewModel(
     }
 
     private fun processLogin() {
-        _state.value = state.value.copy(waitingResponse = true)
-        messageService.processLogin(state.value.username)
+        messageService.processLogin(state.value.username).onEach { isComplete ->
+            _state.value = state.value.copy(waitingResponse = !isComplete)
+        }.launchIn(viewModelScope)
     }
 }

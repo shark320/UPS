@@ -19,14 +19,18 @@ open class CustomViewModel(
         errorStateService.getStateFlow().onEach { errorState ->
             if (errorState.isError){
                 _commonState.value = commonState.value.copy(errorMessage = errorState.errorMessage)
-                errorStateService.clearError()
+            } else {
+                _commonState.value = commonState.value.copy(errorMessage = null)
             }
         }.launchIn(viewModelScope)
     }
 
     fun onEvent(commonEvent: CommonEvent){
         when(commonEvent){
-            CommonEvent.ClearError -> {_commonState.value = commonState.value.copy(errorMessage = null)}
+            CommonEvent.ClearError -> {
+                _commonState.value = commonState.value.copy(errorMessage = null)
+                errorStateService.clearError()
+            }
         }
     }
 

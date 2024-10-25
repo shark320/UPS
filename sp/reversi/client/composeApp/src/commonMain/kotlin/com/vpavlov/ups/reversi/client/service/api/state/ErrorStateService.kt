@@ -8,7 +8,8 @@ interface ErrorStateService {
     fun getStateFlow(): StateFlow<ErrorState>
 
     fun setError(
-        errorMessage: String
+        errorMessage: String,
+        fatal: Boolean = false
     )
 
     fun clearError()

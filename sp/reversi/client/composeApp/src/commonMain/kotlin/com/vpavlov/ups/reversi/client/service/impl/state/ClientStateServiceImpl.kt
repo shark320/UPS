@@ -18,7 +18,7 @@ open class ClientStateServiceImpl: ClientStateService {
     @Synchronized
     override fun updateState(
         username: String,
-        flowState: ClientFlowState
+        flowState: ClientFlowState,
     ) {
         _state.value = state.value!!.copy(
             username = username,

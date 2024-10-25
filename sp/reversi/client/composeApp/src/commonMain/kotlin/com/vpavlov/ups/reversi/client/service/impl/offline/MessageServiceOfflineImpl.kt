@@ -27,7 +27,7 @@ class MessageServiceOfflineImpl(
         val LOGGER = loggerOf(MessageServiceOfflineImpl::class.java)
     }
 
-    override fun processLogin(username: String) {
+    override fun processLogin(username: String) = processWithResult {
         LOGGER.debug("Processing login")
         clientStateService.initState(username = username, flowState = ClientFlowState.MENU)
     }

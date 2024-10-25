@@ -16,6 +16,8 @@ import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import org.apache.logging.log4j.kotlin.loggerOf
@@ -44,7 +46,7 @@ open class MessageServiceImpl(
         errorStateService.setError("Malformed response for the type [$subtype]")
     }
 
-    override fun processLogin(username: String) = process {
+    override fun processLogin(username: String) = processWithResult {
         LOGGER.debug("Processing login with username '$username'")
         val requestHeader = Header(
             type = Type.POST,
@@ -129,5 +131,18 @@ open class MessageServiceImpl(
             }
         }
 
+    }
+
+    protected inline fun processWithResult(crossinline exchanger: suspend () -> Unit): StateFlow<Boolean> {
+        val isComplete = MutableStateFlow(false)
+        CoroutineScope(Dispatchers.Default).launch {
+            try {
+                exchanger()
+            } catch (e: Throwable) {
+                LOGGER.error("Error during message processing.", e)
+            }
+            isComplete.value = true
+        }
+        return isComplete
     }
 }
