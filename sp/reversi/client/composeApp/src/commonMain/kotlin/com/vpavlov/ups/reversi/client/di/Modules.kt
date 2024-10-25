@@ -54,7 +54,7 @@ val onlineModules = module {
             errorStateService = get()
         )
     }
-    single<ClientStateService>{
+    single<ClientStateService> {
         ClientStateServiceImpl()
     }
 }
@@ -75,14 +75,21 @@ val offlineModules = module {
             errorStateService = get()
         )
     }
-    single<ClientStateService>{
+    single<ClientStateService> {
         ClientStateServiceOfflineImpl()
     }
 }
 
 
 val sharedModules = module {
-    viewModel { ConnectionViewModel() }
+    viewModel {
+        ConnectionViewModel(
+            connectionService = get(),
+            errorStateService = get(),
+            connectionStateService = get(),
+            messageService = get(),
+        )
+    }
     viewModel { (navController: NavHostController) ->
         LoginViewModel(
             navController = navController,
@@ -92,7 +99,7 @@ val sharedModules = module {
         )
     }
 
-    single<ErrorStateService>{
+    single<ErrorStateService> {
         ErrorStateServiceImpl()
     }
 }

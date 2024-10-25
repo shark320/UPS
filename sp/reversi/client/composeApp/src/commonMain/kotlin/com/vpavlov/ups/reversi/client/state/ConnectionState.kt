@@ -7,4 +7,5 @@ data class ConnectionState(
     val lastPing: Long? = null,
 
     val socket: Socket? = null,
+    val isHandshake: Boolean = false
 )

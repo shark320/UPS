@@ -14,7 +14,8 @@ interface ConnectionStateService {
     fun updateConnectionState(
         isAlive: Boolean = getConnectionState().value.isAlive,
         lastPing: Long? = getConnectionState().value.lastPing,
-        socket: Socket? = getConnectionState().value.socket
+        socket: Socket? = getConnectionState().value.socket,
+        isHandshake: Boolean = getConnectionState().value.isHandshake
     )
 
     fun connectionLost()
@@ -22,4 +23,8 @@ interface ConnectionStateService {
     fun isAliveFLow(): Flow<Boolean>
 
     fun isAlive(): Boolean
+
+    fun isAliveAndHandshake(): Boolean
+
+    fun isAliveAndHandshakeFlow(): Flow<Boolean>
 }

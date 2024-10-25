@@ -21,12 +21,13 @@ open class ConnectionStateServiceImpl : ConnectionStateService {
 
     @Synchronized
     override fun updateConnectionState(
-        isAlive: Boolean, lastPing: Long?, socket: Socket?
+        isAlive: Boolean, lastPing: Long?, socket: Socket?, isHandshake: Boolean
     ) {
         _state.value = state.value.copy(
             isAlive = isAlive,
             lastPing = lastPing,
-            socket = socket
+            socket = socket,
+            isHandshake = isHandshake
         )
     }
 
@@ -45,5 +46,11 @@ open class ConnectionStateServiceImpl : ConnectionStateService {
 
     @Synchronized
     override fun isAlive(): Boolean = state.value.isAlive && state.value.socket != null
+
+    override fun isAliveAndHandshake(): Boolean = isAlive() && state.value.isHandshake
+
+    override fun isAliveAndHandshakeFlow(): Flow<Boolean> = isAliveFLow().map {
+        it && state.value.isHandshake
+    }
 
 }

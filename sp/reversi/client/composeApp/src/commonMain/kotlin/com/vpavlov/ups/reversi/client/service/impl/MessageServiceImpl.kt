@@ -34,6 +34,16 @@ open class MessageServiceImpl(
 
     protected val mutex = Mutex();
 
+    private fun unexpectedErrorStatus(status: Status) {
+        LOGGER.error("Unexpected response status: $status")
+        errorStateService.setError("Unexpected error status")
+    }
+
+    private fun malformedResponse(subtype: Subtype){
+        LOGGER.error("Malformed response for the subtype [$subtype]")
+        errorStateService.setError("Malformed response for the type [$subtype]")
+    }
+
     override fun processLogin(username: String) = process {
         LOGGER.debug("Processing login with username '$username'")
         val requestHeader = Header(
@@ -74,21 +84,32 @@ open class MessageServiceImpl(
         } else{
             clientStateService.initState(username = username, flowState = state)
         }
-
     }
 
-    private fun unexpectedErrorStatus(status: Status) {
-        LOGGER.error("Unexpected response status: $status")
-        errorStateService.setError("Unexpected error status")
+
+
+    override fun processHandshake() = process {
+        LOGGER.debug("Processing handshake with username.")
+        val requestHeader = Header(
+            type = Type.POST,
+            identifier = config.identifier,
+            subtype = Subtype.HANDSHAKE
+        )
+        val response = connectionService.exchange(Message(header = requestHeader))
+        if (response.isError()) {
+            handleHandshakeError()
+        } else {
+            handleHandshakeOk()
+        }
     }
 
-    private fun malformedResponse(subtype: Subtype){
-        LOGGER.error("Malformed response for the subtype [$subtype]")
-        errorStateService.setError("Malformed response for the type [$subtype]")
+    private fun handleHandshakeError(){
+        connectionStateService.updateConnectionState(isHandshake = false)
+        //FATAL error -> show error and terminate execution
     }
 
-    override fun processHandshake() {
-
+    private fun handleHandshakeOk() {
+        connectionStateService.updateConnectionState(isHandshake = true)
     }
 
     override fun processPing() {
