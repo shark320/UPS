@@ -135,7 +135,7 @@ std::shared_ptr<message> message_manager::process_login(const std::shared_ptr<me
             response_payload->set_value("msg", std::make_shared<string>(
                     "Provided username is already in use. Choose another one, please."));
 
-
+            return std::make_shared<message>(response_header, response_payload);
         } else {
             client_logger->debug(fmt::format("Found client with the username '{}' in cache.", *login));
             _client->connect(client_connection);

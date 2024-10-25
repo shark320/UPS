@@ -161,6 +161,7 @@ void server::process_client_connection(const std::shared_ptr<client_connection> 
             }
 
             std::string response_str = response->construct();
+            client_logger->debug(fmt::format("Response message: {}", response->to_string()));
             if (!response_str.empty()){
                 send(socket, response_str.c_str(), response_str.size(), MSG_NOSIGNAL);
             }
