@@ -14,6 +14,7 @@ import com.vpavlov.ups.reversi.client.service.impl.state.ConnectionStateServiceI
 import com.vpavlov.ups.reversi.client.service.impl.message.MessageServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.HandshakeProcessor
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.LoginProcessor
+import com.vpavlov.ups.reversi.client.service.impl.message.processors.PingProcessor
 import com.vpavlov.ups.reversi.client.service.impl.offline.ConnectionServiceOfflineImpl
 import com.vpavlov.ups.reversi.client.service.impl.offline.state.ConnectionStateServiceOfflineImpl
 import com.vpavlov.ups.reversi.client.service.impl.offline.MessageServiceOfflineImpl
@@ -76,6 +77,15 @@ val messageProcessorsModule = module {
             errorStateService = get()
         )
     }
+
+    single {
+        PingProcessor(
+            config = ConfigProvider.connectionConfig,
+            connectionStateService = get(),
+            connectionService = get(),
+        )
+    }
+
 }
 
 

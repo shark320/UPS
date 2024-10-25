@@ -10,11 +10,11 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Type
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
-import com.vpavlov.ups.reversi.client.service.impl.message.MessageServiceImpl.Companion.LOGGER
 import com.vpavlov.ups.reversi.client.service.impl.message.malformedResponse
 import com.vpavlov.ups.reversi.client.service.impl.message.process
 import com.vpavlov.ups.reversi.client.service.impl.message.unexpectedErrorStatus
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
+import org.apache.logging.log4j.kotlin.loggerOf
 
 class LoginProcessor(
     private val config: ConnectionConfig,
@@ -23,7 +23,11 @@ class LoginProcessor(
     private val errorStateService: ErrorStateService
 ) {
 
-    operator fun invoke(username: String) = process {
+    companion object {
+        private val LOGGER = loggerOf(LoginProcessor::class.java)
+    }
+
+    operator fun invoke(username: String) = process(LOGGER) {
         LOGGER.debug("Processing login with username '$username'")
         val requestHeader = Header(
             type = Type.POST,
@@ -48,7 +52,8 @@ class LoginProcessor(
             Status.NOT_FOUND,
             Status.NOT_ALLOWED -> unexpectedErrorStatus(
                 response.header.status,
-                errorStateService = errorStateService
+                errorStateService = errorStateService,
+                logger = LOGGER
             )
 
             Status.CONFLICT -> {
@@ -66,7 +71,8 @@ class LoginProcessor(
         if (state == null) {
             malformedResponse(
                 subtype = response.header.subtype,
-                errorStateService = errorStateService
+                errorStateService = errorStateService,
+                logger = LOGGER
             )
         } else {
             clientStateService.initState(username = username, flowState = state)

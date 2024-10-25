@@ -11,40 +11,39 @@ import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.impl.message.process
 import org.apache.logging.log4j.kotlin.loggerOf
 
-class HandshakeProcessor(
+class PingProcessor(
     private val config: ConnectionConfig,
     private val connectionStateService: ConnectionStateService,
-    private val connectionService: ConnectionService,
-    private val errorStateService: ErrorStateService
+    private val connectionService: ConnectionService
 ) {
     companion object {
-        private val LOGGER = loggerOf(HandshakeProcessor::class.java)
+        private val LOGGER = loggerOf(PingProcessor::class.java)
     }
 
     operator fun invoke() = process(LOGGER) {
+
         LOGGER.debug("Processing handshake with username.")
         val requestHeader = Header(
-            type = Type.POST,
+            type = Type.GET,
             identifier = config.identifier,
-            subtype = Subtype.HANDSHAKE
+            subtype = Subtype.PING
         )
         val response = connectionService.exchange(Message(header = requestHeader))
         if (response.isError()) {
-            handleHandshakeError()
+            handlePingError(response)
         } else {
-            handleHandshakeOk()
+            handlePingOk()
         }
+
     }
 
-    private fun handleHandshakeError(){
-        connectionStateService.updateConnectionState(isHandshake = false)
-        errorStateService.setError(
-            errorMessage = "Fatal error: could not process handshake.",
-            fatal = true
+    private fun handlePingError(response: Message) {
+        LOGGER.error("Handle ping response error status. $response")
+    }
+
+    private fun handlePingOk() {
+        connectionStateService.updateConnectionState(
+            lastPing = System.currentTimeMillis()
         )
-    }
-
-    private fun handleHandshakeOk() {
-        connectionStateService.updateConnectionState(isHandshake = true)
     }
 }

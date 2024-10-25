@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
+import org.apache.logging.log4j.kotlin.KotlinLogger
 import org.apache.logging.log4j.kotlin.loggerOf
 
 open class MessageServiceImpl(
@@ -28,7 +29,7 @@ open class MessageServiceImpl(
 ) : MessageService {
 
     companion object {
-        val LOGGER = loggerOf(MessageServiceImpl::class.java)
+        private val LOGGER = loggerOf(MessageServiceImpl::class.java)
     }
 
     protected val mutex = Mutex();
@@ -41,35 +42,35 @@ open class MessageServiceImpl(
 
 
 
-    override fun processPing() = process{
+    override fun processPing() = process(LOGGER){
 
     }
 
-    override fun processGetLobbies() = process {
+    override fun processGetLobbies() = process(LOGGER) {
 
     }
 }
 
-inline fun process(crossinline exchanger: suspend () -> Unit): StateFlow<Boolean> {
+inline fun process(logger: KotlinLogger ,crossinline exchanger: suspend () -> Unit): StateFlow<Boolean> {
     val isComplete = MutableStateFlow(false)
     CoroutineScope(Dispatchers.Default).launch {
         try {
             exchanger()
         } catch (e: Throwable) {
             //TODO: handle
-            LOGGER.error("Error during message processing.", e)
+            logger.error("Error during message processing.", e)
         }
         isComplete.value = true
     }
     return isComplete
 }
 
-fun unexpectedErrorStatus(status: Status, errorStateService: ErrorStateService) {
-    LOGGER.error("Unexpected response status: $status")
+fun unexpectedErrorStatus(status: Status, errorStateService: ErrorStateService,logger: KotlinLogger ) {
+    logger.error("Unexpected response status: $status")
     errorStateService.setError("Unexpected error status")
 }
 
-fun malformedResponse(subtype: Subtype, errorStateService: ErrorStateService){
-    LOGGER.error("Malformed response for the subtype [$subtype]")
+fun malformedResponse(subtype: Subtype, errorStateService: ErrorStateService, logger: KotlinLogger ){
+    logger.error("Malformed response for the subtype [$subtype]")
     errorStateService.setError("Malformed response for the type [$subtype]")
 }
