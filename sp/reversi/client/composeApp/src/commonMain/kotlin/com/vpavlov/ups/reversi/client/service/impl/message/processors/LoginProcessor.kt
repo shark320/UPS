@@ -14,6 +14,7 @@ import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.impl.message.malformedResponse
 import com.vpavlov.ups.reversi.client.service.impl.message.unexpectedErrorStatus
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
+import com.vpavlov.ups.reversi.client.state.ErrorMessage
 
 class LoginProcessor(
     private val config: ConnectionConfig,
@@ -58,7 +59,7 @@ class LoginProcessor(
 
             Status.CONFLICT -> {
                 LOGGER.info("Provided username conflict. $response")
-                errorStateService.setError("The username is already in use")
+                errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "The username is already in use"))
             }
 
             Status.OK, Status.NULL_STATUS -> LOGGER.warn("Could not handle error code")

@@ -4,6 +4,8 @@ import com.vpavlov.ups.reversi.client.config.ConnectionConfig
 import com.vpavlov.ups.reversi.client.domains.connection.message.Header
 import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
+import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.impl.ConnectionServiceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,8 +13,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.loggerOf
 
-class ConnectionServiceOfflineImpl(config: ConnectionConfig) :
-    ConnectionServiceImpl(config = config) {
+class ConnectionServiceOfflineImpl(
+    config: ConnectionConfig,
+    connectionStateService: ConnectionStateService, errorStateService: ErrorStateService
+) :
+    ConnectionServiceImpl(
+        config = config, connectionStateService = connectionStateService,
+        errorStateService = errorStateService
+    ) {
 
     companion object {
         private val LOGGER = loggerOf(ConnectionServiceOfflineImpl::class.java)

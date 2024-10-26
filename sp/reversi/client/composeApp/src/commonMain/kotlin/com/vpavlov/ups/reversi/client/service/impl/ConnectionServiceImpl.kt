@@ -8,14 +8,20 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.exceptions.ConnectionException
+import com.vpavlov.ups.reversi.client.service.exceptions.FatalException
+import com.vpavlov.ups.reversi.client.state.ErrorMessage
 import com.vpavlov.ups.reversi.client.utils.readExactChars
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
+import io.ktor.network.sockets.connection
+import io.ktor.network.sockets.isClosed
 import io.ktor.network.sockets.openReadChannel
 import io.ktor.network.sockets.openWriteChannel
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
+import io.ktor.utils.io.errors.IOException
 import io.ktor.utils.io.read
 import io.ktor.utils.io.writeStringUtf8
 import kotlinx.coroutines.CoroutineScope
@@ -25,20 +31,23 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.apache.logging.log4j.kotlin.loggerOf
 import java.net.InetSocketAddress
+import java.net.SocketException
 
-open class ConnectionServiceImpl(private val config: ConnectionConfig) : ConnectionService {
+open class ConnectionServiceImpl(
+    private val config: ConnectionConfig,
+    protected val connectionStateService: ConnectionStateService,
+    protected val errorStateService: ErrorStateService,
+) : ConnectionService {
 
     companion object {
         private val LOGGER = loggerOf(ConnectionServiceImpl::class.java)
     }
 
-    protected val connectionStateService: ConnectionStateService = koin.get()
+    private var readChannel: ByteReadChannel? = null
 
-    protected var readChannel: ByteReadChannel? = null
+    private var writeChannel: ByteWriteChannel? = null
 
-    protected var writeChannel: ByteWriteChannel? = null
-
-    protected val mutex = Mutex()
+    private val mutex = Mutex()
 
     @Synchronized
     override fun connect() {
@@ -51,8 +60,16 @@ open class ConnectionServiceImpl(private val config: ConnectionConfig) : Connect
                     writeChannel = socket.openWriteChannel(autoFlush = true)
                     connectionStateService.updateConnectionState(isAlive = true, socket = socket)
                     LOGGER.info("Connected to the server [${config.ip}:${config.port}]")
+                    println(socket.isClosed)
+                    writeChannel?.writeStringUtf8("  ")
                 } catch (e: Throwable) {
                     //TODO: reconnect on error
+                    errorStateService.setError(
+                        errorMessage = ErrorMessage(
+                            errorMessage = "Could not connect to the server.",
+                            okButton = "Try again"
+                        )
+                    )
                     LOGGER.error("Could not connect to the server [${config.ip}:${config.port}]", e)
                 }
             }
@@ -62,15 +79,24 @@ open class ConnectionServiceImpl(private val config: ConnectionConfig) : Connect
 
     override suspend fun exchange(request: Message): Message {
         mutex.withLock(this) {
-            if (writeChannel == null || readChannel == null) {
-                throw ConnectionException("No available read or write channel fot the socket.")
+            try{
+                if (writeChannel == null || readChannel == null) {
+                    throw ConnectionException("No available read or write channel fot the socket.")
+                }
+                val constructed = request.construct()
+                LOGGER.debug("Sending message: $request")
+                LOGGER.debug("Constructed: $constructed")
+                //TODO catch error
+                writeChannel!!.writeStringUtf8(constructed)
+                return readMessageUnsafe()
+            }catch (e: IOException){
+                connectionStateService.connectionLost()
+                throw ConnectionException(e)
+            }catch (e: Throwable){
+                LOGGER.error("", e)
+                throw FatalException(e)
             }
-            val constructed = request.construct()
-            LOGGER.debug("Sending message: $request")
-            LOGGER.debug("Constructed: $constructed")
-            //TODO catch error
-            writeChannel!!.writeStringUtf8(constructed)
-            return readMessageUnsafe()
+
         }
     }
 

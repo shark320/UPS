@@ -5,6 +5,9 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.exceptions.ConnectionException
+import com.vpavlov.ups.reversi.client.service.exceptions.FatalException
+import com.vpavlov.ups.reversi.client.state.ErrorMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
@@ -27,13 +30,15 @@ open class CommonProcessor(
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 exchanger()
-            }
-            catch (e: ClosedReceiveChannelException){
-                connectionStateService.connectionLost()
-                LOGGER.error("Connection to the server lost", e)
-            }
-            catch (e: Throwable) {
-                errorStateService.setError("A fatal error during the message processing.", fatal = true)
+            }catch (e: ConnectionException) {
+                onConnectionError(e)
+            } catch (e: ClosedReceiveChannelException) {
+                onConnectionError(e)
+            } catch (e: Throwable) {
+                errorStateService.setError(
+                    errorMessage = ErrorMessage(errorMessage = "A fatal error during the message processing.", okButton = "Exit"),
+                    fatal = true
+                )
                 LOGGER.error("Error during message processing.", e)
             }
             isComplete.value = true
@@ -43,11 +48,16 @@ open class CommonProcessor(
 
     protected fun unexpectedErrorStatus(status: Status, errorStateService: ErrorStateService) {
         LOGGER.error("Unexpected response status: $status")
-        errorStateService.setError("Unexpected error status")
+        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status"))
     }
 
-    protected fun malformedResponse(subtype: Subtype, errorStateService: ErrorStateService){
+    protected fun malformedResponse(subtype: Subtype, errorStateService: ErrorStateService) {
         LOGGER.error("Malformed response for the subtype [$subtype]")
-        errorStateService.setError("Malformed response for the type [$subtype]")
+        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Malformed response for the type [$subtype]"))
+    }
+
+    protected open fun onConnectionError(exception: Exception){
+        connectionStateService.connectionLost()
+        LOGGER.error("Connection to the server lost", exception)
     }
 }

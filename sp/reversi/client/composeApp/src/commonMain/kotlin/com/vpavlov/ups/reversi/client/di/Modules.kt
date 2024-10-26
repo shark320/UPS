@@ -1,9 +1,8 @@
 package com.vpavlov.ups.reversi.client.di
 
-import androidx.navigation.NavHostController
 import com.vpavlov.ups.reversi.client.config.ConfigProvider
-import com.vpavlov.ups.reversi.client.presentation.connection.ConnectionViewModel
-import com.vpavlov.ups.reversi.client.presentation.login.LoginViewModel
+import com.vpavlov.ups.reversi.client.presentation.connection.ConnectionViewScreenModel
+import com.vpavlov.ups.reversi.client.presentation.login.LoginScreenViewModel
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.MessageService
@@ -41,7 +40,11 @@ fun initKoin(offline: Boolean) = startKoin {
 
 val onlineModules = module {
     single<ConnectionService> {
-        ConnectionServiceImpl(config = ConfigProvider.connectionConfig)
+        ConnectionServiceImpl(
+            config = ConfigProvider.connectionConfig,
+            errorStateService = get(),
+            connectionStateService = get()
+        )
     }
     single<ConnectionStateService> {
         ConnectionStateServiceImpl()
@@ -93,7 +96,11 @@ val messageProcessorsModule = module {
 
 val offlineModules = module {
     single<ConnectionService> {
-        ConnectionServiceOfflineImpl(config = ConfigProvider.connectionConfig)
+        ConnectionServiceOfflineImpl(
+            config = ConfigProvider.connectionConfig,
+            connectionStateService = get(),
+            errorStateService = get()
+        )
     }
     single<ConnectionStateService> {
         ConnectionStateServiceOfflineImpl()
@@ -113,19 +120,19 @@ val offlineModules = module {
 
 val sharedModules = module {
     viewModel {
-        ConnectionViewModel(
+        ConnectionViewScreenModel(
             connectionService = get(),
             errorStateService = get(),
             connectionStateService = get(),
             messageService = get(),
         )
     }
-    viewModel { (navController: NavHostController) ->
-        LoginViewModel(
-            navController = navController,
+    viewModel {
+        LoginScreenViewModel(
             messageService = get(),
             clientStateService = get(),
-            errorStateService = get()
+            errorStateService = get(),
+            connectionStateService = get(),
         )
     }
 

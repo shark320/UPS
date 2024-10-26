@@ -14,6 +14,7 @@ import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.impl.message.MessageServiceImpl.Companion.LOGGER
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.HandshakeProcessor
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.LoginProcessor
+import com.vpavlov.ups.reversi.client.state.ErrorMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,10 +70,10 @@ inline fun process(logger: KotlinLogger, crossinline exchanger: suspend () -> Un
 
 fun unexpectedErrorStatus(status: Status, errorStateService: ErrorStateService,logger: KotlinLogger ) {
     logger.error("Unexpected response status: $status")
-    errorStateService.setError("Unexpected error status")
+    errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status"))
 }
 
 fun malformedResponse(subtype: Subtype, errorStateService: ErrorStateService, logger: KotlinLogger ){
     logger.error("Malformed response for the subtype [$subtype]")
-    errorStateService.setError("Malformed response for the type [$subtype]")
+    errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Malformed response for the type [$subtype]"))
 }

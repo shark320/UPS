@@ -13,29 +13,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import com.vpavlov.ups.reversi.client.presentation.common.component.CustomOutlinedTextField
-import com.vpavlov.ups.reversi.client.presentation.common.component.ErrorDialog
 import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
 import com.vpavlov.ups.reversi.client.presentation.common.component.OnTopCircularProgressIndicator
-import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonEvent
 import com.vpavlov.ups.reversi.client.presentation.navigation.ScreenNavigation
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.core.parameter.parametersOf
 
-@OptIn(KoinExperimentalAPI::class, ExperimentalMaterial3Api::class)
+@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    viewModel: LoginViewModel = koinViewModel(
-        parameters = {
-            parametersOf(navController)
-        }
-    )
+    viewModel: LoginScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.state.value
     if (state.loggedIn){
-        navController.navigate(ScreenNavigation.MenuScreen.toString())
+        navController.navigate(
+            route = ScreenNavigation.MenuScreen.toString(),
+            navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
+        )
+
     }
     Box(
         contentAlignment = Alignment.Center,
@@ -52,12 +50,12 @@ fun LoginScreen(
                     .fillMaxWidth(0.3f),
                 label = { Text(text = "Username") },
                 value = state.username,
-                onValueChange = { viewModel.onEvent(LoginEvent.UsernameEntered(it)) },
+                onValueChange = { viewModel.onEvent(LoginScreenEvent.UsernameEntered(it)) },
                 isError = state.usernameError,
                 errorMessage = "Username is not valid!"
             )
             Button(
-                onClick = { viewModel.onEvent(LoginEvent.ProcessLogin) },
+                onClick = { viewModel.onEvent(LoginScreenEvent.ProcessLoginScreen) },
                 enabled = state.validUsername
             ) {
                 Text(text = "Login")

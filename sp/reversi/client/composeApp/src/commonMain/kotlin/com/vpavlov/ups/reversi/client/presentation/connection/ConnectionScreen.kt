@@ -11,6 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
+import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
+import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
 import com.vpavlov.ups.reversi.client.presentation.navigation.ScreenNavigation
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -19,10 +22,35 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 fun ConnectionScreen(
     navController: NavHostController,
-    viewModel: ConnectionViewModel = koinViewModel()
+    viewModel: ConnectionViewScreenModel = koinViewModel()
 ) {
-    if (viewModel.state.value.isAliveAndHandshake){
-        navController.navigate(ScreenNavigation.LoginScreen.toString())
+//    ConnectionStateListenerWrapper(
+//        viewModel = viewModel,
+//        navController = navController
+//    ) {
+    HandleErrors(
+        viewModel = viewModel,
+        okButtonText = "Reconnect"
+    ) {
+        viewModel.onEvent(ConnectionScreenEvent.Reconnect)
+    }
+    Content(
+        viewModel = viewModel,
+        navController = navController
+    )
+//    }
+}
+
+@Composable
+private fun Content(
+    navController: NavHostController,
+    viewModel: ConnectionViewScreenModel
+) {
+    if (viewModel.state.value.isAliveAndHandshake) {
+        navController.navigate(
+            ScreenNavigation.LoginScreen.toString(),
+            navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
+        )
     }
     Box(
         contentAlignment = Alignment.Center,

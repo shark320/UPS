@@ -6,9 +6,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.navigation.NavController
-import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonEvent
-import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CustomViewModel
 
 @Composable
 fun ConfirmationDialog(
@@ -77,13 +74,3 @@ fun ErrorDialog(
     }
 }
 
-@Composable
-fun HandleErrors(viewModel: CustomViewModel){
-    val errorMessage = viewModel.commonState.value.errorMessage
-    if (errorMessage != null){
-        ErrorDialog(
-            message = errorMessage,
-            onOkClick = {viewModel.onEvent(CommonEvent.ClearError)}
-        )
-    }
-}
