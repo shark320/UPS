@@ -57,7 +57,7 @@ class LoginScreenViewModel(
     }
 
     private fun processLogin() {
-        pingService.pause()
+        pingService.stop()
         messageService.processLogin(state.value.username).onEach { isComplete ->
             _state.value = state.value.copy(waitingResponse = !isComplete)
         }.launchIn(viewModelScope)

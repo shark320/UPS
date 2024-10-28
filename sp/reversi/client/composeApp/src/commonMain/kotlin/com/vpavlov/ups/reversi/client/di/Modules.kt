@@ -164,7 +164,8 @@ val sharedModules = module {
         MenuScreenViewModel(
             connectionStateService = get(),
             errorStateService = get(),
-            pingService = get()
+            pingService = get(),
+            clientStateService = get()
         )
     }
 

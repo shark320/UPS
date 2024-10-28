@@ -17,6 +17,10 @@ fun checkListTypes(list: List<*>, type: KClass<out Any>): Boolean {
     return list.all { it != null && it::class == type }
 }
 
+fun checkListTypes(list: List<*>, types: Set<KClass<out Any>>): Boolean {
+    return list.all { it != null && it::class in types }
+}
+
 fun requireAllNotNull(vararg vars: Any?): Boolean{
     return vars.all { it != null }
 }

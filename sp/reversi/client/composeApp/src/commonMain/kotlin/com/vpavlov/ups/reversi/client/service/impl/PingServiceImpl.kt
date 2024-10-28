@@ -80,25 +80,6 @@ class PingServiceImpl(
         job = null
     }
 
-    @Synchronized
-    override fun resume() {
-        LOGGER.debug("Resuming ping service!")
-        if (job == null){
-            LOGGER.error("Ping service was not started!")
-            throw IllegalStateException("Ping service was not started!")
-        }
-        if (!isRunning.get()) {
-            isRunning.set(true)
-        } else {
-            LOGGER.warn("The Ping Service is already running!")
-        }
-    }
-
-    override fun pause() {
-        LOGGER.debug("Pausing ping service!")
-        isRunning.set(false)
-    }
-
     override fun isRunning() = isRunning.get()
 
 }

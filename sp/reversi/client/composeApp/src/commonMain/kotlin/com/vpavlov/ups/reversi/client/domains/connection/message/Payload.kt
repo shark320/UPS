@@ -52,7 +52,7 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
             data[key] = null
             return;
         }
-        require(value::class in ALLOWED_TYPES || value is List<*> && value.all { it in ALLOWED_TYPES }) {
+        require(value::class in ALLOWED_TYPES || value is List<*> && checkListTypes(value, ALLOWED_TYPES)) {
             "value should be of type: $ALLOWED_TYPES."
         }
         data[key] = value
