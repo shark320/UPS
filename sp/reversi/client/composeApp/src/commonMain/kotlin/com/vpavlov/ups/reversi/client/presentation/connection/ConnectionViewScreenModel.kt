@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.MessageService
+import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import kotlinx.coroutines.flow.launchIn
@@ -16,7 +17,8 @@ class ConnectionViewScreenModel(
     errorStateService: ErrorStateService,
     connectionStateService: ConnectionStateService,
     private val connectionService: ConnectionService,
-    private val messageService: MessageService
+    private val messageService: MessageService,
+    private val pingService: PingService
 ) : CommonScreenViewModel<ConnectionScreenEvent, ConnectionScreenState>(
     errorStateService = errorStateService,
     connectionStateService = connectionStateService
@@ -34,6 +36,9 @@ class ConnectionViewScreenModel(
 
         connectionStateService.isAliveAndHandshakeFlow().onEach {
             _state.value = state.value.copy(isAliveAndHandshake = it)
+            if (it && !pingService.isRunning()){
+                pingService.start()
+            }
         }.launchIn(viewModelScope)
     }
 

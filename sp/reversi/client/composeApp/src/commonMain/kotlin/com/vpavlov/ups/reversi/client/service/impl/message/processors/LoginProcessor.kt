@@ -11,8 +11,6 @@ import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
-import com.vpavlov.ups.reversi.client.service.impl.message.malformedResponse
-import com.vpavlov.ups.reversi.client.service.impl.message.unexpectedErrorStatus
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import com.vpavlov.ups.reversi.client.state.ErrorMessage
 
@@ -72,7 +70,6 @@ class LoginProcessor(
         if (state == null) {
             malformedResponse(
                 subtype = response.header.subtype,
-                errorStateService = errorStateService,
                 logger = LOGGER
             )
         } else {

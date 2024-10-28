@@ -3,6 +3,7 @@ package com.vpavlov.ups.reversi.client.service.impl.state
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import com.vpavlov.ups.reversi.client.state.ClientState
+import com.vpavlov.ups.reversi.client.state.LobbyInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,10 +20,12 @@ open class ClientStateServiceImpl: ClientStateService {
     override fun updateState(
         username: String,
         flowState: ClientFlowState,
+        lobbiesList: List<LobbyInfo>
     ) {
         _state.value = state.value!!.copy(
             username = username,
-            flowState = flowState
+            flowState = flowState,
+            lobbiesList = lobbiesList,
         )
 
     }

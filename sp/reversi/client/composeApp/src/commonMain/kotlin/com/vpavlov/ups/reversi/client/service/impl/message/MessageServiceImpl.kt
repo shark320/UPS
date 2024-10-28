@@ -68,12 +68,3 @@ inline fun process(logger: KotlinLogger, crossinline exchanger: suspend () -> Un
     return isComplete
 }
 
-fun unexpectedErrorStatus(status: Status, errorStateService: ErrorStateService,logger: KotlinLogger ) {
-    logger.error("Unexpected response status: $status")
-    errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status"))
-}
-
-fun malformedResponse(subtype: Subtype, errorStateService: ErrorStateService, logger: KotlinLogger ){
-    logger.error("Malformed response for the subtype [$subtype]")
-    errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Malformed response for the type [$subtype]"))
-}

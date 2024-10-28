@@ -14,6 +14,7 @@ import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.apache.logging.log4j.kotlin.KotlinLogger
 import org.apache.logging.log4j.kotlin.loggerOf
 
 open class CommonProcessor(
@@ -59,5 +60,15 @@ open class CommonProcessor(
     protected open fun onConnectionError(exception: Exception){
         connectionStateService.connectionLost()
         LOGGER.error("Connection to the server lost", exception)
+    }
+
+    protected fun unexpectedErrorStatus(status: Status, errorStateService: ErrorStateService,logger: KotlinLogger) {
+        logger.error("Unexpected response status: $status")
+        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status"))
+    }
+
+    protected fun malformedResponse(subtype: Subtype, logger: KotlinLogger){
+        logger.error("Malformed response for the subtype [$subtype]")
+        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Malformed response for the type [$subtype]"))
     }
 }

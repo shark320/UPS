@@ -1,6 +1,7 @@
 package com.vpavlov.ups.reversi.client.domains.connection.message
 
 import com.vpavlov.ups.reversi.client.domains.connection.MSG_HEADER_LENGTH
+import com.vpavlov.ups.reversi.client.utils.checkListTypes
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -23,7 +24,9 @@ private var KEY_SEPARATOR = "="
 private var LIST_SEPARATOR = ","
 
 
-val LIST_PATTERN: Pattern = Pattern.compile("^\\[((\"[^\"]*(?:\",\"[^\"]*)*\")|\\d+(?:,\\d+)*)]$")
+val LIST_PATTERN: Pattern = Pattern.compile("^\\[((\"[^\"]*(?:\",\"[^\"]*)*\")|\\d+(?:,\\d+)*)*]$")
+
+val EMPTY_LIST_PATTERN: Pattern = Pattern.compile("^\\[\\s*]$")
 
 val LIST_INT_PATTERN: Pattern = Pattern.compile("^\\[(\\d+(?:,\\d+)*)]$")
 
@@ -38,7 +41,6 @@ val BOOL_PATTERN: Pattern = Pattern.compile("^(true|false)$")
 val NULL_PATTERN: Pattern = Pattern.compile("^(null)$")
 
 
-
 data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
 
     @Synchronized
@@ -46,7 +48,7 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
         require(key.isNotBlank()) {
             "key could not be blank."
         }
-        if (value == null){
+        if (value == null) {
             data[key] = null
             return;
         }
@@ -62,8 +64,17 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
     @Synchronized
     fun getStringValue(key: String): String? {
         val value = getValue(key)
-        if (value is String){
+        if (value is String) {
             return value
+        }
+        return null
+    }
+
+    @Synchronized
+    fun getListOfStrings(key: String): List<String>? {
+        val value = getValue(key)
+        if (value is List<*> && checkListTypes(value, String::class)) {
+            return value as List<String>
         }
         return null
     }
@@ -81,11 +92,11 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
         return sb.toString()
     }
 
-    private fun map(value: Any?): String?{
-        if (value == null){
+    private fun map(value: Any?): String? {
+        if (value == null) {
             return "null"
         }
-        return when(value){
+        return when (value) {
             is String -> mapString(value)
             is Int -> mapInt(value)
             is Boolean -> mapBoolean(value)
@@ -96,7 +107,7 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
 
     private fun mapString(value: String): String = "\"$value\""
 
-    private fun mapStringsList(value: List<String>): String{
+    private fun mapStringsList(value: List<String>): String {
         val sb = java.lang.StringBuilder()
         for (string in value) {
             sb.append(mapString(string)).append(',')
@@ -105,7 +116,7 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
         return sb.toString()
     }
 
-    private fun mapInt (value: Int) = value.toString()
+    private fun mapInt(value: Int) = value.toString()
 
     private fun mapIntList(value: List<Int>): String {
         val sb = java.lang.StringBuilder()
@@ -119,10 +130,10 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
     }
 
     private fun mapList(value: List<*>): String {
-        if (value.isEmpty()){
+        if (value.isEmpty()) {
             return "$LIST_START$LIST_END"
         }
-        val result = when(value[0]){
+        val result = when (value[0]) {
             is Int -> mapIntList(value as List<Int>)
             is String -> mapStringsList(value as List<String>)
             else -> ""
@@ -132,33 +143,33 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
 
     private fun mapBoolean(value: Boolean) = value.toString()
 
-    companion object{
+    companion object {
         fun parse(payloadStr: String): Payload {
             return parseHelper(payloadStr)
         }
 
         private fun parseHelper(payloadStr: String): Payload {
             val payload = Payload()
-            if (payloadStr.isBlank()){
+            if (payloadStr.isBlank()) {
                 return payload
             }
             val payloadTokens = payloadStr.split(SEPARATOR)
-            payloadTokens.forEach { token->
+            payloadTokens.forEach { token ->
                 parseToken(token, payload)
             }
             return payload
         }
 
-        private fun parseToken(token: String, payload: Payload){
-            if (token.isBlank()){
+        private fun parseToken(token: String, payload: Payload) {
+            if (token.isBlank()) {
                 return
             }
             val keyValueTokens = token.split(KEY_SEPARATOR)
-            require (keyValueTokens.size == 2){
+            require(keyValueTokens.size == 2) {
                 "Unable to parse token: $token"
             }
             val key = keyValueTokens[0]
-            require(key.isNotBlank()){
+            require(key.isNotBlank()) {
                 "key could not be blank."
             }
             val value = keyValueTokens[1]
@@ -185,17 +196,20 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
             if (INT_PATTERN.matcher(value).matches()) {
                 return parsePayloadInt(value)
             }
-            if ( BOOL_PATTERN.matcher(value).matches()) {
+            if (BOOL_PATTERN.matcher(value).matches()) {
                 return value.toBoolean()
             }
             throw IllegalArgumentException("Invalid value: $value")
         }
 
-        private fun parsePayloadString(value: String) = value.substring(1,value.length-1)
+        private fun parsePayloadString(value: String) = value.substring(1, value.length - 1)
 
         private fun parsePayloadInt(value: String) = Integer.parseInt(value)
 
         private fun parsePayloadList(value: String): List<Any> {
+            if (EMPTY_LIST_PATTERN.matcher(value).matches()){
+                return emptyList()
+            }
             if (LIST_STRING_PATTERN.matcher(value).matches()) {
                 return parseStringList(value)
             }

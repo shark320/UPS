@@ -3,14 +3,18 @@ package com.vpavlov.ups.reversi.client.di
 import com.vpavlov.ups.reversi.client.config.ConfigProvider
 import com.vpavlov.ups.reversi.client.presentation.connection.ConnectionViewScreenModel
 import com.vpavlov.ups.reversi.client.presentation.login.LoginScreenViewModel
+import com.vpavlov.ups.reversi.client.presentation.menu.MenuScreenViewModel
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.MessageService
+import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.impl.ConnectionServiceImpl
+import com.vpavlov.ups.reversi.client.service.impl.PingServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.ConnectionStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.message.MessageServiceImpl
+import com.vpavlov.ups.reversi.client.service.impl.message.processors.GetLobbiesProcessor
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.HandshakeProcessor
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.LoginProcessor
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.PingProcessor
@@ -25,6 +29,7 @@ import org.koin.core.Koin
 import org.koin.core.context.GlobalContext.get
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
+import kotlin.math.sin
 
 val koin: Koin
     get() = get()
@@ -58,7 +63,14 @@ val onlineModules = module {
     single<ClientStateService> {
         ClientStateServiceImpl()
     }
-
+    single<PingService> {
+        PingServiceImpl(
+            config = ConfigProvider.connectionConfig,
+            clientStateService = get(),
+            pingProcessor = get(),
+            getLobbiesProcessor = get()
+        )
+    }
 
 }
 
@@ -88,6 +100,16 @@ val messageProcessorsModule = module {
             connectionStateService = get(),
             connectionService = get(),
             errorStateService = get()
+        )
+    }
+
+    single {
+        GetLobbiesProcessor(
+            config = ConfigProvider.connectionConfig,
+            connectionStateService = get(),
+            connectionService = get(),
+            errorStateService = get(),
+            clientStateService = get()
         )
     }
 
@@ -125,6 +147,7 @@ val sharedModules = module {
             errorStateService = get(),
             connectionStateService = get(),
             messageService = get(),
+            pingService = get()
         )
     }
     viewModel {
@@ -133,6 +156,15 @@ val sharedModules = module {
             clientStateService = get(),
             errorStateService = get(),
             connectionStateService = get(),
+            pingService = get(),
+        )
+    }
+
+    viewModel {
+        MenuScreenViewModel(
+            connectionStateService = get(),
+            errorStateService = get(),
+            pingService = get()
         )
     }
 

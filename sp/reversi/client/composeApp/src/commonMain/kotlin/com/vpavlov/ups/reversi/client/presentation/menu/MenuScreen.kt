@@ -11,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MenuScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: MenuScreenViewModel = koinViewModel()
 ){
     Box(
         contentAlignment = Alignment.Center,

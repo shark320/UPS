@@ -22,7 +22,7 @@ class HandshakeProcessor(
 ) {
 
     operator fun invoke() = process{
-        LOGGER.debug("Processing handshake with username.")
+        LOGGER.debug("Processing handshake.")
         val requestHeader = Header(
             type = Type.POST,
             identifier = config.identifier,

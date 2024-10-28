@@ -20,13 +20,9 @@ class PingProcessor(
     errorStateService = errorStateService,
     connectionStateService = connectionStateService
 ) {
-    companion object {
-        private val LOGGER = loggerOf(PingProcessor::class.java)
-    }
 
     operator fun invoke() = process {
-
-        LOGGER.debug("Processing handshake with username.")
+        LOGGER.debug("Processing ping.")
         val requestHeader = Header(
             type = Type.GET,
             identifier = config.identifier,
