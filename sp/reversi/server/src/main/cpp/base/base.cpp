@@ -72,6 +72,9 @@ std::string string::to_string() const {
 }
 
 std::string objects_vector::to_string() const {
+    if (this->empty()){
+        return "[]";
+    }
     std::string result = "[";
 
     for (const std::shared_ptr<object>& item : *this){

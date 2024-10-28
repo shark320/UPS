@@ -7,6 +7,7 @@
 static const std::regex LIST_PATTERN = std::regex(R"(^\[(("[^"]*(?:","[^"]*)*")|\d+(?:,\d+)*)\]$)");
 static const std::regex LIST_INT_PATTERN = std::regex(R"(^\[(\d+(?:,\d+)*)\]$)");
 static const std::regex LIST_STRING_PATTERN = std::regex(R"(^\[("[^"]*(?:","[^"]*)*")\]$)");
+static const std::regex EMPTY_LIST_PATTERN = std::regex(R"(^\[\s*]$)");
 static const std::regex STRING_PATTERN = std::regex("^\"([^\"]*)\"$");
 static const std::regex INT_PATTERN = std::regex("^\\d+$");
 static const std::regex BOOL_PATTERN = std::regex("^(true|false)$");
@@ -47,7 +48,8 @@ std::shared_ptr<std::map<std::string, std::shared_ptr<object>>> payload::get_dat
 std::string payload::to_string() {
     std::string result = "";
     for (auto const& item : *this->data){
-        result += item.first + "=" + item.second->to_string() + ", ";
+        std::string data_str = item.second == nullptr ? "null" : item.second->to_string();
+        result += item.first + "=" + data_str + ", ";
     }
 
     if (result.length() > 1){
@@ -96,7 +98,10 @@ std::shared_ptr<objects_vector> payload::parse_string_list(const std::string& va
 std::shared_ptr<objects_vector> payload::parse_list(const std::string& value) {
     std::smatch str_list_match;
     std::smatch int_list_match;
-    if (std::regex_search(value, str_list_match, LIST_STRING_PATTERN)) {
+    std::smatch empty_list_match;
+    if (std::regex_search(value, empty_list_match, EMPTY_LIST_PATTERN)) {
+        return std::make_shared<objects_vector>();
+    } else if (std::regex_search(value, str_list_match, LIST_STRING_PATTERN)) {
         return parse_string_list(value);
     } else if (std::regex_search(value, int_list_match, LIST_INT_PATTERN)) {
         return parse_int_list(value);
@@ -224,8 +229,11 @@ std::string payload::map_ints_list(const std::shared_ptr<objects_vector> &intege
 }
 
 std::string payload::map_list(const std::shared_ptr<objects_vector>& list){
-    if (list == nullptr || list->empty()) {
+    if (list == nullptr) {
         return "null";
+    }
+    if (list->empty()){
+        return "[]";
     }
     std::string result;
     const auto& first_element = list->at(0);
@@ -276,7 +284,6 @@ std::string payload::map(const std::shared_ptr<payload> &_payload) {
 }
 
 std::string payload::construct() const{
-    //TODO: replace with function overloading
     return map(std::make_shared<payload>(this));
 }
 
