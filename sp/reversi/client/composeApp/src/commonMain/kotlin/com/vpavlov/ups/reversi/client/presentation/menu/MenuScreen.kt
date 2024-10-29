@@ -21,6 +21,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowStateAwareness
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
+import com.vpavlov.ups.reversi.client.presentation.common.component.InputDialog
 import com.vpavlov.ups.reversi.client.state.LobbyInfo
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
 import org.koin.compose.viewmodel.koinViewModel
@@ -40,6 +44,7 @@ fun MenuScreen(
     viewModel: MenuScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.state.value
+    val isCreateNewLobbyDialogVisible = remember { mutableStateOf(false) }
     ClientFlowStateAwareness(
         viewModel = viewModel,
         navController = navController
@@ -86,15 +91,23 @@ fun MenuScreen(
             }
             FloatingActionButton(
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 30.dp),
-                onClick = {},
+                onClick = {
+                    isCreateNewLobbyDialogVisible.value = true
+                },
 
                 ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = "Create new lobby")
+                    text = "Create new lobby"
+                )
             }
         }
     }
+
+    CreateNewLobbyDialog(
+        viewModel = viewModel,
+        isCreateNewLobbyDialogVisible = isCreateNewLobbyDialogVisible
+    )
 
 }
 
@@ -133,6 +146,36 @@ private fun LobbyCard(lobbyInfo: LobbyInfo, onClick: (String) -> Unit) {
             ) {
                 Text(text = "Connect")
             }
+        }
+    }
+}
+
+@Composable
+private fun CreateNewLobbyDialog(
+    viewModel: MenuScreenViewModel,
+    isCreateNewLobbyDialogVisible: MutableState<Boolean>
+) {
+    when {
+        isCreateNewLobbyDialogVisible.value -> {
+            val inputState = viewModel.state.value.lobbyNameInputState
+            InputDialog(
+                onOkClick = {
+                    viewModel.onEvent(MenuScreenEvent.CreateNewLobby(it))
+                    isCreateNewLobbyDialogVisible.value = false
+                },
+                onInputStringChange = {
+                    viewModel.onEvent(MenuScreenEvent.LobbyNameEntered(it))
+                },
+                onCancelClick = {
+                    viewModel.onEvent(MenuScreenEvent.LobbyNameInputCancelled)
+                    isCreateNewLobbyDialogVisible.value = false
+                },
+                errorMessage = "Invalid lobby name!",
+                isError = !inputState.isValidName,
+                inputText = inputState.name,
+                inputLabel = "Lobby name",
+                title = "Enter lobby name",
+            )
         }
     }
 }

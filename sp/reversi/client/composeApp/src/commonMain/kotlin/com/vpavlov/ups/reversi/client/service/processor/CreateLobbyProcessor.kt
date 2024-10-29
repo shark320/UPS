@@ -11,30 +11,30 @@ import com.vpavlov.ups.reversi.client.domains.game.Lobby
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.processor.common.CommonClientProcessor
 import com.vpavlov.ups.reversi.client.service.processor.common.CommonProcessor
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import com.vpavlov.ups.reversi.client.state.ErrorMessage
 import com.vpavlov.ups.reversi.client.utils.requireAllNotNull
 
-class ConnectToLobbyProcessor(
+class CreateLobbyProcessor(
     private val config: ConnectionConfig,
-    private val clientStateService: ClientStateService,
+    clientStateService: ClientStateService,
     connectionService: ConnectionService,
     errorStateService: ErrorStateService
-) : CommonProcessor(
+) : CommonClientProcessor(
     connectionService = connectionService,
     errorStateService = errorStateService,
+    clientStateService = clientStateService,
 ) {
-
-    operator fun invoke(lobby: String) = process {
-        LOGGER.debug("Processing connecting to he lobby with username '$lobby'")
+    operator fun invoke(lobbyName: String) = process {
+        LOGGER.debug("Processing getting current lobby state.")
         val requestHeader = Header(
             type = Type.POST,
             identifier = config.identifier,
-            subtype = Subtype.LOBBY_CONNECT
+            subtype = Subtype.CREATE_GAME
         )
         val payload = Payload();
-        payload.setValue("lobby", lobby)
         val response =
             connectionService.exchange(Message(header = requestHeader, payload = payload))
         if (response.isError()) {
@@ -46,21 +46,14 @@ class ConnectToLobbyProcessor(
 
     private fun handleError(response: Message) {
         val status = response.header.status
-        if (status == Status.NOT_FOUND) {
+        if (status == Status.CONFLICT){
             errorStateService.setError(
                 errorMessage = ErrorMessage(
-                    errorMessage = "The lobby is not available anymore."
+                    errorMessage = "Lobby with the entered name already exists."
                 )
             )
-            val state = ClientFlowState.getValueOrNull(response.payload.getStringValue("state"))
-            if (state == null) {
-                malformedResponse(
-                    subtype = response.header.subtype,
-                )
-            } else {
-                clientStateService.updateState(flowState = state)
-            }
-        } else {
+            getAndUpdateState(response)
+        } else{
             unexpectedErrorStatus(
                 response.header.status,
             )
@@ -69,10 +62,9 @@ class ConnectToLobbyProcessor(
 
     private fun handleOk(response: Message) {
         val state = ClientFlowState.getValueOrNull(response.payload.getStringValue("state"))
-        val host = response.payload.getStringValue("host")
-        val lobby = response.payload.getStringValue("lobby")
-        val players = response.payload.getListOfStrings("players")
-        if (!requireAllNotNull(state, host, players, lobby)) {
+        val user = response.payload.getStringValue("user")
+        val lobbyName = response.payload.getStringValue("name")
+        if (!requireAllNotNull(state, user, lobbyName)) {
             malformedResponse(
                 subtype = response.header.subtype,
             )
@@ -81,11 +73,11 @@ class ConnectToLobbyProcessor(
         clientStateService.updateState(
             flowState = state!!,
             currentLobby = Lobby(
-                host = host!!,
-                players = players!!,
-                name = lobby!!
+                host = user!!,
+                players = listOf(user),
+                name = lobbyName!!
             )
         )
-
     }
+
 }

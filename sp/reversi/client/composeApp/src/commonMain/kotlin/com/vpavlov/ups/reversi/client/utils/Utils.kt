@@ -3,9 +3,14 @@ package com.vpavlov.ups.reversi.client.utils
 import io.ktor.utils.io.ByteReadChannel
 import kotlin.reflect.KClass
 
-val VALID_USERNAME = Regex("^[a-zA-Z][a-zA-Z0-9_]*$");
+val VALID_USERNAME = Regex("^[a-zA-Z][a-zA-Z0-9_]*$")
+
+val VALID_LOBBY_NAME = VALID_USERNAME
 
 fun isValidUsername(username: String) = VALID_USERNAME.matches(username)
+
+fun isValidLobbyName(username: String) = VALID_LOBBY_NAME.matches(username)
+
 
 suspend fun ByteReadChannel.readExactChars(readSize: Int): String{
     val buffer = ByteArray(readSize)

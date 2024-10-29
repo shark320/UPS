@@ -8,18 +8,21 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Type
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.processor.common.CommonClientProcessor
+import com.vpavlov.ups.reversi.client.service.processor.common.CommonProcessor
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import com.vpavlov.ups.reversi.client.state.LobbyInfo
 import com.vpavlov.ups.reversi.client.utils.requireAllNotNull
 
 class GetLobbiesProcessor(
     private val config: ConnectionConfig,
-    private val clientStateService: ClientStateService,
+    clientStateService: ClientStateService,
     connectionService: ConnectionService,
     errorStateService: ErrorStateService
-) : CommonProcessor(
+) : CommonClientProcessor(
     connectionService = connectionService,
     errorStateService = errorStateService,
+    clientStateService = clientStateService
 ) {
 
     operator fun invoke() = process {
@@ -40,7 +43,6 @@ class GetLobbiesProcessor(
     private fun handleError(response: Message) {
         unexpectedErrorStatus(
             response.header.status,
-            errorStateService = errorStateService,
         )
     }
 

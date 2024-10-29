@@ -1,8 +1,10 @@
-package com.vpavlov.ups.reversi.client.service.processor
+package com.vpavlov.ups.reversi.client.service.processor.common
 
+import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.domains.connection.message.Status
 import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
+import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.exceptions.ConnectionException
 import com.vpavlov.ups.reversi.client.state.ErrorMessage
@@ -12,13 +14,13 @@ import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import org.apache.logging.log4j.kotlin.KotlinLogger
 import org.apache.logging.log4j.kotlin.loggerOf
 
-open class CommonProcessor(
+abstract class CommonProcessor(
     protected val errorStateService: ErrorStateService,
     protected val connectionService: ConnectionService,
 ) {
+
 
     protected val LOGGER = loggerOf(this::class.java)
 
@@ -47,7 +49,7 @@ open class CommonProcessor(
         return isComplete
     }
 
-    protected fun unexpectedErrorStatus(status: Status, errorStateService: ErrorStateService) {
+    protected fun unexpectedErrorStatus(status: Status) {
         LOGGER.error("Unexpected response status: $status")
         errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status"))
     }
@@ -61,4 +63,6 @@ open class CommonProcessor(
         LOGGER.error("Malformed response for the subtype [$subtype]")
         errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Malformed response for the type [$subtype]"))
     }
+
+
 }
