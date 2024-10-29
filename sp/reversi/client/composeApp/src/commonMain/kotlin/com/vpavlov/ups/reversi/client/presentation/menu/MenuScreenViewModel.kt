@@ -16,10 +16,11 @@ class MenuScreenViewModel(
     connectionStateService: ConnectionStateService,
     errorStateService: ErrorStateService,
     private val pingService: PingService,
-    private val clientStateService: ClientStateService
+    clientStateService: ClientStateService
 ): CommonScreenViewModel<MenuScreenEvent, MenuScreenState>(
     errorStateService = errorStateService,
-    connectionStateService = connectionStateService
+    connectionStateService = connectionStateService,
+    clientStateService = clientStateService
 ) {
 
     init{

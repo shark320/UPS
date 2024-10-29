@@ -7,68 +7,83 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.domains.connection.message.Status
 import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
 import com.vpavlov.ups.reversi.client.domains.connection.message.Type
+import com.vpavlov.ups.reversi.client.domains.game.Lobby
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import com.vpavlov.ups.reversi.client.state.ErrorMessage
+import com.vpavlov.ups.reversi.client.utils.requireAllNotNull
 
-class LoginProcessor(
+class ConnectToLobbyProcessor(
     private val config: ConnectionConfig,
     private val clientStateService: ClientStateService,
     connectionService: ConnectionService,
     errorStateService: ErrorStateService
-): CommonProcessor(
+) : CommonProcessor(
     connectionService = connectionService,
     errorStateService = errorStateService,
 ) {
 
-    operator fun invoke(username: String) = process {
-        LOGGER.debug("Processing login with username '$username'")
+    operator fun invoke(lobby: String) = process {
+        LOGGER.debug("Processing connecting to he lobby with username '$lobby'")
         val requestHeader = Header(
             type = Type.POST,
             identifier = config.identifier,
             subtype = Subtype.LOGIN
         )
         val payload = Payload();
-        payload.setValue("username", username)
+        payload.setValue("lobby", lobby)
         val response =
             connectionService.exchange(Message(header = requestHeader, payload = payload))
         if (response.isError()) {
-            handleLoginError(response)
+            handleError(response)
         } else {
-            handleLoginOk(response, username = username)
+            handleOk(response)
         }
     }
 
-    private fun handleLoginError(response: Message) {
-        when (response.header.status) {
-            Status.BAD_REQUEST,
-            Status.UNAUTHORIZED,
-            Status.NOT_FOUND,
-            Status.NOT_ALLOWED -> unexpectedErrorStatus(
+    private fun handleError(response: Message) {
+        val status = response.header.status
+        if (status == Status.NOT_FOUND) {
+            errorStateService.setError(
+                errorMessage = ErrorMessage(
+                    errorMessage = "The lobby is not available anymore."
+                )
+            )
+            val state = ClientFlowState.getValueOrNull(response.payload.getStringValue("state"))
+            if (state == null) {
+                malformedResponse(
+                    subtype = response.header.subtype,
+                )
+            } else {
+                clientStateService.updateState(flowState = state)
+            }
+        } else {
+            unexpectedErrorStatus(
                 response.header.status,
                 errorStateService = errorStateService,
             )
-
-            Status.CONFLICT -> {
-                LOGGER.info("Provided username conflict. $response")
-                errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "The username is already in use"))
-            }
-
-            Status.OK, Status.NULL_STATUS -> LOGGER.warn("Could not handle error code")
         }
     }
 
-    private fun handleLoginOk(response: Message, username: String) {
-        val responsePayload = response.payload;
-        val state = ClientFlowState.getValueOrNull(responsePayload.getStringValue("state"))
-        if (state == null) {
+    private fun handleOk(response: Message) {
+        val state = ClientFlowState.getValueOrNull(response.payload.getStringValue("state"))
+        val host = response.payload.getStringValue("host")
+        val players = response.payload.getListOfStrings("players")
+        if (!requireAllNotNull(state, host, players)) {
             malformedResponse(
                 subtype = response.header.subtype,
             )
-        } else {
-            clientStateService.initState(username = username, flowState = state)
+            return
         }
+        clientStateService.updateState(
+            flowState = state!!,
+            currentLobby = Lobby(
+                host = host!!,
+                players = players!!
+            )
+        )
+
     }
 }

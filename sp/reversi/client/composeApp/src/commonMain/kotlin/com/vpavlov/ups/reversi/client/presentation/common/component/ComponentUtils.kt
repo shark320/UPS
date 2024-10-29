@@ -6,6 +6,8 @@ import androidx.navigation.NavOptions
 import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenEvent
 import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.navigation.ScreenNavigation
+import com.vpavlov.ups.reversi.client.state.ClientFlowState
+import org.koin.core.qualifier._q
 import kotlin.system.exitProcess
 
 @Composable
@@ -43,6 +45,40 @@ fun HandleErrors(viewModel: CommonScreenViewModel<*,*>, okButtonText: String = "
             message = errorState.errorMessage.errorMessage,
             onOkClick = if (errorState.isFatalError) fatalReaction else nonFatalReaction,
             okButtonText = errorState.errorMessage.okButton
+        )
+    }
+}
+
+@Composable
+fun ClientFlowStateAwareness(
+    viewModel: CommonScreenViewModel<*,*>,
+    navController: NavController,
+){
+    val state = viewModel.commonScreenState.value
+    if (state.clientFlowState == null){
+        navigateIfNotTheSame(navController = navController, screenNavigation = ScreenNavigation.LoginScreen)
+    }else{
+        when(state.clientFlowState){
+            ClientFlowState.MENU -> {
+                navigateIfNotTheSame(navController = navController, screenNavigation = ScreenNavigation.MenuScreen)
+            }
+            ClientFlowState.LOBBY -> {
+                navigateIfNotTheSame(navController = navController, screenNavigation = ScreenNavigation.LobbyScreen)
+            }
+            ClientFlowState.GAME -> {
+                navigateIfNotTheSame(navController = navController, screenNavigation = ScreenNavigation.GameScreen)
+            }
+        }
+    }
+
+}
+
+@Composable
+private fun navigateIfNotTheSame(navController: NavController, screenNavigation: ScreenNavigation){
+    if (navController.currentBackStackEntry?.destination?.route != screenNavigation.toString()){
+        navController.navigate(
+            route = screenNavigation.toString(),
+            navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
         )
     }
 }

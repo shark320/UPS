@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowStateAwareness
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
 import com.vpavlov.ups.reversi.client.presentation.common.component.CustomOutlinedTextField
 import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
@@ -29,13 +30,10 @@ fun LoginScreen(
     viewModel: LoginScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.state.value
-    if (state.loggedIn) {
-        navController.navigate(
-            route = ScreenNavigation.MenuScreen.toString(),
-            navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
-        )
-
-    }
+    ClientFlowStateAwareness(
+        viewModel = viewModel,
+        navController = navController
+    )
     ConnectionStateListenerWrapper(
         viewModel = viewModel,
         navController = navController

@@ -1,5 +1,6 @@
 package com.vpavlov.ups.reversi.client.service.impl.state
 
+import com.vpavlov.ups.reversi.client.domains.game.Lobby
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import com.vpavlov.ups.reversi.client.state.ClientState
@@ -20,12 +21,14 @@ open class ClientStateServiceImpl: ClientStateService {
     override fun updateState(
         username: String,
         flowState: ClientFlowState,
-        lobbiesList: List<LobbyInfo>
+        lobbiesList: List<LobbyInfo>,
+        currentLobby: Lobby?
     ) {
         _state.value = state.value!!.copy(
             username = username,
             flowState = flowState,
             lobbiesList = lobbiesList,
+            currentLobby = currentLobby
         )
 
     }

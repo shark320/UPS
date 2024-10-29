@@ -52,27 +52,13 @@ open class CommonProcessor(
         errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status"))
     }
 
-    protected fun malformedResponse(subtype: Subtype, errorStateService: ErrorStateService) {
-        LOGGER.error("Malformed response for the subtype [$subtype]")
-        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Malformed response for the type [$subtype]"))
-    }
-
     protected open fun onConnectionError(exception: Exception) {
         connectionService.connectionLost()
         LOGGER.error("Connection to the server lost", exception)
     }
 
-    protected fun unexpectedErrorStatus(
-        status: Status,
-        errorStateService: ErrorStateService,
-        logger: KotlinLogger
-    ) {
-        logger.error("Unexpected response status: $status")
-        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status"))
-    }
-
-    protected fun malformedResponse(subtype: Subtype, logger: KotlinLogger) {
-        logger.error("Malformed response for the subtype [$subtype]")
+    protected fun malformedResponse(subtype: Subtype) {
+        LOGGER.error("Malformed response for the subtype [$subtype]")
         errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Malformed response for the type [$subtype]"))
     }
 }

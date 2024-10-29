@@ -41,7 +41,6 @@ class GetLobbiesProcessor(
         unexpectedErrorStatus(
             response.header.status,
             errorStateService = errorStateService,
-            logger = LOGGER
         )
     }
 
@@ -52,7 +51,6 @@ class GetLobbiesProcessor(
         if (!requireAllNotNull(state, lobbiesList, lobbyHostsList) || lobbiesList!!.size != lobbyHostsList!!.size) {
             malformedResponse(
                 subtype = response.header.subtype,
-                logger = LOGGER
             )
             return
         }

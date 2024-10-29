@@ -128,7 +128,8 @@ val sharedModules = module {
             errorStateService = get(),
             connectionStateService = get(),
             pingService = get(),
-            handshakeProcessor = get()
+            handshakeProcessor = get(),
+            clientStateService = get()
         )
     }
     viewModel {

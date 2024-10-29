@@ -15,13 +15,14 @@ import kotlinx.coroutines.flow.onEach
 
 class LoginScreenViewModel(
     private val loginProcessor: LoginProcessor,
-    private val clientStateService: ClientStateService,
+    clientStateService: ClientStateService,
     connectionStateService: ConnectionStateService,
     errorStateService: ErrorStateService,
     private val pingService: PingService
 ) : CommonScreenViewModel<LoginScreenEvent, LoginScreenState>(
     errorStateService = errorStateService,
-    connectionStateService = connectionStateService
+    connectionStateService = connectionStateService,
+    clientStateService = clientStateService
 ) {
 
     init {

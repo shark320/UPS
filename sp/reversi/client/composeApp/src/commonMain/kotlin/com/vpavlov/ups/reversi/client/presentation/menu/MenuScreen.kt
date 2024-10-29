@@ -2,7 +2,6 @@ package com.vpavlov.ups.reversi.client.presentation.menu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +28,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowStateAwareness
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
 import com.vpavlov.ups.reversi.client.state.LobbyInfo
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
@@ -40,6 +40,10 @@ fun MenuScreen(
     viewModel: MenuScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.state.value
+    ClientFlowStateAwareness(
+        viewModel = viewModel,
+        navController = navController
+    )
     ConnectionStateListenerWrapper(
         viewModel = viewModel,
         navController = navController

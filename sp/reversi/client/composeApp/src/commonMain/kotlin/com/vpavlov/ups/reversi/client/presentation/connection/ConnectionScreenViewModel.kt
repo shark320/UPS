@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.PingService
+import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.processor.HandshakeProcessor
@@ -17,10 +18,12 @@ class ConnectionScreenViewModel(
     connectionStateService: ConnectionStateService,
     private val connectionService: ConnectionService,
     private val handshakeProcessor: HandshakeProcessor,
-    private val pingService: PingService
+    private val pingService: PingService,
+    clientStateService: ClientStateService
 ) : CommonScreenViewModel<ConnectionScreenEvent, ConnectionScreenState>(
     errorStateService = errorStateService,
-    connectionStateService = connectionStateService
+    connectionStateService = connectionStateService,
+    clientStateService = clientStateService
 ) {
 
     init {
