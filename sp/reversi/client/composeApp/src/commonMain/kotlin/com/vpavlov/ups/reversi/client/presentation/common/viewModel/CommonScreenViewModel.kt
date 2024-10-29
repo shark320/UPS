@@ -37,6 +37,7 @@ abstract class CommonScreenViewModel<EventType, StateType>(
 
         clientStateService.getStateFlow().onEach { clientState ->
             handleClientStateUpdate(clientState)
+            handleClientStateUpdateCst(clientState)
         }.launchIn(viewModelScope)
     }
 
@@ -51,6 +52,8 @@ abstract class CommonScreenViewModel<EventType, StateType>(
             clientFlowState = clientState?.flowState
         )
     }
+
+    protected open fun handleClientStateUpdateCst(clientState: ClientState?){}
 
     fun onCommonEvent(commonScreenEvent: CommonScreenEvent) {
         when (commonScreenEvent) {

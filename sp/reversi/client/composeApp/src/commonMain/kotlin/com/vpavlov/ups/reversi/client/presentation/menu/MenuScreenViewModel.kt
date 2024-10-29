@@ -8,6 +8,7 @@ import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.processor.ConnectToLobbyProcessor
 import com.vpavlov.ups.reversi.client.state.ClientState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -16,14 +17,15 @@ class MenuScreenViewModel(
     connectionStateService: ConnectionStateService,
     errorStateService: ErrorStateService,
     private val pingService: PingService,
+    private val connectToLobbyProcessor: ConnectToLobbyProcessor,
     clientStateService: ClientStateService
-): CommonScreenViewModel<MenuScreenEvent, MenuScreenState>(
+) : CommonScreenViewModel<MenuScreenEvent, MenuScreenState>(
     errorStateService = errorStateService,
     connectionStateService = connectionStateService,
     clientStateService = clientStateService
 ) {
 
-    init{
+    init {
         pingService.start()
 
         clientStateService.getStateFlow().onEach { clientState ->
@@ -31,15 +33,21 @@ class MenuScreenViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun clientStateUpdated(clientState: ClientState){
-       _state.value = state.value.copy(
-           lobbies = clientState.lobbiesList
-       )
+    private fun clientStateUpdated(clientState: ClientState) {
+        _state.value = state.value.copy(
+            lobbies = clientState.lobbiesList
+        )
     }
 
     override fun onEvent(event: MenuScreenEvent) {
-
+        when (event) {
+            is MenuScreenEvent.ConnectToLobby -> connectToLobby(event.lobbyName)
+        }
     }
 
-    override fun initState(): MutableState<MenuScreenState>  = mutableStateOf(MenuScreenState())
+    private fun connectToLobby(lobby: String) {
+        connectToLobbyProcessor(lobby)
+    }
+
+    override fun initState(): MutableState<MenuScreenState> = mutableStateOf(MenuScreenState())
 }

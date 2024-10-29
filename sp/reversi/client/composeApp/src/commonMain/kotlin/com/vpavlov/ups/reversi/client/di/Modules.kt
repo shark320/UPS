@@ -2,6 +2,7 @@ package com.vpavlov.ups.reversi.client.di
 
 import com.vpavlov.ups.reversi.client.config.ConfigProvider
 import com.vpavlov.ups.reversi.client.presentation.connection.ConnectionScreenViewModel
+import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.login.LoginScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.menu.MenuScreenViewModel
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
@@ -21,6 +22,7 @@ import com.vpavlov.ups.reversi.client.service.impl.offline.state.ConnectionState
 import com.vpavlov.ups.reversi.client.service.impl.state.ClientStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.ConnectionStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.ErrorStateServiceImpl
+import com.vpavlov.ups.reversi.client.service.processor.ConnectToLobbyProcessor
 import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.Koin
 import org.koin.core.context.GlobalContext.get
@@ -100,6 +102,15 @@ val messageProcessorsModule = module {
         )
     }
 
+    single {
+        ConnectToLobbyProcessor(
+            config = ConfigProvider.connectionConfig,
+            clientStateService = get(),
+            connectionService = get(),
+            errorStateService = get(),
+        )
+    }
+
 }
 
 
@@ -147,7 +158,16 @@ val sharedModules = module {
             connectionStateService = get(),
             errorStateService = get(),
             pingService = get(),
-            clientStateService = get()
+            clientStateService = get(),
+            connectToLobbyProcessor = get()
+        )
+    }
+
+    viewModel {
+        LobbyScreenViewModel(
+            clientStateService = get(),
+            connectionStateService = get(),
+            errorStateService = get()
         )
     }
 

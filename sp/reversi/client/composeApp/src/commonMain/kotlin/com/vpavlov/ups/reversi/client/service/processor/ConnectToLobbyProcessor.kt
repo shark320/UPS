@@ -30,7 +30,7 @@ class ConnectToLobbyProcessor(
         val requestHeader = Header(
             type = Type.POST,
             identifier = config.identifier,
-            subtype = Subtype.LOGIN
+            subtype = Subtype.LOBBY_CONNECT
         )
         val payload = Payload();
         payload.setValue("lobby", lobby)
@@ -70,8 +70,9 @@ class ConnectToLobbyProcessor(
     private fun handleOk(response: Message) {
         val state = ClientFlowState.getValueOrNull(response.payload.getStringValue("state"))
         val host = response.payload.getStringValue("host")
+        val lobby = response.payload.getStringValue("lobby")
         val players = response.payload.getListOfStrings("players")
-        if (!requireAllNotNull(state, host, players)) {
+        if (!requireAllNotNull(state, host, players, lobby)) {
             malformedResponse(
                 subtype = response.header.subtype,
             )
@@ -81,7 +82,8 @@ class ConnectToLobbyProcessor(
             flowState = state!!,
             currentLobby = Lobby(
                 host = host!!,
-                players = players!!
+                players = players!!,
+                name = lobby!!
             )
         )
 
