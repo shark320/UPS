@@ -8,7 +8,7 @@ import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
-import com.vpavlov.ups.reversi.client.service.impl.message.processors.HandshakeProcessor
+import com.vpavlov.ups.reversi.client.service.processor.HandshakeProcessor
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 

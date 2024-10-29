@@ -11,10 +11,10 @@ import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.impl.ConnectionServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.PingServiceImpl
-import com.vpavlov.ups.reversi.client.service.impl.message.processors.GetLobbiesProcessor
-import com.vpavlov.ups.reversi.client.service.impl.message.processors.HandshakeProcessor
-import com.vpavlov.ups.reversi.client.service.impl.message.processors.LoginProcessor
-import com.vpavlov.ups.reversi.client.service.impl.message.processors.PingProcessor
+import com.vpavlov.ups.reversi.client.service.processor.GetLobbiesProcessor
+import com.vpavlov.ups.reversi.client.service.processor.HandshakeProcessor
+import com.vpavlov.ups.reversi.client.service.processor.LoginProcessor
+import com.vpavlov.ups.reversi.client.service.processor.PingProcessor
 import com.vpavlov.ups.reversi.client.service.impl.offline.ConnectionServiceOfflineImpl
 import com.vpavlov.ups.reversi.client.service.impl.offline.state.ClientStateServiceOfflineImpl
 import com.vpavlov.ups.reversi.client.service.impl.offline.state.ConnectionStateServiceOfflineImpl

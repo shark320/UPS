@@ -4,8 +4,8 @@ import com.vpavlov.ups.reversi.client.config.ConnectionConfig
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
-import com.vpavlov.ups.reversi.client.service.impl.message.processors.GetLobbiesProcessor
-import com.vpavlov.ups.reversi.client.service.impl.message.processors.PingProcessor
+import com.vpavlov.ups.reversi.client.service.processor.GetLobbiesProcessor
+import com.vpavlov.ups.reversi.client.service.processor.PingProcessor
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
