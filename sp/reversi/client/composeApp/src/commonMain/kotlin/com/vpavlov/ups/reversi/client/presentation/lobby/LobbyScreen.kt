@@ -109,20 +109,21 @@ private fun PlayersList(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            DisplayPlayer(player = player1, player1 == host)
+            DisplayPlayer(player = player1, player1 == host, number = 1)
             Spacer(modifier = Modifier.height(8.dp))
-            DisplayPlayer(player = player2, player2 == host)
+            DisplayPlayer(player = player2, player2 == host, number = 2)
         }
     }
 }
 
 @Composable
-private fun DisplayPlayer(player: String?, isHost: Boolean){
+private fun DisplayPlayer(player: String?, isHost: Boolean, number: Int){
     if (player == null){
         return
     }
     Row{
-        Text(text = player)
+
+        Text(text = "$number. $player")
         if (isHost){
             Spacer(modifier = Modifier.width(4.dp))
             Icon(imageVector = Icons.Filled.Star, contentDescription = null)
