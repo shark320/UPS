@@ -4,17 +4,17 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
-import com.vpavlov.ups.reversi.client.service.api.MessageService
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.impl.message.processors.LoginProcessor
 import com.vpavlov.ups.reversi.client.utils.isValidUsername
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class LoginScreenViewModel(
-    private val messageService: MessageService,
+    private val loginProcessor: LoginProcessor,
     private val clientStateService: ClientStateService,
     connectionStateService: ConnectionStateService,
     errorStateService: ErrorStateService,
@@ -58,7 +58,7 @@ class LoginScreenViewModel(
 
     private fun processLogin() {
         pingService.stop()
-        messageService.processLogin(state.value.username).onEach { isComplete ->
+        loginProcessor(state.value.username).onEach { isComplete ->
             _state.value = state.value.copy(waitingResponse = !isComplete)
         }.launchIn(viewModelScope)
     }

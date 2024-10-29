@@ -5,24 +5,21 @@ import com.vpavlov.ups.reversi.client.presentation.connection.ConnectionScreenVi
 import com.vpavlov.ups.reversi.client.presentation.login.LoginScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.menu.MenuScreenViewModel
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
-import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
-import com.vpavlov.ups.reversi.client.service.api.MessageService
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.impl.ConnectionServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.PingServiceImpl
-import com.vpavlov.ups.reversi.client.service.impl.state.ConnectionStateServiceImpl
-import com.vpavlov.ups.reversi.client.service.impl.message.MessageServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.GetLobbiesProcessor
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.HandshakeProcessor
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.LoginProcessor
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.PingProcessor
 import com.vpavlov.ups.reversi.client.service.impl.offline.ConnectionServiceOfflineImpl
-import com.vpavlov.ups.reversi.client.service.impl.offline.state.ConnectionStateServiceOfflineImpl
-import com.vpavlov.ups.reversi.client.service.impl.offline.MessageServiceOfflineImpl
 import com.vpavlov.ups.reversi.client.service.impl.offline.state.ClientStateServiceOfflineImpl
+import com.vpavlov.ups.reversi.client.service.impl.offline.state.ConnectionStateServiceOfflineImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.ClientStateServiceImpl
+import com.vpavlov.ups.reversi.client.service.impl.state.ConnectionStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.ErrorStateServiceImpl
 import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.Koin
@@ -52,12 +49,6 @@ val onlineModules = module {
     }
     single<ConnectionStateService> {
         ConnectionStateServiceImpl()
-    }
-    single<MessageService> {
-        MessageServiceImpl(
-            loginProcessor = get(),
-            handshakeProcessor = get()
-        )
     }
     single<ClientStateService> {
         ClientStateServiceImpl()
@@ -124,13 +115,6 @@ val offlineModules = module {
         ConnectionStateServiceOfflineImpl(
         )
     }
-    single<MessageService> {
-        MessageServiceOfflineImpl(
-            connectionStateService = get(),
-            clientStateService = get(),
-            errorStateService = get()
-        )
-    }
     single<ClientStateService> {
         ClientStateServiceOfflineImpl()
     }
@@ -143,17 +127,17 @@ val sharedModules = module {
             connectionService = get(),
             errorStateService = get(),
             connectionStateService = get(),
-            messageService = get(),
-            pingService = get()
+            pingService = get(),
+            handshakeProcessor = get()
         )
     }
     viewModel {
         LoginScreenViewModel(
-            messageService = get(),
             clientStateService = get(),
             errorStateService = get(),
             connectionStateService = get(),
             pingService = get(),
+            loginProcessor = get()
         )
     }
 

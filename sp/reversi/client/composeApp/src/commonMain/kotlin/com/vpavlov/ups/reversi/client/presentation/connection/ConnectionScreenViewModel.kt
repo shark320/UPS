@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
-import com.vpavlov.ups.reversi.client.service.api.MessageService
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.impl.message.processors.HandshakeProcessor
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -16,7 +16,7 @@ class ConnectionScreenViewModel(
     errorStateService: ErrorStateService,
     connectionStateService: ConnectionStateService,
     private val connectionService: ConnectionService,
-    private val messageService: MessageService,
+    private val handshakeProcessor: HandshakeProcessor,
     private val pingService: PingService
 ) : CommonScreenViewModel<ConnectionScreenEvent, ConnectionScreenState>(
     errorStateService = errorStateService,
@@ -29,7 +29,7 @@ class ConnectionScreenViewModel(
         connectionStateService.isAliveFLow().onEach { isAlive ->
             if (isAlive && !state.value.isHandshakeStarted) {
                 _state.value = state.value.copy(isHandshakeStarted = true)
-                messageService.processHandshake()
+                handshakeProcessor()
             }
         }.launchIn(viewModelScope)
 
