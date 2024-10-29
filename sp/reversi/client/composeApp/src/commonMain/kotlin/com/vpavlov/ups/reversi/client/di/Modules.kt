@@ -180,7 +180,8 @@ val sharedModules = module {
             errorStateService = get(),
             pingService = get(),
             clientStateService = get(),
-            connectToLobbyProcessor = get()
+            connectToLobbyProcessor = get(),
+            createLobbyProcessor = get()
         )
     }
 

@@ -1,7 +1,6 @@
-package com.vpavlov.ups.reversi.client.service.processor.common
+package com.vpavlov.ups.reversi.client.service.processor
 
 import com.vpavlov.ups.reversi.client.domains.connection.message.Message
-import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService

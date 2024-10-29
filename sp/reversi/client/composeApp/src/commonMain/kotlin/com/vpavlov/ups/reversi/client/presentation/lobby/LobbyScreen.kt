@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowStateAwareness
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
+import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -59,6 +60,14 @@ private fun Content(
     navController: NavHostController
 ) {
     val state = viewModel.state.value
+    ClientFlowStateAwareness(
+        viewModel = viewModel,
+        navController = navController
+    )
+    ConnectionStateListenerWrapper(
+        viewModel = viewModel,
+        navController = navController
+    )
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -75,9 +84,9 @@ private fun Content(
                 state.host,
                 state.players
             )
-            if (state.username == state.host){
+            if (state.username == state.host) {
                 Button(
-                    onClick = {  },
+                    onClick = { },
                 ) {
                     Text(text = "Start Game")
                 }
@@ -85,6 +94,10 @@ private fun Content(
 
         }
     }
+
+
+
+    HandleErrors(viewModel)
 }
 
 @Composable
@@ -117,14 +130,14 @@ private fun PlayersList(
 }
 
 @Composable
-private fun DisplayPlayer(player: String?, isHost: Boolean, number: Int){
-    if (player == null){
+private fun DisplayPlayer(player: String?, isHost: Boolean, number: Int) {
+    if (player == null) {
         return
     }
-    Row{
+    Row {
 
         Text(text = "$number. $player")
-        if (isHost){
+        if (isHost) {
             Spacer(modifier = Modifier.width(4.dp))
             Icon(imageVector = Icons.Filled.Star, contentDescription = null)
             Spacer(modifier = Modifier.width(2.dp))

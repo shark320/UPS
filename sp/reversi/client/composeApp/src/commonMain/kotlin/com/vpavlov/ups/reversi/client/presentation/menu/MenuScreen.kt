@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowStateAwareness
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
+import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
 import com.vpavlov.ups.reversi.client.presentation.common.component.InputDialog
 import com.vpavlov.ups.reversi.client.state.LobbyInfo
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
@@ -109,6 +110,7 @@ fun MenuScreen(
         isCreateNewLobbyDialogVisible = isCreateNewLobbyDialogVisible
     )
 
+    HandleErrors(viewModel)
 }
 
 @Composable

@@ -14,7 +14,7 @@ import kotlin.system.exitProcess
 fun ConnectionStateListenerWrapper(
     viewModel: CommonScreenViewModel<*,*>,
     navController: NavController,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit = {}
 ) {
     val state = viewModel.commonScreenState.value
     if (!state.isConnectionAlive) {

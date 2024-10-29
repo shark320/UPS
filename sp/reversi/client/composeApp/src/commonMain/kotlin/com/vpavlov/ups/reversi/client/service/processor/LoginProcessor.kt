@@ -10,8 +10,6 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Type
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
-import com.vpavlov.ups.reversi.client.service.processor.common.CommonClientProcessor
-import com.vpavlov.ups.reversi.client.service.processor.common.CommonProcessor
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import com.vpavlov.ups.reversi.client.state.ErrorMessage
 

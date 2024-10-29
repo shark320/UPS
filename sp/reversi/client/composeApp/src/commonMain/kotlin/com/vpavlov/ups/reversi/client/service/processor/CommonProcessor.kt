@@ -1,10 +1,8 @@
-package com.vpavlov.ups.reversi.client.service.processor.common
+package com.vpavlov.ups.reversi.client.service.processor
 
-import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.domains.connection.message.Status
 import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
-import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.exceptions.ConnectionException
 import com.vpavlov.ups.reversi.client.state.ErrorMessage
@@ -16,7 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.loggerOf
 
-abstract class CommonProcessor(
+open class CommonProcessor(
     protected val errorStateService: ErrorStateService,
     protected val connectionService: ConnectionService,
 ) {

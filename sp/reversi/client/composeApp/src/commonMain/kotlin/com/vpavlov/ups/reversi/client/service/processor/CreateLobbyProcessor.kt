@@ -11,8 +11,6 @@ import com.vpavlov.ups.reversi.client.domains.game.Lobby
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
-import com.vpavlov.ups.reversi.client.service.processor.common.CommonClientProcessor
-import com.vpavlov.ups.reversi.client.service.processor.common.CommonProcessor
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import com.vpavlov.ups.reversi.client.state.ErrorMessage
 import com.vpavlov.ups.reversi.client.utils.requireAllNotNull
@@ -35,6 +33,7 @@ class CreateLobbyProcessor(
             subtype = Subtype.CREATE_GAME
         )
         val payload = Payload();
+        payload.setValue("name", lobbyName)
         val response =
             connectionService.exchange(Message(header = requestHeader, payload = payload))
         if (response.isError()) {
@@ -63,7 +62,8 @@ class CreateLobbyProcessor(
     private fun handleOk(response: Message) {
         val state = ClientFlowState.getValueOrNull(response.payload.getStringValue("state"))
         val user = response.payload.getStringValue("user")
-        val lobbyName = response.payload.getStringValue("name")
+        //TODO: change documentation
+        val lobbyName = response.payload.getStringValue("game")
         if (!requireAllNotNull(state, user, lobbyName)) {
             malformedResponse(
                 subtype = response.header.subtype,

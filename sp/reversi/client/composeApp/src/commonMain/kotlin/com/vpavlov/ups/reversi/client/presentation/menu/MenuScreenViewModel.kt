@@ -9,6 +9,7 @@ import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.processor.ConnectToLobbyProcessor
+import com.vpavlov.ups.reversi.client.service.processor.CreateLobbyProcessor
 import com.vpavlov.ups.reversi.client.state.ClientState
 import com.vpavlov.ups.reversi.client.utils.isValidLobbyName
 import com.vpavlov.ups.reversi.client.utils.isValidUsername
@@ -20,7 +21,8 @@ class MenuScreenViewModel(
     errorStateService: ErrorStateService,
     private val pingService: PingService,
     private val connectToLobbyProcessor: ConnectToLobbyProcessor,
-    clientStateService: ClientStateService
+    clientStateService: ClientStateService,
+    private val createLobbyProcessor: CreateLobbyProcessor,
 ) : CommonScreenViewModel<MenuScreenEvent, MenuScreenState>(
     errorStateService = errorStateService,
     connectionStateService = connectionStateService,
@@ -68,7 +70,7 @@ class MenuScreenViewModel(
     }
 
     private fun createNewLobby(lobbyName: String) {
-
+        createLobbyProcessor(lobbyName)
     }
 
     private fun connectToLobby(lobby: String) {
