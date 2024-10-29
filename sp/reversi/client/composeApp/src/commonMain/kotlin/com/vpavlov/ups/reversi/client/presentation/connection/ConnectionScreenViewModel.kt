@@ -1,7 +1,6 @@
 package com.vpavlov.ups.reversi.client.presentation.connection
 
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
@@ -13,7 +12,7 @@ import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class ConnectionViewScreenModel(
+class ConnectionScreenViewModel(
     errorStateService: ErrorStateService,
     connectionStateService: ConnectionStateService,
     private val connectionService: ConnectionService,

@@ -12,13 +12,11 @@ import com.vpavlov.ups.reversi.client.state.ErrorMessage
 
 class HandshakeProcessor(
     private val config: ConnectionConfig,
-    connectionStateService: ConnectionStateService,
     connectionService: ConnectionService,
     errorStateService: ErrorStateService
 ): CommonProcessor(
     connectionService = connectionService,
     errorStateService = errorStateService,
-    connectionStateService = connectionStateService
 ) {
 
     operator fun invoke() = process{
@@ -37,7 +35,7 @@ class HandshakeProcessor(
     }
 
     override fun onConnectionError(exception: Exception) {
-        connectionStateService.connectionLost()
+        connectionService.connectionLost()
         errorStateService.setError(
             errorMessage = ErrorMessage("Could not connect to the server.", okButton = "Reconnect")
         )
@@ -45,7 +43,7 @@ class HandshakeProcessor(
     }
 
     private fun handleHandshakeError(){
-        connectionStateService.updateConnectionState(isHandshake = false)
+        connectionService.handshakeError()
         errorStateService.setError(
             errorMessage = ErrorMessage(errorMessage = "Fatal error: could not process handshake.", okButton = "Exit"),
             fatal = true
@@ -53,6 +51,6 @@ class HandshakeProcessor(
     }
 
     private fun handleHandshakeOk() {
-        connectionStateService.updateConnectionState(isHandshake = true)
+        connectionService.handshakePerformed()
     }
 }

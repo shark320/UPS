@@ -12,13 +12,11 @@ import org.apache.logging.log4j.kotlin.loggerOf
 
 class PingProcessor(
     private val config: ConnectionConfig,
-    connectionStateService: ConnectionStateService,
     connectionService: ConnectionService,
     errorStateService: ErrorStateService
 ): CommonProcessor(
     connectionService = connectionService,
     errorStateService = errorStateService,
-    connectionStateService = connectionStateService
 ) {
 
     operator fun invoke() = process {
@@ -42,8 +40,5 @@ class PingProcessor(
     }
 
     private fun handlePingOk() {
-        connectionStateService.updateConnectionState(
-            lastPing = System.currentTimeMillis()
-        )
     }
 }

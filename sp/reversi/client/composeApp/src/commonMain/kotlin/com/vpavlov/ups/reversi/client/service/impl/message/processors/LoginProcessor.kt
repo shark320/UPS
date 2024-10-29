@@ -17,13 +17,11 @@ import com.vpavlov.ups.reversi.client.state.ErrorMessage
 class LoginProcessor(
     private val config: ConnectionConfig,
     private val clientStateService: ClientStateService,
-    connectionStateService: ConnectionStateService,
     connectionService: ConnectionService,
     errorStateService: ErrorStateService
 ): CommonProcessor(
     connectionService = connectionService,
     errorStateService = errorStateService,
-    connectionStateService = connectionStateService
 ) {
 
     operator fun invoke(username: String) = process {

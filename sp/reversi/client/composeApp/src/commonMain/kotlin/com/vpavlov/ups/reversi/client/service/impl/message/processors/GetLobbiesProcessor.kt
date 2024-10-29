@@ -16,13 +16,11 @@ import com.vpavlov.ups.reversi.client.utils.requireAllNotNull
 class GetLobbiesProcessor(
     private val config: ConnectionConfig,
     private val clientStateService: ClientStateService,
-    connectionStateService: ConnectionStateService,
     connectionService: ConnectionService,
     errorStateService: ErrorStateService
 ) : CommonProcessor(
     connectionService = connectionService,
     errorStateService = errorStateService,
-    connectionStateService = connectionStateService
 ) {
 
     operator fun invoke() = process {

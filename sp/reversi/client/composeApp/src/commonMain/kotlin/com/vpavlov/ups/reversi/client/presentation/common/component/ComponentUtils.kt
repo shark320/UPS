@@ -23,7 +23,7 @@ fun ConnectionStateListenerWrapper(
                     route = ScreenNavigation.ConnectionScreen.toString(),
                     navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
                 )
-            }
+            },
         )
     }
     content()

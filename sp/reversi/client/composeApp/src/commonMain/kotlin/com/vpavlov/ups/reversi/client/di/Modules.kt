@@ -1,7 +1,7 @@
 package com.vpavlov.ups.reversi.client.di
 
 import com.vpavlov.ups.reversi.client.config.ConfigProvider
-import com.vpavlov.ups.reversi.client.presentation.connection.ConnectionViewScreenModel
+import com.vpavlov.ups.reversi.client.presentation.connection.ConnectionScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.login.LoginScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.menu.MenuScreenViewModel
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
@@ -29,7 +29,6 @@ import org.koin.core.Koin
 import org.koin.core.context.GlobalContext.get
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
-import kotlin.math.sin
 
 val koin: Koin
     get() = get()
@@ -48,7 +47,7 @@ val onlineModules = module {
         ConnectionServiceImpl(
             config = ConfigProvider.connectionConfig,
             errorStateService = get(),
-            connectionStateService = get()
+            connectionStateService = get(),
         )
     }
     single<ConnectionStateService> {
@@ -68,7 +67,8 @@ val onlineModules = module {
             config = ConfigProvider.connectionConfig,
             clientStateService = get(),
             pingProcessor = get(),
-            getLobbiesProcessor = get()
+            getLobbiesProcessor = get(),
+            connectionStateService = get()
         )
     }
 
@@ -80,15 +80,13 @@ val messageProcessorsModule = module {
             config = ConfigProvider.connectionConfig,
             clientStateService = get(),
             connectionService = get(),
-            errorStateService = get(),
-            connectionStateService = get()
+            errorStateService = get()
         )
     }
 
     single {
         HandshakeProcessor(
             config = ConfigProvider.connectionConfig,
-            connectionStateService = get(),
             connectionService = get(),
             errorStateService = get()
         )
@@ -97,7 +95,6 @@ val messageProcessorsModule = module {
     single {
         PingProcessor(
             config = ConfigProvider.connectionConfig,
-            connectionStateService = get(),
             connectionService = get(),
             errorStateService = get()
         )
@@ -106,7 +103,6 @@ val messageProcessorsModule = module {
     single {
         GetLobbiesProcessor(
             config = ConfigProvider.connectionConfig,
-            connectionStateService = get(),
             connectionService = get(),
             errorStateService = get(),
             clientStateService = get()
@@ -121,11 +117,12 @@ val offlineModules = module {
         ConnectionServiceOfflineImpl(
             config = ConfigProvider.connectionConfig,
             connectionStateService = get(),
-            errorStateService = get()
+            errorStateService = get(),
         )
     }
     single<ConnectionStateService> {
-        ConnectionStateServiceOfflineImpl()
+        ConnectionStateServiceOfflineImpl(
+        )
     }
     single<MessageService> {
         MessageServiceOfflineImpl(
@@ -142,7 +139,7 @@ val offlineModules = module {
 
 val sharedModules = module {
     viewModel {
-        ConnectionViewScreenModel(
+        ConnectionScreenViewModel(
             connectionService = get(),
             errorStateService = get(),
             connectionStateService = get(),

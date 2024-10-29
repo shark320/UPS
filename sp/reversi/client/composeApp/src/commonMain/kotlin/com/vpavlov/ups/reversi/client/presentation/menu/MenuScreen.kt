@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
 import com.vpavlov.ups.reversi.client.state.LobbyInfo
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
 import org.koin.compose.viewmodel.koinViewModel
@@ -39,52 +40,58 @@ fun MenuScreen(
     viewModel: MenuScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.state.value
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorScheme.background),
-        contentAlignment = Alignment.TopCenter,
+    ConnectionStateListenerWrapper(
+        viewModel = viewModel,
+        navController = navController
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorScheme.background),
+            contentAlignment = Alignment.TopCenter,
 
-        ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "Open Lobbies",
-                textAlign = TextAlign.Center,
-                fontSize = 35.sp
-            )
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth().height(400.dp)
             ) {
-                items(state.lobbies.size) { index ->
-                    val lobbyInfo = state.lobbies[index]
-                    LobbyCard(
-                        lobbyInfo = lobbyInfo,
-                        onClick = { lobbyName ->
-                            viewModel.onEvent(
-                                MenuScreenEvent.ConnectToLobby(
-                                    lobbyName
+            Column(
+                modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Open Lobbies",
+                    textAlign = TextAlign.Center,
+                    fontSize = 35.sp
+                )
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth().height(400.dp)
+                ) {
+                    items(state.lobbies.size) { index ->
+                        val lobbyInfo = state.lobbies[index]
+                        LobbyCard(
+                            lobbyInfo = lobbyInfo,
+                            onClick = { lobbyName ->
+                                viewModel.onEvent(
+                                    MenuScreenEvent.ConnectToLobby(
+                                        lobbyName
+                                    )
                                 )
-                            )
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                 }
+
             }
+            FloatingActionButton(
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 30.dp),
+                onClick = {},
 
-        }
-        FloatingActionButton(
-            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 30.dp),
-            onClick = {},
-
-            ) {
-            Text(
-                modifier = Modifier.padding(8.dp),
-                text = "Create new lobby")
+                ) {
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = "Create new lobby")
+            }
         }
     }
+
 }
 
 @Composable

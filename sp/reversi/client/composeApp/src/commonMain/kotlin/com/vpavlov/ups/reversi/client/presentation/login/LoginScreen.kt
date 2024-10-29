@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
+import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
 import com.vpavlov.ups.reversi.client.presentation.common.component.CustomOutlinedTextField
 import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
 import com.vpavlov.ups.reversi.client.presentation.common.component.OnTopCircularProgressIndicator
@@ -28,44 +29,50 @@ fun LoginScreen(
     viewModel: LoginScreenViewModel = koinViewModel()
 ) {
     val state = viewModel.state.value
-    if (state.loggedIn){
+    if (state.loggedIn) {
         navController.navigate(
             route = ScreenNavigation.MenuScreen.toString(),
             navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
         )
 
     }
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorScheme.background)
+    ConnectionStateListenerWrapper(
+        viewModel = viewModel,
+        navController = navController
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorScheme.background)
         ) {
-            Text(text = "Enter your username:")
-            CustomOutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(0.3f),
-                label = { Text(text = "Username") },
-                value = state.username,
-                onValueChange = { viewModel.onEvent(LoginScreenEvent.UsernameEntered(it)) },
-                isError = state.usernameError,
-                errorMessage = "Username is not valid!"
-            )
-            Button(
-                onClick = { viewModel.onEvent(LoginScreenEvent.ProcessLoginScreen) },
-                enabled = state.validUsername
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Login")
+                Text(text = "Enter your username:")
+                CustomOutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(0.3f),
+                    label = { Text(text = "Username") },
+                    value = state.username,
+                    onValueChange = { viewModel.onEvent(LoginScreenEvent.UsernameEntered(it)) },
+                    isError = state.usernameError,
+                    errorMessage = "Username is not valid!"
+                )
+                Button(
+                    onClick = { viewModel.onEvent(LoginScreenEvent.ProcessLoginScreen) },
+                    enabled = state.validUsername
+                ) {
+                    Text(text = "Login")
+                }
+
+
             }
-
-
         }
+
+        OnTopCircularProgressIndicator(show = state.waitingResponse)
+
+        HandleErrors(viewModel)
     }
 
-    OnTopCircularProgressIndicator(show = state.waitingResponse)
-
-    HandleErrors(viewModel)
 }

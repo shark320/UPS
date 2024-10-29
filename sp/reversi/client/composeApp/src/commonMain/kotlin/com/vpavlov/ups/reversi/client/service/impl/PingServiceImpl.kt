@@ -3,6 +3,7 @@ package com.vpavlov.ups.reversi.client.service.impl
 import com.vpavlov.ups.reversi.client.config.ConnectionConfig
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
+import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.GetLobbiesProcessor
 import com.vpavlov.ups.reversi.client.service.impl.message.processors.PingProcessor
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
@@ -19,6 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class PingServiceImpl(
     private val config: ConnectionConfig,
     private val clientStateService: ClientStateService,
+    private val connectionStateService: ConnectionStateService,
     private val pingProcessor: PingProcessor,
     private val getLobbiesProcessor: GetLobbiesProcessor
 ): PingService {
@@ -31,10 +33,18 @@ class PingServiceImpl(
     private var clientFlowState: ClientFlowState? = null
     private var job: Job? = null
 
+
     init{
         clientStateService.getStateFlow().onEach { clientState ->
             clientFlowState = clientState?.flowState
             LOGGER.debug("Client state updated: $clientFlowState")
+        }.launchIn(CoroutineScope(Dispatchers.Default))
+
+        connectionStateService.getConnectionState().onEach { connectionState ->
+            if (!connectionState.isAlive){
+                LOGGER.debug("Connection lost. Stopping ping service.")
+                stop()
+            }
         }.launchIn(CoroutineScope(Dispatchers.Default))
     }
 

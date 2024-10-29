@@ -20,7 +20,6 @@ import org.apache.logging.log4j.kotlin.loggerOf
 open class CommonProcessor(
     protected val errorStateService: ErrorStateService,
     protected val connectionService: ConnectionService,
-    protected val connectionStateService: ConnectionStateService
 ) {
 
     protected val LOGGER = loggerOf(this::class.java)
@@ -31,13 +30,16 @@ open class CommonProcessor(
         CoroutineScope(Dispatchers.Default).launch {
             try {
                 exchanger()
-            }catch (e: ConnectionException) {
+            } catch (e: ConnectionException) {
                 onConnectionError(e)
             } catch (e: ClosedReceiveChannelException) {
                 onConnectionError(e)
             } catch (e: Throwable) {
                 errorStateService.setError(
-                    errorMessage = ErrorMessage(errorMessage = "A fatal error during the message processing.", okButton = "Exit"),
+                    errorMessage = ErrorMessage(
+                        errorMessage = "A fatal error during the message processing.",
+                        okButton = "Exit"
+                    ),
                     fatal = true
                 )
                 LOGGER.error("Error during message processing.", e)
@@ -57,17 +59,21 @@ open class CommonProcessor(
         errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Malformed response for the type [$subtype]"))
     }
 
-    protected open fun onConnectionError(exception: Exception){
-        connectionStateService.connectionLost()
+    protected open fun onConnectionError(exception: Exception) {
+        connectionService.connectionLost()
         LOGGER.error("Connection to the server lost", exception)
     }
 
-    protected fun unexpectedErrorStatus(status: Status, errorStateService: ErrorStateService,logger: KotlinLogger) {
+    protected fun unexpectedErrorStatus(
+        status: Status,
+        errorStateService: ErrorStateService,
+        logger: KotlinLogger
+    ) {
         logger.error("Unexpected response status: $status")
         errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status"))
     }
 
-    protected fun malformedResponse(subtype: Subtype, logger: KotlinLogger){
+    protected fun malformedResponse(subtype: Subtype, logger: KotlinLogger) {
         logger.error("Malformed response for the subtype [$subtype]")
         errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Malformed response for the type [$subtype]"))
     }
