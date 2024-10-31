@@ -13,6 +13,8 @@ private:
     std::shared_ptr<reversi_game> _game;
     std::string _name;
 
+    const std::shared_ptr<std::shared_mutex> shared_mutex = std::make_shared<std::shared_mutex>();
+
 public:
     lobby(std::string  name, const std::shared_ptr<client>& host);
 
@@ -42,5 +44,5 @@ public:
 
     [[nodiscard]] std::shared_ptr<std::vector<std::shared_ptr<client>>>  get_players() const;
 
-    std::shared_ptr<std::shared_mutex> shared_mutex = std::make_shared<std::shared_mutex>();
+    [[nodiscard]] std::shared_ptr<reversi_game> get_game() const;
 };

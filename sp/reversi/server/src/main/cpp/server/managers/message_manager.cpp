@@ -357,23 +357,11 @@ std::shared_ptr<message> message_manager::process_get_lobby_state(const std::sha
     return std::make_shared<message>(response_header, response_payload);
 }
 
-std::shared_ptr<message> message_manager::invalid_state(flow_state state, const std::shared_ptr<message> &request,
-                                                        const std::shared_ptr<client> &client,
-                                                        const std::shared_ptr<log4cxx::Logger> &client_logger) {
-    std::string msg = fmt::format("Client is in invalid state ({}).", flow_state_mapper::get_string(state));
-    client_logger->error(msg);
-    return bad_request(request, client, msg);
-}
 
 void
 message_manager::add_lobby_info(const std::shared_ptr<lobby> &lobby, const std::shared_ptr<payload> &response_payload) {
-    const auto lobby_players = lobby->get_players();
-    auto lobby_players_payload = std::make_shared<objects_vector>();
-    for (const auto &player: *lobby_players) {
-        if (player != nullptr) {
-            lobby_players_payload->push_back(std::make_shared<string>(player->get_username()));
-        }
-    }
+
+    const auto lobby_players_payload = get_lobby_players(lobby);
 
     response_payload->set_value("host", lobby_players_payload->at(0));
     response_payload->set_value("lobby", std::make_shared<string>(lobby->get_name()));
@@ -404,11 +392,52 @@ std::shared_ptr<message> message_manager::process_start_the_game(const std::shar
         return not_allowed(request, client, msg);
     }
     response_header->set_status(status::OK);
-    client->update_flow_state(flow_state::GAME);
     response_payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
     add_lobby_info(lobby, response_payload);
 
 
+    return std::make_shared<message>(response_header, response_payload);
+}
+
+std::shared_ptr<message> message_manager::process_get_game_state(const std::shared_ptr<message> &request,
+                                                                 const std::shared_ptr<client_connection> &client_connection) {
+    const auto client_logger = client_connection->get_logger();
+    const auto client = client_connection->get_client();
+    const auto response_header = std::make_shared<header>(request->get_header());
+    const auto response_payload = std::make_shared<payload>();
+    const auto lobby = client->get_lobby();
+
+    if (lobby == nullptr || !client->is_in_state({flow_state::GAME})) {
+        return invalid_state(client->get_flow_state(), request,client, client_logger);
+    }
+
+    const auto game = lobby->get_game();
+    if (game == nullptr){
+        return not_found(request, client, "The game for the client is not found.");
+    }
+
+    const auto opponent_client = game->get_opponent_client(client);
+
+    if (opponent_client == nullptr){
+        return not_found(request, client, "The opponent player for the client is not found.");
+    }
+
+    const auto current_player_client = game->get_current_player_client();
+
+    if (current_player_client == nullptr){
+        return not_found(request, client, "The current player for the game is not found.");
+    }
+
+    const auto lobby_players_payload = get_lobby_players(lobby);
+
+    response_header->set_status(status::OK);
+    response_payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
+    response_payload->set_value("players", lobby_players_payload);
+    response_payload->set_value("is_opponent_connected", std::make_shared<boolean>(opponent_client->is_connected()));
+    response_payload->set_value("current_player", std::make_shared<string>(current_player_client->get_username()));
+    //TODO: provide relevant X and Y coordinated
+    response_payload->set_value("x", std::make_shared<integer>(1));
+    response_payload->set_value("y", std::make_shared<integer>(1));
     return std::make_shared<message>(response_header, response_payload);
 }
 
@@ -449,4 +478,46 @@ std::shared_ptr<message>
 message_manager::not_allowed(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client) {
     return not_allowed(request, client, "Not allowed");
 }
+
+
+std::shared_ptr<message> message_manager::invalid_state(flow_state state, const std::shared_ptr<message> &request,
+                                                        const std::shared_ptr<client> &client,
+                                                        const std::shared_ptr<log4cxx::Logger> &client_logger) {
+    std::string msg = fmt::format("Client is in invalid state ({}).", flow_state_mapper::get_string(state));
+    client_logger->error(msg);
+    return bad_request(request, client, msg);
+}
+
+std::shared_ptr<objects_vector> message_manager::get_lobby_players(const std::shared_ptr<lobby> &lobby) {
+    const auto lobby_players = lobby->get_players();
+    auto lobby_players_payload = std::make_shared<objects_vector>();
+    for (const auto &player: *lobby_players) {
+        if (player != nullptr) {
+            lobby_players_payload->push_back(std::make_shared<string>(player->get_username()));
+        }
+    }
+
+    return lobby_players_payload;
+}
+
+std::shared_ptr<message>
+message_manager::not_found(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client,
+                           const std::string &msg) {
+    const auto _header = std::make_shared<header>(request->get_header());
+    const auto _payload = std::make_shared<payload>();
+    _header->set_status(status::NOT_FOUND);
+    _payload->set_value("msg", std::make_shared<string>(msg));
+    if (client != nullptr) {
+        _payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
+    }
+
+    return std::make_shared<message>(_header, _payload);
+}
+
+std::shared_ptr<message>
+message_manager::not_found(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client) {
+    return not_found(request, client, "Not Found");
+}
+
+
 

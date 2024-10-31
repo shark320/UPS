@@ -50,6 +50,11 @@ private:
     static std::shared_ptr<message>
     unauthorized(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, const std::string &msg);
 
+    static std::shared_ptr<message> not_found(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
+
+    static std::shared_ptr<message> not_found(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, const std::string &msg);
+
+
     std::shared_ptr<message> process_create_new_game(const std::shared_ptr<message> &request,
                                                      const std::shared_ptr<client_connection> &client_connection);
 
@@ -57,6 +62,9 @@ private:
                                                 const std::shared_ptr<client_connection> &client_connection);
 
     std::shared_ptr<message> process_start_the_game(const std::shared_ptr<message> &request,
+                                                    const std::shared_ptr<client_connection> &client_connection);
+
+    std::shared_ptr<message> process_get_game_state(const std::shared_ptr<message> &request,
                                                     const std::shared_ptr<client_connection> &client_connection);
 
     std::shared_ptr<message> process_connect_to_the_lobby(const std::shared_ptr<message> &request,
@@ -74,6 +82,8 @@ private:
                                                   const std::shared_ptr<log4cxx::Logger> &client_logger);
 
     static void add_lobby_info(const std::shared_ptr<lobby> &lobby, const std::shared_ptr<payload> &response_payload);
+
+    static std::shared_ptr<objects_vector> get_lobby_players(const std::shared_ptr<lobby> &lobby);
 
 //    std::shared_ptr<message> process_unknown_type(std::shared_ptr<message> request, std::shared_ptr<client_connection> client_connection);
 //
