@@ -86,7 +86,8 @@ fun InputDialog(
     title: String,
     inputLabel: String,
     isError: Boolean = false,
-    errorMessage: String? = null
+    errorMessage: String? = null,
+    okButtonEnabled: Boolean = true
 ) {
     val openAlertDialog = remember { mutableStateOf(true) }
     AlertDialog(
@@ -108,7 +109,8 @@ fun InputDialog(
                 onClick = {
                     onOkClick(inputText)
                     openAlertDialog.value = false
-                }
+                },
+                enabled = okButtonEnabled
             ) {
                 Text("OK")
             }

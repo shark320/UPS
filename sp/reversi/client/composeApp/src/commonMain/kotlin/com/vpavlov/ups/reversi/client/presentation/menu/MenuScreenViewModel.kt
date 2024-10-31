@@ -57,19 +57,19 @@ class MenuScreenViewModel(
     }
 
     private fun lobbyNameEntered(lobbyName: String) {
-        var validName = true
-        if (lobbyName.isNotEmpty() && !isValidLobbyName(lobbyName)) {
-            validName = false
-        }
         _state.value = state.value.copy(
             lobbyNameInputState = LobbyNameInputState(
                 name = lobbyName,
-                isValidName = validName
+                isValidName = isValidLobbyName(lobbyName),
+                isNameError = lobbyName.isNotEmpty() && !isValidLobbyName(lobbyName)
             )
         )
     }
 
     private fun createNewLobby(lobbyName: String) {
+        if (!isValidLobbyName(lobbyName)){
+            return
+        }
         createLobbyProcessor(lobbyName)
     }
 
