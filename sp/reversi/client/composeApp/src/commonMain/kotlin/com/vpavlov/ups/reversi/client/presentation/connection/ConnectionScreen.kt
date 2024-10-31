@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
-import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
 import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
 import com.vpavlov.ups.reversi.client.presentation.navigation.ScreenNavigation
 import org.koin.compose.viewmodel.koinViewModel
@@ -22,7 +21,7 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 fun ConnectionScreen(
     navController: NavHostController,
-    viewModel: ConnectionViewScreenModel = koinViewModel()
+    viewModel: ConnectionScreenViewModel = koinViewModel()
 ) {
 //    ConnectionStateListenerWrapper(
 //        viewModel = viewModel,
@@ -44,7 +43,7 @@ fun ConnectionScreen(
 @Composable
 private fun Content(
     navController: NavHostController,
-    viewModel: ConnectionViewScreenModel
+    viewModel: ConnectionScreenViewModel
 ) {
     if (viewModel.state.value.isAliveAndHandshake) {
         navController.navigate(

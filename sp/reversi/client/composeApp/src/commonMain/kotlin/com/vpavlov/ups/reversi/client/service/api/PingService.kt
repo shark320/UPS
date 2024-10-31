@@ -6,9 +6,5 @@ interface PingService {
 
     fun stop()
 
-    fun resume()
-
-    fun pause()
-
     fun isRunning(): Boolean
 }

@@ -7,6 +7,7 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Header
 import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
+import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.exceptions.ConnectionException
@@ -26,6 +27,7 @@ import io.ktor.utils.io.read
 import io.ktor.utils.io.writeStringUtf8
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -61,7 +63,6 @@ open class ConnectionServiceImpl(
                     connectionStateService.updateConnectionState(isAlive = true, socket = socket)
                     LOGGER.info("Connected to the server [${config.ip}:${config.port}]")
                     println(socket.isClosed)
-                    writeChannel?.writeStringUtf8("  ")
                 } catch (e: Throwable) {
                     //TODO: reconnect on error
                     errorStateService.setError(
@@ -89,15 +90,33 @@ open class ConnectionServiceImpl(
                 //TODO catch error
                 writeChannel!!.writeStringUtf8(constructed)
                 return readMessageUnsafe()
-            }catch (e: IOException){
-                connectionStateService.connectionLost()
-                throw ConnectionException(e)
             }catch (e: Throwable){
-                LOGGER.error("", e)
-                throw FatalException(e)
+                when (e){
+                    is IOException, is ClosedReceiveChannelException ->{
+                        connectionStateService.connectionLost()
+                        throw ConnectionException(e)
+                    }
+                    else -> {
+                        LOGGER.error("", e)
+                        throw FatalException(e)
+                    }
+                }
+
             }
 
         }
+    }
+
+    override fun handshakePerformed() {
+        connectionStateService.updateConnectionState(
+            isHandshake = true
+        )
+    }
+
+    override fun handshakeError() {
+        connectionStateService.updateConnectionState(
+            isHandshake = false
+        )
     }
 
     protected open suspend fun readHeaderUnsafe(): Header {
@@ -124,6 +143,10 @@ open class ConnectionServiceImpl(
         val message = Message(header = header, payload = payload)
         LOGGER.debug("Read message: $message")
         return message
+    }
+
+    override fun connectionLost(){
+        connectionStateService.connectionLost()
     }
 
 

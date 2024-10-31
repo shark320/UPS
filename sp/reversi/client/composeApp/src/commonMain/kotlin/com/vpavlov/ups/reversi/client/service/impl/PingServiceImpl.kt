@@ -3,8 +3,10 @@ package com.vpavlov.ups.reversi.client.service.impl
 import com.vpavlov.ups.reversi.client.config.ConnectionConfig
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
-import com.vpavlov.ups.reversi.client.service.impl.message.processors.GetLobbiesProcessor
-import com.vpavlov.ups.reversi.client.service.impl.message.processors.PingProcessor
+import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
+import com.vpavlov.ups.reversi.client.service.processor.GetLobbiesProcessor
+import com.vpavlov.ups.reversi.client.service.processor.GetLobbyStateProcessor
+import com.vpavlov.ups.reversi.client.service.processor.PingProcessor
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,11 +21,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 class PingServiceImpl(
     private val config: ConnectionConfig,
     private val clientStateService: ClientStateService,
+    private val connectionStateService: ConnectionStateService,
     private val pingProcessor: PingProcessor,
+    private val getLobbyStateProcessor: GetLobbyStateProcessor,
     private val getLobbiesProcessor: GetLobbiesProcessor
-): PingService {
+) : PingService {
 
-    companion object{
+    companion object {
         private val LOGGER = loggerOf(PingServiceImpl::class.java)
     }
 
@@ -31,17 +35,25 @@ class PingServiceImpl(
     private var clientFlowState: ClientFlowState? = null
     private var job: Job? = null
 
-    init{
+
+    init {
         clientStateService.getStateFlow().onEach { clientState ->
             clientFlowState = clientState?.flowState
             LOGGER.debug("Client state updated: $clientFlowState")
+        }.launchIn(CoroutineScope(Dispatchers.Default))
+
+        connectionStateService.getConnectionState().onEach { connectionState ->
+            if (!connectionState.isAlive) {
+                LOGGER.debug("Connection lost. Stopping ping service.")
+                stop()
+            }
         }.launchIn(CoroutineScope(Dispatchers.Default))
     }
 
     @Synchronized
     override fun start() {
         LOGGER.debug("Starting ping service!")
-        if (isRunning.get()){
+        if (isRunning.get()) {
             LOGGER.warn("The Ping Service is already running!")
             return
         }
@@ -55,18 +67,18 @@ class PingServiceImpl(
     }
 
     @Synchronized
-    private fun action(){
-        if (!config.isPing){
+    private fun action() {
+        if (!config.isPing) {
             LOGGER.warn("Ping is disabled!")
             return
         }
         val clientFlowStateTmp = clientFlowState
-        if (clientFlowStateTmp == null){
+        if (clientFlowStateTmp == null) {
             pingProcessor()
-        }else{
-            when(clientFlowStateTmp){
+        } else {
+            when (clientFlowStateTmp) {
                 ClientFlowState.MENU -> getLobbiesProcessor()
-                ClientFlowState.LOBBY -> {}
+                ClientFlowState.LOBBY -> getLobbyStateProcessor()
                 ClientFlowState.GAME -> {}
             }
         }
@@ -78,25 +90,6 @@ class PingServiceImpl(
         isRunning.set(false)
         job?.cancel()
         job = null
-    }
-
-    @Synchronized
-    override fun resume() {
-        LOGGER.debug("Resuming ping service!")
-        if (job == null){
-            LOGGER.error("Ping service was not started!")
-            throw IllegalStateException("Ping service was not started!")
-        }
-        if (!isRunning.get()) {
-            isRunning.set(true)
-        } else {
-            LOGGER.warn("The Ping Service is already running!")
-        }
-    }
-
-    override fun pause() {
-        LOGGER.debug("Pausing ping service!")
-        isRunning.set(false)
     }
 
     override fun isRunning() = isRunning.get()

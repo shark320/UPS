@@ -4,6 +4,7 @@ import com.vpavlov.ups.reversi.client.config.ConnectionConfig
 import com.vpavlov.ups.reversi.client.domains.connection.message.Header
 import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
+import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
 import com.vpavlov.ups.reversi.client.service.impl.ConnectionServiceImpl
@@ -15,7 +16,7 @@ import org.apache.logging.log4j.kotlin.loggerOf
 
 class ConnectionServiceOfflineImpl(
     config: ConnectionConfig,
-    connectionStateService: ConnectionStateService, errorStateService: ErrorStateService
+    connectionStateService: ConnectionStateService, errorStateService: ErrorStateService,
 ) :
     ConnectionServiceImpl(
         config = config, connectionStateService = connectionStateService,

@@ -29,6 +29,7 @@ enum class Subtype(val id: Int) {
     LOBBY_EXIT(4),
     LOBBIES_LIST(7),
     LOBBY_CONNECT(8),
+    LOBBY_STATE(11),
     HANDSHAKE(12),
     NULL_SUBTYPE(-1)
     ;

@@ -10,5 +10,11 @@ interface ConnectionService {
 
     @Throws(ConnectionException::class)
     suspend fun exchange(request: Message): Message
+
+    fun handshakePerformed()
+
+    fun handshakeError()
+
+    fun connectionLost()
 }
 

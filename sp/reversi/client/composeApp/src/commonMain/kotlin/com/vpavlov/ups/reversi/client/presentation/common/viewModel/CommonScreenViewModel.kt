@@ -5,8 +5,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.state.ClientState
 import com.vpavlov.ups.reversi.client.state.ConnectionState
 import com.vpavlov.ups.reversi.client.state.ErrorState
 import kotlinx.coroutines.flow.launchIn
@@ -14,7 +16,8 @@ import kotlinx.coroutines.flow.onEach
 
 abstract class CommonScreenViewModel<EventType, StateType>(
     protected val errorStateService: ErrorStateService,
-    protected val connectionStateService: ConnectionStateService
+    protected val connectionStateService: ConnectionStateService,
+    protected val clientStateService: ClientStateService
 ) : ViewModel() {
 
     protected val _commonScreenState = mutableStateOf(CommonScreenState())
@@ -31,6 +34,11 @@ abstract class CommonScreenViewModel<EventType, StateType>(
         connectionStateService.getConnectionState().onEach {
             handleConnectionStateUpdate(it)
         }.launchIn(viewModelScope)
+
+        clientStateService.getStateFlow().onEach { clientState ->
+            handleClientStateUpdate(clientState)
+            handleClientStateUpdateCst(clientState)
+        }.launchIn(viewModelScope)
     }
 
     protected fun handleConnectionStateUpdate(connectionState: ConnectionState) {
@@ -38,6 +46,14 @@ abstract class CommonScreenViewModel<EventType, StateType>(
             isConnectionAlive = connectionState.isAlive
         )
     }
+
+    protected fun handleClientStateUpdate(clientState: ClientState?){
+        _commonScreenState.value = commonScreenState.value.copy(
+            clientFlowState = clientState?.flowState
+        )
+    }
+
+    protected open fun handleClientStateUpdateCst(clientState: ClientState?){}
 
     fun onCommonEvent(commonScreenEvent: CommonScreenEvent) {
         when (commonScreenEvent) {
