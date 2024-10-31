@@ -138,6 +138,7 @@ std::shared_ptr<message> message_manager::process_login(const std::shared_ptr<me
             return std::make_shared<message>(response_header, response_payload);
         } else {
             client_logger->debug(fmt::format("Found client with the username '{}' in cache.", *login));
+            client_connection->set_client(_client);
             _client->connect(client_connection);
         }
 
