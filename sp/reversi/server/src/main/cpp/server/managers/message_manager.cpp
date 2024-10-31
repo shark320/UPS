@@ -395,7 +395,7 @@ std::shared_ptr<message> message_manager::process_start_the_game(const std::shar
     if (client != lobby->get_host()) {
         std::string msg = fmt::format("The client '{}' is not a host of the lobby.", client->get_username());
         client_logger->error(msg);
-        return not_allowed(request, client, msg);
+        return unauthorized(request, client, msg);
     }
 
     if (!lobby->start_game()) {
@@ -404,7 +404,10 @@ std::shared_ptr<message> message_manager::process_start_the_game(const std::shar
         return not_allowed(request, client, msg);
     }
     response_header->set_status(status::OK);
+    client->update_flow_state(flow_state::GAME);
+    response_payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
     add_lobby_info(lobby, response_payload);
+
 
     return std::make_shared<message>(response_header, response_payload);
 }
