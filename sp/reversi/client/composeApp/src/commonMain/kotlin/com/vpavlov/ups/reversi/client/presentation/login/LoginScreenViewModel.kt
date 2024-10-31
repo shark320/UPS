@@ -44,16 +44,10 @@ class LoginScreenViewModel(
     }
 
     private fun usernameEntered(username: String) {
-        var error = false
-        var validUsername = true
-        if (username.isNotEmpty() && !isValidUsername(username)) {
-            error = true
-            validUsername = false
-        }
         _state.value = state.value.copy(
             username = username,
-            usernameError = error,
-            validUsername = validUsername
+            usernameError = username.isNotEmpty() && !isValidUsername(username),
+            validUsername = isValidUsername(username)
         )
     }
 

@@ -1,5 +1,6 @@
 package com.vpavlov.ups.reversi.client.presentation.lobby
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -15,22 +16,31 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowStateAwareness
+import com.vpavlov.ups.reversi.client.presentation.common.component.ConfirmationDialog
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
 import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
+import com.vpavlov.ups.reversi.client.ui.theme.heavyBorderWidth
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -84,13 +94,21 @@ private fun Content(
                 state.host,
                 state.players
             )
-            if (state.username == state.host) {
-                Button(
-                    onClick = { },
-                ) {
-                    Text(text = "Start Game")
+            Spacer(modifier = Modifier.height(24.dp))
+            Row {
+                if (state.username == state.host) {
+                    Button(
+                        onClick = { },
+                    ) {
+                        Text(text = "Start Game")
+                    }
                 }
+                Spacer(modifier = Modifier.width(16.dp))
+                ExitLobbyButton(
+                    viewModel = viewModel
+                )
             }
+
 
         }
     }
@@ -101,32 +119,70 @@ private fun Content(
 }
 
 @Composable
+private fun ExitLobbyButton(
+    viewModel: LobbyScreenViewModel,
+){
+    var isConfirmationMessageVisible by remember { mutableStateOf(false) }
+    OutlinedButton(
+        onClick = {
+            isConfirmationMessageVisible = true
+        },
+        colors = ButtonDefaults.outlinedButtonColors(
+            contentColor = Color.Red,
+        ),
+        border = BorderStroke(2.dp, Color.Red),
+    ){
+        Text("Exit Lobby", fontWeight = FontWeight.Bold)
+    }
+
+    if (isConfirmationMessageVisible){
+        ConfirmationDialog(
+            title = "Exit Lobby Confirmation",
+            message = "Are You sure you want to exit the lobby?",
+            onOkClick = {
+                isConfirmationMessageVisible = false
+                viewModel.onEvent(LobbyScreenEvent.ExitLobby)
+            },
+            onCancelClick = {
+                isConfirmationMessageVisible = false
+            }
+        )
+    }
+}
+
+@Composable
 private fun PlayersList(
     host: String,
     players: List<String>
 ) {
     val player1 = players.getOrNull(0)
     val player2 = players.getOrNull(1)
-    Text("Players", fontSize = 20.sp)
-    Card(
-        shape = RoundedCornerShape(defaultCornerRadius),
-        modifier = Modifier
-            .border(
-                width = 1.dp, // Set the border width
-                color = Color.Blue.copy(alpha = 0.9f), // Set the border color
-                shape = RoundedCornerShape(defaultCornerRadius) // Apply the same shape as the card
-            )
-            .fillMaxWidth(),
-        colors = CardDefaults.elevatedCardColors(),
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Text("Players", fontSize = 20.sp)
+        Spacer(modifier = Modifier.height(8.dp))
+        Card(
+            shape = RoundedCornerShape(defaultCornerRadius),
+            modifier = Modifier
+                .border(
+                    width = 1.dp, // Set the border width
+                    color = Color.Blue.copy(alpha = 0.9f), // Set the border color
+                    shape = RoundedCornerShape(defaultCornerRadius) // Apply the same shape as the card
+                )
+                .fillMaxWidth(),
+            colors = CardDefaults.elevatedCardColors(),
         ) {
-            DisplayPlayer(player = player1, player1 == host, number = 1)
-            Spacer(modifier = Modifier.height(8.dp))
-            DisplayPlayer(player = player2, player2 == host, number = 2)
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                DisplayPlayer(player = player1, player1 == host, number = 1)
+                Spacer(modifier = Modifier.height(8.dp))
+                DisplayPlayer(player = player2, player2 == host, number = 2)
+            }
         }
     }
+
 }
 
 @Composable

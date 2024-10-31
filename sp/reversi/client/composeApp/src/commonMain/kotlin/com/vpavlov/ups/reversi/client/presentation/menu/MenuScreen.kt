@@ -70,6 +70,7 @@ fun MenuScreen(
                     textAlign = TextAlign.Center,
                     fontSize = 35.sp
                 )
+                Spacer(modifier = Modifier.height(8.dp))
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth().height(400.dp)
                 ) {
@@ -90,12 +91,12 @@ fun MenuScreen(
                 }
 
             }
-            FloatingActionButton(
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 30.dp),
                 onClick = {
                     isCreateNewLobbyDialogVisible.value = true
-                },
-
+                }
                 ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
@@ -165,6 +166,7 @@ private fun CreateNewLobbyDialog(
                     viewModel.onEvent(MenuScreenEvent.CreateNewLobby(it))
                     isCreateNewLobbyDialogVisible.value = false
                 },
+                okButtonEnabled = inputState.isValidName,
                 onInputStringChange = {
                     viewModel.onEvent(MenuScreenEvent.LobbyNameEntered(it))
                 },
@@ -173,7 +175,7 @@ private fun CreateNewLobbyDialog(
                     isCreateNewLobbyDialogVisible.value = false
                 },
                 errorMessage = "Invalid lobby name!",
-                isError = !inputState.isValidName,
+                isError = inputState.isNameError,
                 inputText = inputState.name,
                 inputLabel = "Lobby name",
                 title = "Enter lobby name",

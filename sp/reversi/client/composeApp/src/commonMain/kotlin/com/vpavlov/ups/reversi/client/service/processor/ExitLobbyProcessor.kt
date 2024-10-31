@@ -7,33 +7,30 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.domains.connection.message.Status
 import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
 import com.vpavlov.ups.reversi.client.domains.connection.message.Type
-import com.vpavlov.ups.reversi.client.domains.game.Lobby
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
-import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import com.vpavlov.ups.reversi.client.state.ErrorMessage
-import com.vpavlov.ups.reversi.client.utils.requireAllNotNull
 
-class CreateLobbyProcessor(
+class ExitLobbyProcessor(
     private val config: ConnectionConfig,
     clientStateService: ClientStateService,
     connectionService: ConnectionService,
     errorStateService: ErrorStateService
-) : CommonClientProcessor(
+): CommonClientProcessor(
     connectionService = connectionService,
     errorStateService = errorStateService,
     clientStateService = clientStateService,
 ) {
-    operator fun invoke(lobbyName: String) = process {
-        LOGGER.debug("Processing creating a new lobby.")
+
+    operator fun invoke() = process{
+        LOGGER.debug("Processing exiting the current lobby.")
         val requestHeader = Header(
             type = Type.POST,
             identifier = config.identifier,
-            subtype = Subtype.CREATE_GAME
+            subtype = Subtype.LOBBY_EXIT
         )
         val payload = Payload();
-        payload.setValue("name", lobbyName)
         val response =
             connectionService.exchange(Message(header = requestHeader, payload = payload))
         if (response.isError()) {
@@ -44,11 +41,12 @@ class CreateLobbyProcessor(
     }
 
     private fun handleError(response: Message) {
+        LOGGER.trace("Handle error: $response")
         val status = response.header.status
-        if (status == Status.CONFLICT){
+        if (status == Status.BAD_REQUEST){
             errorStateService.setError(
                 errorMessage = ErrorMessage(
-                    errorMessage = "Lobby with the entered name already exists."
+                    errorMessage = "Exit the lobby is not possible."
                 )
             )
             getAndUpdateState(response)
@@ -60,24 +58,7 @@ class CreateLobbyProcessor(
     }
 
     private fun handleOk(response: Message) {
-        val state = ClientFlowState.getValueOrNull(response.payload.getStringValue("state"))
-        val user = response.payload.getStringValue("user")
-        //TODO: change documentation
-        val lobbyName = response.payload.getStringValue("game")
-        if (!requireAllNotNull(state, user, lobbyName)) {
-            malformedResponse(
-                subtype = response.header.subtype,
-            )
-            return
-        }
-        clientStateService.updateState(
-            flowState = state!!,
-            currentLobby = Lobby(
-                host = user!!,
-                players = listOf(user),
-                name = lobbyName!!
-            )
-        )
+        LOGGER.trace("Handle ok: $response")
+        getAndUpdateState(response)
     }
-
 }
