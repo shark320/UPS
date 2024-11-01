@@ -3,12 +3,12 @@
 
 reversi_game::reversi_game(const std::shared_ptr<client> &white_player_client,
                            const std::shared_ptr<client> &black_player_client) {
-    this->engine = std::make_shared<reversi_engine>();
+    this->_engine = std::make_shared<reversi_engine>();
     //TODO: random player color distribution
     this->_white_player = std::make_shared<player>(white_player_client, player_code::WHITE_PLAYER);
     this->_black_player = std::make_shared<player>(black_player_client, player_code::BLACK_PLAYER);
     this->_current_player = this->_white_player;
-    this->engine->create_board(DEFAULT_BOARD_WIDTH, DEFAULT_BOARD_HEIGHT, DEFAULT_INIT_X, DEFAULT_INIT_Y);
+    this->_engine->create_board(DEFAULT_BOARD_WIDTH, DEFAULT_BOARD_HEIGHT, DEFAULT_INIT_X, DEFAULT_INIT_Y);
 }
 
 std::shared_ptr<player> reversi_game::get_client_player(const std::shared_ptr<client> &client) const {
@@ -29,7 +29,7 @@ std::shared_ptr<player> reversi_game::get_current_player() const {
 
 std::string reversi_game::get_board_representation() const {
     std::shared_lock<std::shared_mutex> shared_lock(*this->_shared_mutex);
-    const auto board = this->engine->get_board();
+    const auto board = this->_engine->get_board();
     const auto board_size = board->get_rows() * board->get_cols();
     std::string board_str = std::string(board_size, '\0');
     const auto cells = board->get_cells();
@@ -43,7 +43,7 @@ std::shared_ptr<client> reversi_game::get_opponent_client(const std::shared_ptr<
     std::shared_lock<std::shared_mutex> shared_lock(*this->_shared_mutex);
     const auto client_player = get_client_player(client);
     const auto opponent_player = get_opponent(client_player);
-    if (opponent_player == nullptr){
+    if (opponent_player == nullptr) {
         return nullptr;
     }
     return opponent_player->get_client();
@@ -67,9 +67,35 @@ std::shared_ptr<player> reversi_game::get_opponent(const std::shared_ptr<player>
 std::shared_ptr<client> reversi_game::get_current_player_client() const {
     std::shared_lock<std::shared_mutex> shared_lock(*this->_shared_mutex);
     const auto current_player = get_current_player();
-    if (current_player == nullptr){
+    if (current_player == nullptr) {
         return nullptr;
     }
     return current_player->get_client();
+}
+
+move_result reversi_game::process_move_unsafe(b_size x, b_size y, const std::shared_ptr<player> &player) {
+    std::unique_lock<std::shared_mutex> unique_lock(*this->_shared_mutex);
+    if (player != get_current_player()) {
+        return INVALID_PLAYER;
+    }
+    bool result = _engine->process_move(x, y, player->get_player_code());
+    if (result) {
+        this->_current_player = get_opponent(player);
+        this->_last_move = std::make_shared<move_coordinates>(x, y);
+    }
+    return result ? SUCCESS : INVALID_COORDINATES;
+}
+
+move_result reversi_game::process_move(b_size x, b_size y, const std::shared_ptr<client> &client) {
+    const auto client_player = get_client_player(client);
+    if (client_player == nullptr) {
+        return NO_PLAYER;
+    }
+    return process_move_unsafe(x, y, client_player);
+}
+
+std::shared_ptr<move_coordinates> reversi_game::get_last_move() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->_shared_mutex);
+    return this->_last_move;
 }
 

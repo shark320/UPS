@@ -64,6 +64,8 @@ std::shared_ptr<message> message_manager::process_get(const std::shared_ptr<mess
             return process_get_lobbies_list(request, client_connection);
         case subtype::LOBBY_STATE:
             return process_get_lobby_state(request, client_connection);
+        case subtype::GAME_STATE:
+            return process_get_game_state(request, client_connection);
         default:
             return bad_request(request, client_connection->get_client());
     }
@@ -430,14 +432,15 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
 
     const auto lobby_players_payload = get_lobby_players(lobby);
 
+    const auto last_move = game->get_last_move();
+
     response_header->set_status(status::OK);
     response_payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
     response_payload->set_value("players", lobby_players_payload);
     response_payload->set_value("is_opponent_connected", std::make_shared<boolean>(opponent_client->is_connected()));
     response_payload->set_value("current_player", std::make_shared<string>(current_player_client->get_username()));
-    //TODO: provide relevant X and Y coordinated
-    response_payload->set_value("x", std::make_shared<integer>(1));
-    response_payload->set_value("y", std::make_shared<integer>(1));
+    response_payload->set_value("x", std::make_shared<integer>(last_move->x));
+    response_payload->set_value("y", std::make_shared<integer>(last_move->y));
     return std::make_shared<message>(response_header, response_payload);
 }
 
