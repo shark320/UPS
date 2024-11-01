@@ -10,7 +10,8 @@ enum move_result {
     SUCCESS,
     INVALID_PLAYER,
     INVALID_COORDINATES,
-    NO_PLAYER
+    NO_PLAYER,
+    GAME_OVER,
 };
 
 class move_coordinates {
@@ -27,6 +28,7 @@ private:
     std::shared_ptr<player> _white_player;
     std::shared_ptr<player> _black_player;
     std::shared_ptr<player> _current_player;
+    std::shared_ptr<player> _winner = nullptr;
     std::shared_ptr<move_coordinates> _last_move = std::make_shared<move_coordinates>(DEFAULT_INIT_X, DEFAULT_INIT_Y);
 
     std::shared_ptr<std::shared_mutex> _shared_mutex = std::make_shared<std::shared_mutex>();
@@ -51,5 +53,7 @@ public:
     [[nodiscard]] move_result process_move(b_size x, b_size y, const std::shared_ptr<client> &client);
 
     [[nodiscard]] std::shared_ptr<move_coordinates> get_last_move() const;
+
+    [[nodiscard]] std::shared_ptr<player> get_winner() const;
 };
 

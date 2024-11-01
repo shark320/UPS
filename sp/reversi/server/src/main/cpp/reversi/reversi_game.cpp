@@ -74,7 +74,9 @@ std::shared_ptr<client> reversi_game::get_current_player_client() const {
 }
 
 move_result reversi_game::process_move_unsafe(b_size x, b_size y, const std::shared_ptr<player> &player) {
-    std::unique_lock<std::shared_mutex> unique_lock(*this->_shared_mutex);
+    if (this->_winner != nullptr){
+        return GAME_OVER;
+    }
     if (player != get_current_player()) {
         return INVALID_PLAYER;
     }
@@ -87,6 +89,7 @@ move_result reversi_game::process_move_unsafe(b_size x, b_size y, const std::sha
 }
 
 move_result reversi_game::process_move(b_size x, b_size y, const std::shared_ptr<client> &client) {
+    std::unique_lock<std::shared_mutex> unique_lock(*this->_shared_mutex);
     const auto client_player = get_client_player(client);
     if (client_player == nullptr) {
         return NO_PLAYER;
@@ -97,5 +100,10 @@ move_result reversi_game::process_move(b_size x, b_size y, const std::shared_ptr
 std::shared_ptr<move_coordinates> reversi_game::get_last_move() const {
     std::shared_lock<std::shared_mutex> shared_lock(*this->_shared_mutex);
     return this->_last_move;
+}
+
+std::shared_ptr<player> reversi_game::get_winner() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->_shared_mutex);
+    return this->_winner;
 }
 

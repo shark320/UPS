@@ -2,6 +2,7 @@
 
 const std::unordered_map<int, status> status_mapper::status_map = {
         {200, status::OK},
+        {205, status::RESET},
         {0, status::NULL_STATUS},
         {400, status::BAD_REQUEST},
         {401, status::UNAUTHORIZED},
