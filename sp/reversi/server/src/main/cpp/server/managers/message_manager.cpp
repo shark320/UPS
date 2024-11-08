@@ -50,7 +50,7 @@ message_manager::process_post(const std::shared_ptr<message> &request,
         case subtype::START_GAME:
             return process_start_the_game(request, client_connection);
         case subtype::GAME_MOVE:
-            return process_game_move(requst, client_connection);
+            return process_game_move(request, client_connection);
         default:
             return bad_request(request, client_connection->get_client());
     }
@@ -350,8 +350,15 @@ std::shared_ptr<message> message_manager::process_get_lobby_state(const std::sha
     const auto response_payload = std::make_shared<payload>();
     const auto lobby = client->get_lobby();
 
-    if (lobby == nullptr || !client->is_in_state({flow_state::LOBBY})) {
+    if (lobby == nullptr || !client->is_in_state({flow_state::LOBBY, flow_state::GAME})) {
         return invalid_state(client->get_flow_state(), request, client, client_logger);
+    }
+
+    if (client->is_in_state({flow_state::GAME}) && lobby->is_started()){
+        //Game is started
+        response_header->set_status(status::MOVED_PERMANENTLY);
+    } else{
+        response_header->set_status(status::OK);
     }
 
     response_payload->set_value("state",
@@ -539,7 +546,7 @@ message_manager::not_allowed(const std::shared_ptr<message> &request, const std:
                              const std::string &msg) {
     const auto _header = std::make_shared<header>(request->get_header());
     const auto _payload = std::make_shared<payload>();
-    _header->set_status(status::UNAUTHORIZED);
+    _header->set_status(status::NOT_ALLOWED);
     _payload->set_value("msg", std::make_shared<string>(msg));
     if (client != nullptr) {
         _payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
