@@ -21,4 +21,6 @@ data class Message(
     }
 
     fun isError() = header.isError()
+
+    fun isRedirect() = header.isRedirect()
 }

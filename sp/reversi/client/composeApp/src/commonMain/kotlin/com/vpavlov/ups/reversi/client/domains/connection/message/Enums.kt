@@ -27,6 +27,7 @@ enum class Subtype(val id: Int) {
     LOGIN(2),
     CREATE_GAME(3),
     LOBBY_EXIT(4),
+    START_GAME(6),
     LOBBIES_LIST(7),
     LOBBY_CONNECT(8),
     LOBBY_STATE(11),
@@ -52,6 +53,7 @@ enum class Subtype(val id: Int) {
 enum class Status(val code: Int) {
     NULL_STATUS(0),
     OK(200),
+    MOVED_PERMANENTLY(301),
     BAD_REQUEST(400),
     UNAUTHORIZED(401),
     NOT_FOUND(404),

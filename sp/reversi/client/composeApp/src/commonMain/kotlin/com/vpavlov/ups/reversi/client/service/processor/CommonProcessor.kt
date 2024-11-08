@@ -1,5 +1,6 @@
 package com.vpavlov.ups.reversi.client.service.processor
 
+import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 import com.vpavlov.ups.reversi.client.domains.connection.message.Status
 import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
@@ -50,6 +51,11 @@ open class CommonProcessor(
     protected fun unexpectedErrorStatus(status: Status) {
         LOGGER.error("Unexpected response status: $status")
         errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status"))
+    }
+
+    protected fun unexpectedErrorStatus(response: Message) {
+        LOGGER.error("Unexpected response status: ${response.header.status}")
+        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status. Message: ${response.payload.getStringValue("msg")}"))
     }
 
     protected open fun onConnectionError(exception: Exception) {

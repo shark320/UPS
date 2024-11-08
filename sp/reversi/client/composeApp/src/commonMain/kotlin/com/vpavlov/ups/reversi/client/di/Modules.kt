@@ -26,6 +26,7 @@ import com.vpavlov.ups.reversi.client.service.processor.ConnectToLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.CreateLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.ExitLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.GetLobbyStateProcessor
+import com.vpavlov.ups.reversi.client.service.processor.StartGameProcessor
 import org.koin.compose.viewmodel.dsl.viewModel
 import org.koin.core.Koin
 import org.koin.core.context.GlobalContext.get
@@ -142,6 +143,16 @@ val messageProcessorsModule = module {
         )
     }
 
+    single {
+        StartGameProcessor(
+            config = ConfigProvider.connectionConfig,
+            clientStateService = get(),
+            connectionService = get(),
+            errorStateService = get(),
+        )
+    }
+
+
 }
 
 
@@ -201,11 +212,14 @@ val sharedModules = module {
             connectionStateService = get(),
             errorStateService = get(),
             pingService = get(),
-            exitLobbyProcessor = get()
+            exitLobbyProcessor = get(),
+            startGameProcessor = get()
         )
     }
+
 
     single<ErrorStateService> {
         ErrorStateServiceImpl()
     }
+
 }

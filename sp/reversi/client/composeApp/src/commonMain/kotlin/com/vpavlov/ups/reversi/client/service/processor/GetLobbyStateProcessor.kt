@@ -38,8 +38,20 @@ class GetLobbyStateProcessor(
             connectionService.exchange(Message(header = requestHeader, payload = payload))
         if (response.isError()) {
             handleError(response)
-        } else {
+        } else if (response.isRedirect()) {
+            handleRedirect(response)
+        }
+        else {
             handleOk(response)
+        }
+    }
+
+    private fun handleRedirect(response: Message) {
+        val status = response.header.status
+        if (status == Status.MOVED_PERMANENTLY){
+            updateLobbyState(response)
+        } else{
+            LOGGER.warn("Response with unexpected status: $response")
         }
     }
 
@@ -60,6 +72,10 @@ class GetLobbyStateProcessor(
     }
 
     private fun handleOk(response: Message) {
+        updateLobbyState(response)
+    }
+
+    private fun updateLobbyState(response: Message){
         val state = ClientFlowState.getValueOrNull(response.payload.getStringValue("state"))
         val host = response.payload.getStringValue("host")
         val lobby = response.payload.getStringValue("lobby")
@@ -78,6 +94,5 @@ class GetLobbyStateProcessor(
                 name = lobby!!
             )
         )
-
     }
 }

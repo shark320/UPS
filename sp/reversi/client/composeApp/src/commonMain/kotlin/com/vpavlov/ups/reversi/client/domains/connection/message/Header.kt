@@ -77,6 +77,8 @@ data class Header(
         }
     }
 
+    fun isRedirect() = status.code in 300..399
+
     fun isError() = status.code in 400..499
 
 }

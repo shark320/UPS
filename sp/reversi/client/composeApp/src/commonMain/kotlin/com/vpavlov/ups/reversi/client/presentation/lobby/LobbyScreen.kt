@@ -98,7 +98,9 @@ private fun Content(
             Row {
                 if (state.username == state.host) {
                     Button(
-                        onClick = { },
+                        onClick = {
+                            viewModel.onEvent(LobbyScreenEvent.StartGame)
+                        },
                     ) {
                         Text(text = "Start Game")
                     }

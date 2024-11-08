@@ -44,19 +44,16 @@ class LoginProcessor(
 
     private fun handleLoginError(response: Message) {
         when (response.header.status) {
-            Status.BAD_REQUEST,
-            Status.UNAUTHORIZED,
-            Status.NOT_FOUND,
-            Status.NOT_ALLOWED -> unexpectedErrorStatus(
-                response.header.status,
-            )
-
             Status.CONFLICT -> {
                 LOGGER.info("Provided username conflict. $response")
                 errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "The username is already in use"))
             }
 
             Status.OK, Status.NULL_STATUS -> LOGGER.warn("Could not handle error code")
+
+            else -> unexpectedErrorStatus(
+                response.header.status,
+            )
         }
     }
 
