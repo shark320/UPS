@@ -18,6 +18,7 @@ bool lobby::remove_player(const std::shared_ptr<client> &player) {
         } else if (player == _second_player) {
             this->_second_player = nullptr;
         }
+        player->set_lobby(nullptr);
     }
     return _first_player != nullptr;
 }

@@ -30,8 +30,6 @@ void lobby_manager::exit_lobby(const std::shared_ptr<client> &player) {
         remove_lobby(lobby->get_name_unsafe());
     }
     (*this->_hosts)[lobby] = lobby->get_host();
-
-    player->set_lobby(nullptr);
 }
 
 void lobby_manager::remove_lobby(const std::string &name) {
