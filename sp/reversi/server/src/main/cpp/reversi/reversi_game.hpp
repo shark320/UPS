@@ -34,6 +34,7 @@ private:
     std::shared_ptr<std::shared_mutex> _shared_mutex = std::make_shared<std::shared_mutex>();
 
     [[nodiscard]] move_result process_move_unsafe(b_size x, b_size y, const std::shared_ptr<player> &player);
+
 public:
     reversi_game(const std::shared_ptr<client> &white_player_client,
                  const std::shared_ptr<client> &black_player_client);
@@ -55,5 +56,7 @@ public:
     [[nodiscard]] std::shared_ptr<move_coordinates> get_last_move() const;
 
     [[nodiscard]] std::shared_ptr<player> get_winner() const;
+
+    [[nodiscard]] bool is_game_over() const;
 };
 

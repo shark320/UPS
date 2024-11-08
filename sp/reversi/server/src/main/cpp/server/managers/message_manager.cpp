@@ -49,6 +49,8 @@ message_manager::process_post(const std::shared_ptr<message> &request,
             return process_connect_to_the_lobby(request, client_connection);
         case subtype::START_GAME:
             return process_start_the_game(request, client_connection);
+        case subtype::GAME_MOVE:
+            return process_game_move(requst, client_connection);
         default:
             return bad_request(request, client_connection->get_client());
     }
@@ -422,6 +424,25 @@ std::shared_ptr<message> process_get_game_state_game_over(
     return std::make_shared<message>(response_header, response_payload);
 }
 
+std::shared_ptr<message> process_get_game_state_terminated(
+        const std::shared_ptr<message> &request,
+        const std::shared_ptr<client> &client
+) {
+
+    const auto response_header = std::make_shared<header>(request->get_header());
+    const auto response_payload = std::make_shared<payload>();
+    response_header->set_status(status::MOVED_PERMANENTLY);
+
+    client->update_flow_state(flow_state::MENU);
+
+    response_payload->set_value("state",
+                                std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
+    response_payload->set_value("msg",
+                                std::make_shared<string>("The game session is terminated."));
+
+    return std::make_shared<message>(response_header, response_payload);
+}
+
 std::shared_ptr<message> message_manager::process_get_game_state(const std::shared_ptr<message> &request,
                                                                  const std::shared_ptr<client_connection> &client_connection) {
     const auto client_logger = client_connection->get_logger();
@@ -434,7 +455,16 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
         return invalid_state(client->get_flow_state(), request, client, client_logger);
     }
 
+    if (lobby->is_terminated()) {
+        client_logger->warn(fmt::format("The game in the lobby {} is terminated", lobby->get_name()));
+        return process_get_game_state_terminated(
+                request,
+                client
+        );
+    }
+
     const auto game = lobby->get_game();
+
     if (game == nullptr) {
         return not_found(request, client, "The game for the client is not found.");
     }
@@ -466,7 +496,6 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
         );
     }
 
-
     const auto last_move = game->get_last_move();
 
     response_header->set_status(status::OK);
@@ -480,6 +509,10 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
     return std::make_shared<message>(response_header, response_payload);
 }
 
+std::shared_ptr<message> message_manager::process_game_move(const std::shared_ptr<message> &request,
+                                                            const std::shared_ptr<client_connection> &client_connection) {
+    return std::shared_ptr<message>();
+}
 
 
 std::shared_ptr<message>
@@ -559,6 +592,8 @@ std::shared_ptr<message>
 message_manager::not_found(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client) {
     return not_found(request, client, "Not Found");
 }
+
+
 
 
 

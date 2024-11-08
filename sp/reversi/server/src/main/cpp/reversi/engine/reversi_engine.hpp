@@ -4,6 +4,14 @@
 #include "../board/board.hpp"
 #include "../consts/game_consts.hpp"
 
+class player_scores{
+public:
+    const int white_player;
+    const int black_player;
+
+    player_scores(int white_player, int black_player): white_player(white_player), black_player(black_player) {}
+};
+
 class reversi_engine {
 
 private:
@@ -20,7 +28,7 @@ public:
 
     size_t get_possible_moves_count(player_code player);
 
-    int count_players_scores(b_size& bp_scores, b_size& wp_scores);
+    std::shared_ptr<player_scores> count_players_scores();
 
     [[nodiscard]] std::shared_ptr<board> get_board() const;
 

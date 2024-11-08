@@ -112,3 +112,9 @@ std::shared_ptr<reversi_game> lobby::get_game() const {
     std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
     return this->_game;
 }
+
+bool lobby::is_terminated() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->shared_mutex);
+    bool not_enough_players = this->_first_player == nullptr || this->_second_player == nullptr;
+    return is_started() && not_enough_players;
+}

@@ -84,6 +84,10 @@ move_result reversi_game::process_move_unsafe(b_size x, b_size y, const std::sha
     if (result) {
         this->_current_player = get_opponent(player);
         this->_last_move = std::make_shared<move_coordinates>(x, y);
+        if (_engine->get_possible_moves_count(this->_current_player->get_player_code()) <= 0){
+            auto player_scores = this->_engine->count_players_scores();
+            this->_winner = player_scores->white_player > player_scores->black_player ? this->_white_player : this->_black_player;
+        }
     }
     return result ? SUCCESS : INVALID_COORDINATES;
 }
@@ -105,5 +109,10 @@ std::shared_ptr<move_coordinates> reversi_game::get_last_move() const {
 std::shared_ptr<player> reversi_game::get_winner() const {
     std::shared_lock<std::shared_mutex> shared_lock(*this->_shared_mutex);
     return this->_winner;
+}
+
+bool reversi_game::is_game_over() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->_shared_mutex);
+    return get_winner() != nullptr;
 }
 

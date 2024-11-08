@@ -45,4 +45,6 @@ public:
     [[nodiscard]] std::shared_ptr<std::vector<std::shared_ptr<client>>>  get_players() const;
 
     [[nodiscard]] std::shared_ptr<reversi_game> get_game() const;
+
+    [[nodiscard]] bool is_terminated() const;
 };

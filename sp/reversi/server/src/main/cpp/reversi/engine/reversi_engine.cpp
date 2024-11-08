@@ -97,12 +97,12 @@ bool reversi_engine::no_available_moves() {
     return (get_possible_moves_count(player_code::BLACK_PLAYER) == 0) && (get_possible_moves_count(player_code::WHITE_PLAYER) == 0);
 }
 
-int reversi_engine::count_players_scores(b_size &bp_scores, b_size &wp_scores) {
+std::shared_ptr<player_scores> reversi_engine::count_players_scores() {
     size_t x;
     size_t y;
     player_code c;
-    bp_scores = 0;
-    wp_scores = 0;
+    int bp_scores = 0;
+    int wp_scores = 0;
 
     for (y = 0; y < this->_game_board->get_rows(); ++y) {
         for (x = 0; x < this->_game_board->get_cols(); ++x) {
@@ -114,7 +114,7 @@ int reversi_engine::count_players_scores(b_size &bp_scores, b_size &wp_scores) {
             }
         }
     }
-    return 0;
+    return std::make_shared<player_scores>(wp_scores, bp_scores);
 }
 
 size_t reversi_engine::_make_move(size_t x, size_t y, player_code player) {

@@ -30,6 +30,7 @@ enum class subtype {
     LOBBIES_LIST = 7,
     LOBBY_CONNECT = 8,
     GAME_STATE = 9,
+    GAME_MOVE = 10,
     LOBBY_STATE = 11,
     HANDSHAKE = 12
 };

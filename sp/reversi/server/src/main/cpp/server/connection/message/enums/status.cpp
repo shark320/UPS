@@ -1,9 +1,10 @@
 #include "status.hpp"
 
 const std::unordered_map<int, status> status_mapper::status_map = {
+        {0, status::NULL_STATUS},
         {200, status::OK},
         {205, status::RESET},
-        {0, status::NULL_STATUS},
+        {301, status::MOVED_PERMANENTLY},
         {400, status::BAD_REQUEST},
         {401, status::UNAUTHORIZED},
         {404, status::NOT_FOUND},
