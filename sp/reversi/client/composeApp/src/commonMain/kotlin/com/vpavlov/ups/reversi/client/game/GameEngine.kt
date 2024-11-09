@@ -1,8 +1,11 @@
 package com.vpavlov.ups.reversi.client.game
 
+import com.vpavlov.ups.reversi.client.domains.game.MoveCoordinates
+import com.vpavlov.ups.reversi.client.domains.game.PlayerCode
+
 class GameEngine(gameConfig: GameConfig) {
 
-    private val board: Board = Board(rows = gameConfig.boardWidth, cols = gameConfig.boardHeight)
+    val board: Board = Board(rows = gameConfig.boardWidth, cols = gameConfig.boardHeight)
 
     fun getPossibleMovesCount(player: PlayerCode): Int {
         val (movesCount, _) = getPossibleMoves(player)
@@ -14,7 +17,7 @@ class GameEngine(gameConfig: GameConfig) {
         var movesCount = 0;
         for (x in 0..<board.cols) {
             for (y in 0..<board.rows) {
-                if (isValidMove(x, y, player)) {
+                if (isValidMove(MoveCoordinates(x, y), player)) {
                     moves[y * board.cols + x] = true
                     ++movesCount
                 }
@@ -23,17 +26,17 @@ class GameEngine(gameConfig: GameConfig) {
         return Pair(movesCount, moves)
     }
 
-    private fun isValidMove(x: Int, y: Int, player: PlayerCode): Boolean {
-        if (x !in 0..<board.cols || y !in 0..<board.rows) {
+    fun isValidMove(move: MoveCoordinates, player: PlayerCode): Boolean {
+        if (move.x !in 0..<board.cols || move.y !in 0..<board.rows) {
             return false
         }
-        if (board.getAt(x, y) != PlayerCode.NO_PLAYER || player == PlayerCode.NO_PLAYER) {
+        if (board.getAt(move.x, move.y) != PlayerCode.NO_PLAYER || player == PlayerCode.NO_PLAYER) {
             return false
         }
         /*Check throw all possible directions*/
         for (dirX in -1..1) {
             for (dirY in -1..1) {
-                if (countSteps(x, y, dirX, dirY, player) > 0) {
+                if (countSteps(move.x, move.y, dirX, dirY, player) > 0) {
                     return true
                 }
             }
@@ -44,7 +47,7 @@ class GameEngine(gameConfig: GameConfig) {
     private fun countSteps(x: Int, y: Int, dirX: Int, dirY: Int, player: PlayerCode): Int {
         val opponent = player.getOpponent()
         var steps = 1
-        if (dirX == 0 && dirY == 0){
+        if (dirX == 0 && dirY == 0) {
             return 0
         }
         /*Check if move is in bounds and an opponent cell*/
@@ -96,7 +99,7 @@ class GameEngine(gameConfig: GameConfig) {
             for (dirY in -1..1) {
                 val tmpSteps = countSteps(x, y, dirX, dirY, player)
                 steps += tmpSteps
-                for (i in 1..tmpSteps){
+                for (i in 1..tmpSteps) {
                     board.setAt(x + i * dirX, y + i * dirY, player)
                 }
             }
@@ -104,11 +107,11 @@ class GameEngine(gameConfig: GameConfig) {
         return steps
     }
 
-    fun processMove(x: Int, y: Int, player: PlayerCode): Boolean {
-        if (!isValidMove(x,y,player)){
+    fun processMove(move: MoveCoordinates, player: PlayerCode): Boolean {
+        if (!isValidMove(move, player)) {
             return false
         }
-        makeMove(x,y,player)
+        makeMove(move.x, move.y, player)
         return true
     }
 

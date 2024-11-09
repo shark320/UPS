@@ -80,6 +80,18 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
     }
 
     @Synchronized
+    fun getBooleanOrNull(key: String): Boolean? {
+        val value = getStringValue(key) ?: return null
+        return value.lowercase().toBooleanStrictOrNull()
+    }
+
+    @Synchronized
+    fun getIntegerOrNull(key: String): Int? {
+        val value = getStringValue(key) ?: return null
+        return value.toIntOrNull()
+    }
+
+    @Synchronized
     fun construct(): String {
         if (data.isEmpty()) {
             return ""

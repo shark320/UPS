@@ -30,8 +30,8 @@ open class ClientStateServiceImpl: ClientStateService {
             lobbiesList = lobbiesList,
             currentLobby = currentLobby
         )
-
     }
+
 
     @Synchronized
     override fun initState(username: String, flowState: ClientFlowState) {

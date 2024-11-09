@@ -58,6 +58,11 @@ open class CommonProcessor(
         errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status. Message: ${response.payload.getStringValue("msg")}"))
     }
 
+    protected fun unexpectedStatus(response: Message) {
+        LOGGER.error("Unexpected response status: ${response.header.status}")
+        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected response status: ${response.header.status}"))
+    }
+
     protected open fun onConnectionError(exception: Exception) {
         connectionService.connectionLost()
         LOGGER.error("Connection to the server lost", exception)

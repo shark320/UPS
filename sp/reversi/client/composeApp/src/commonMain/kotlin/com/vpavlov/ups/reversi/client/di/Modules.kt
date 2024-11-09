@@ -25,6 +25,7 @@ import com.vpavlov.ups.reversi.client.service.impl.state.ErrorStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.processor.ConnectToLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.CreateLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.ExitLobbyProcessor
+import com.vpavlov.ups.reversi.client.service.processor.GetGameStateProcessor
 import com.vpavlov.ups.reversi.client.service.processor.GetLobbyStateProcessor
 import com.vpavlov.ups.reversi.client.service.processor.StartGameProcessor
 import org.koin.compose.viewmodel.dsl.viewModel
@@ -151,6 +152,16 @@ val messageProcessorsModule = module {
             errorStateService = get(),
         )
     }
+
+    single {
+        GetGameStateProcessor(
+            config = ConfigProvider.connectionConfig,
+            clientStateService = get(),
+            connectionService = get(),
+            errorStateService = get(),
+        )
+    }
+
 
 
 }

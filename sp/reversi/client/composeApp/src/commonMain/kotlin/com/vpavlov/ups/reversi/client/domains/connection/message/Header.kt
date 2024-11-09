@@ -81,4 +81,6 @@ data class Header(
 
     fun isError() = status.code in 400..499
 
+    fun isOk() = status.code in 200..299
+
 }
