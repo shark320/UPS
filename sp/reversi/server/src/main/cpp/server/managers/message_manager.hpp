@@ -88,6 +88,8 @@ private:
 
     static std::shared_ptr<objects_vector> get_lobby_players(const std::shared_ptr<lobby> &lobby);
 
+    static std::shared_ptr<objects_vector> get_lobby_player_codes(const std::shared_ptr<lobby> &lobby);
+
 //    std::shared_ptr<message> process_unknown_type(std::shared_ptr<message> request, std::shared_ptr<client_connection> client_connection);
 //
 //    std::shared_ptr<message>

@@ -503,12 +503,15 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
         );
     }
 
+    const auto lobby_player_codes_payload = get_lobby_player_codes(lobby);
+
     const auto last_move = game->get_last_move();
 
     response_header->set_status(status::OK);
     response_payload->set_value("state",
                                 std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
     response_payload->set_value("players", lobby_players_payload);
+    response_payload->set_value("player_codes", lobby_player_codes_payload);
     response_payload->set_value("is_opponent_connected", std::make_shared<boolean>(opponent_client->is_connected()));
     response_payload->set_value("current_player", std::make_shared<string>(current_player_client->get_username()));
     response_payload->set_value("x", std::make_shared<integer>(last_move->x));
@@ -598,6 +601,23 @@ message_manager::not_found(const std::shared_ptr<message> &request, const std::s
 std::shared_ptr<message>
 message_manager::not_found(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client) {
     return not_found(request, client, "Not Found");
+}
+
+std::shared_ptr<objects_vector> message_manager::get_lobby_player_codes(const std::shared_ptr<lobby> &lobby) {
+    auto lobby_player_codes_payload = std::make_shared<objects_vector>();
+    const auto game = lobby->get_game();
+    if (game == nullptr){
+        return lobby_player_codes_payload;
+    }
+    const auto lobby_players = lobby->get_players();
+
+    for (const auto &player: *lobby_players) {
+        if (player != nullptr) {
+            lobby_player_codes_payload->push_back(std::make_shared<string>(player_code_mapper::get_string(game->get_client_player(player)->get_player_code())));
+        }
+    }
+
+    return lobby_player_codes_payload;
 }
 
 
