@@ -10,19 +10,19 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Type
 import com.vpavlov.ups.reversi.client.domains.game.Lobby
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
-import com.vpavlov.ups.reversi.client.state.ErrorMessage
+import com.vpavlov.ups.reversi.client.state.UserMessage
 import com.vpavlov.ups.reversi.client.utils.requireAllNotNull
 
 class CreateLobbyProcessor(
     private val config: ConnectionConfig,
     clientStateService: ClientStateService,
     connectionService: ConnectionService,
-    errorStateService: ErrorStateService
+    userMessageStateService: UserMessageStateService
 ) : CommonClientProcessor(
     connectionService = connectionService,
-    errorStateService = errorStateService,
+    userMessageStateService = userMessageStateService,
     clientStateService = clientStateService,
 ) {
     operator fun invoke(lobbyName: String) = process {
@@ -46,9 +46,9 @@ class CreateLobbyProcessor(
     private fun handleError(response: Message) {
         val status = response.header.status
         if (status == Status.CONFLICT){
-            errorStateService.setError(
-                errorMessage = ErrorMessage(
-                    errorMessage = "Lobby with the entered name already exists."
+            userMessageStateService.showError(
+                userMessage = UserMessage(
+                    message = "Lobby with the entered name already exists."
                 )
             )
             getAndUpdateState(response)

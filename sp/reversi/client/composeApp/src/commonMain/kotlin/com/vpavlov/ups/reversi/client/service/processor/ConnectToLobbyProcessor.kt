@@ -10,19 +10,19 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Type
 import com.vpavlov.ups.reversi.client.domains.game.Lobby
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
-import com.vpavlov.ups.reversi.client.state.ErrorMessage
+import com.vpavlov.ups.reversi.client.state.UserMessage
 import com.vpavlov.ups.reversi.client.utils.requireAllNotNull
 
 class ConnectToLobbyProcessor(
     private val config: ConnectionConfig,
     private val clientStateService: ClientStateService,
     connectionService: ConnectionService,
-    errorStateService: ErrorStateService
+    userMessageStateService: UserMessageStateService
 ) : CommonProcessor(
     connectionService = connectionService,
-    errorStateService = errorStateService,
+    userMessageStateService = userMessageStateService,
 ) {
 
     operator fun invoke(lobby: String) = process {
@@ -46,9 +46,9 @@ class ConnectToLobbyProcessor(
     private fun handleError(response: Message) {
         val status = response.header.status
         if (status == Status.NOT_FOUND) {
-            errorStateService.setError(
-                errorMessage = ErrorMessage(
-                    errorMessage = "The lobby is not available anymore."
+            userMessageStateService.showError(
+                userMessage = UserMessage(
+                    message = "The lobby is not available anymore."
                 )
             )
             val state = ClientFlowState.getValueOrNull(response.payload.getStringValue("state"))

@@ -7,7 +7,7 @@ import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreen
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
 import com.vpavlov.ups.reversi.client.service.processor.LoginProcessor
 import com.vpavlov.ups.reversi.client.utils.isValidUsername
 import kotlinx.coroutines.flow.launchIn
@@ -17,10 +17,10 @@ class LoginScreenViewModel(
     private val loginProcessor: LoginProcessor,
     clientStateService: ClientStateService,
     connectionStateService: ConnectionStateService,
-    errorStateService: ErrorStateService,
+    userMessageStateService: UserMessageStateService,
     private val pingService: PingService
 ) : CommonScreenViewModel<LoginScreenEvent, LoginScreenState>(
-    errorStateService = errorStateService,
+    userMessageStateService = userMessageStateService,
     connectionStateService = connectionStateService,
     clientStateService = clientStateService
 ) {

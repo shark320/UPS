@@ -6,20 +6,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
 import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowStateAwareness
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
 import com.vpavlov.ups.reversi.client.presentation.common.component.CustomOutlinedTextField
-import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
+import com.vpavlov.ups.reversi.client.presentation.common.component.HandleMessages
 import com.vpavlov.ups.reversi.client.presentation.common.component.OnTopCircularProgressIndicator
-import com.vpavlov.ups.reversi.client.presentation.navigation.ScreenNavigation
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -70,7 +67,7 @@ fun LoginScreen(
 
         OnTopCircularProgressIndicator(show = state.waitingResponse)
 
-        HandleErrors(viewModel)
+        HandleMessages(viewModel)
     }
 
 }

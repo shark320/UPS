@@ -17,16 +17,21 @@ class GameStateServiceImpl: GameStateService {
     @Synchronized
     override fun getStateFlow(): StateFlow<GameState?> = state
 
+    override fun isInitialized(): Boolean  = _state.value != null
+
     @Synchronized
     override fun updateState(
-        game: Game,
         players: List<Player>,
         isOpponentConnected: Boolean,
         currentPlayer: Player,
         lastMoveCoordinates: MoveCoordinates
     ) {
+        //TODO: check if player usernames are sync with the game
+        val game = state.value!!.game
+        if (game.isCurrentPlayerChanged(currentPlayer.username)){
+            game.performMoveForCurrentPlayer(lastMoveCoordinates)
+        }
         _state.value = state.value!!.copy(
-            game = game,
             players = players,
             isOpponentConnected = isOpponentConnected,
             currentPlayer = currentPlayer,

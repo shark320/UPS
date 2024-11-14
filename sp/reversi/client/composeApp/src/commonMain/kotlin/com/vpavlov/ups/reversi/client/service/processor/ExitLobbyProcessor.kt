@@ -9,17 +9,17 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
 import com.vpavlov.ups.reversi.client.domains.connection.message.Type
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
-import com.vpavlov.ups.reversi.client.state.ErrorMessage
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
+import com.vpavlov.ups.reversi.client.state.UserMessage
 
 class ExitLobbyProcessor(
     private val config: ConnectionConfig,
     clientStateService: ClientStateService,
     connectionService: ConnectionService,
-    errorStateService: ErrorStateService
+    userMessageStateService: UserMessageStateService
 ): CommonClientProcessor(
     connectionService = connectionService,
-    errorStateService = errorStateService,
+    userMessageStateService = userMessageStateService,
     clientStateService = clientStateService,
 ) {
 
@@ -44,9 +44,9 @@ class ExitLobbyProcessor(
         LOGGER.trace("Handle error: $response")
         val status = response.header.status
         if (status == Status.BAD_REQUEST){
-            errorStateService.setError(
-                errorMessage = ErrorMessage(
-                    errorMessage = "Exit the lobby is not possible."
+            userMessageStateService.showError(
+                userMessage = UserMessage(
+                    message = "Exit the lobby is not possible."
                 )
             )
             getAndUpdateState(response)

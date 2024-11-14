@@ -7,24 +7,23 @@ import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreen
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
 import com.vpavlov.ups.reversi.client.service.processor.ConnectToLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.CreateLobbyProcessor
 import com.vpavlov.ups.reversi.client.state.ClientState
 import com.vpavlov.ups.reversi.client.utils.isValidLobbyName
-import com.vpavlov.ups.reversi.client.utils.isValidUsername
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class MenuScreenViewModel(
     connectionStateService: ConnectionStateService,
-    errorStateService: ErrorStateService,
+    userMessageStateService: UserMessageStateService,
     private val pingService: PingService,
     private val connectToLobbyProcessor: ConnectToLobbyProcessor,
     clientStateService: ClientStateService,
     private val createLobbyProcessor: CreateLobbyProcessor,
 ) : CommonScreenViewModel<MenuScreenEvent, MenuScreenState>(
-    errorStateService = errorStateService,
+    userMessageStateService = userMessageStateService,
     connectionStateService = connectionStateService,
     clientStateService = clientStateService
 ) {

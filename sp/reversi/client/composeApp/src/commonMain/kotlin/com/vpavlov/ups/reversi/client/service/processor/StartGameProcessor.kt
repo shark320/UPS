@@ -3,23 +3,22 @@ package com.vpavlov.ups.reversi.client.service.processor
 import com.vpavlov.ups.reversi.client.config.ConnectionConfig
 import com.vpavlov.ups.reversi.client.domains.connection.message.Header
 import com.vpavlov.ups.reversi.client.domains.connection.message.Message
-import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.domains.connection.message.Status
 import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
 import com.vpavlov.ups.reversi.client.domains.connection.message.Type
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
-import com.vpavlov.ups.reversi.client.state.ErrorMessage
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
+import com.vpavlov.ups.reversi.client.state.UserMessage
 
 class StartGameProcessor(
     private val config: ConnectionConfig,
     clientStateService: ClientStateService,
     connectionService: ConnectionService,
-    errorStateService: ErrorStateService
+    userMessageStateService: UserMessageStateService
 ): CommonClientProcessor(
     connectionService = connectionService,
-    errorStateService = errorStateService,
+    userMessageStateService = userMessageStateService,
     clientStateService = clientStateService,
 )  {
     operator fun invoke() = process{
@@ -43,17 +42,17 @@ class StartGameProcessor(
 
         when(status){
             Status.UNAUTHORIZED -> {
-                errorStateService.setError(
-                    errorMessage = ErrorMessage(
-                        errorMessage = "You are not the lobby host."
+                userMessageStateService.showError(
+                    userMessage = UserMessage(
+                        message = "You are not the lobby host."
                     )
                 )
                 getAndUpdateState(response)
             }
             Status.NOT_ALLOWED -> {
-                errorStateService.setError(
-                    errorMessage = ErrorMessage(
-                        errorMessage = "Not enough players!"
+                userMessageStateService.showError(
+                    userMessage = UserMessage(
+                        message = "Not enough players!"
                     )
                 )
                 getAndUpdateState(response)

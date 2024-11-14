@@ -1,29 +1,25 @@
 package com.vpavlov.ups.reversi.client.service.impl
 
 import com.vpavlov.ups.reversi.client.config.ConnectionConfig
-import com.vpavlov.ups.reversi.client.di.koin
 import com.vpavlov.ups.reversi.client.domains.connection.MSG_HEADER_LENGTH
 import com.vpavlov.ups.reversi.client.domains.connection.message.Header
 import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
-import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
 import com.vpavlov.ups.reversi.client.service.exceptions.ConnectionException
 import com.vpavlov.ups.reversi.client.service.exceptions.FatalException
-import com.vpavlov.ups.reversi.client.state.ErrorMessage
+import com.vpavlov.ups.reversi.client.state.UserMessage
 import com.vpavlov.ups.reversi.client.utils.readExactChars
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
-import io.ktor.network.sockets.connection
 import io.ktor.network.sockets.isClosed
 import io.ktor.network.sockets.openReadChannel
 import io.ktor.network.sockets.openWriteChannel
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
 import io.ktor.utils.io.errors.IOException
-import io.ktor.utils.io.read
 import io.ktor.utils.io.writeStringUtf8
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,12 +29,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.apache.logging.log4j.kotlin.loggerOf
 import java.net.InetSocketAddress
-import java.net.SocketException
 
 open class ConnectionServiceImpl(
     private val config: ConnectionConfig,
     protected val connectionStateService: ConnectionStateService,
-    protected val errorStateService: ErrorStateService,
+    protected val userMessageStateService: UserMessageStateService,
 ) : ConnectionService {
 
     companion object {
@@ -65,9 +60,9 @@ open class ConnectionServiceImpl(
                     println(socket.isClosed)
                 } catch (e: Throwable) {
                     //TODO: reconnect on error
-                    errorStateService.setError(
-                        errorMessage = ErrorMessage(
-                            errorMessage = "Could not connect to the server.",
+                    userMessageStateService.showError(
+                        userMessage = UserMessage(
+                            message = "Could not connect to the server.",
                             okButton = "Try again"
                         )
                     )

@@ -1,12 +1,8 @@
 package com.vpavlov.ups.reversi.client.service.impl.offline
 
 import com.vpavlov.ups.reversi.client.config.ConnectionConfig
-import com.vpavlov.ups.reversi.client.domains.connection.message.Header
-import com.vpavlov.ups.reversi.client.domains.connection.message.Message
-import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
-import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
 import com.vpavlov.ups.reversi.client.service.impl.ConnectionServiceImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,11 +12,11 @@ import org.apache.logging.log4j.kotlin.loggerOf
 
 class ConnectionServiceOfflineImpl(
     config: ConnectionConfig,
-    connectionStateService: ConnectionStateService, errorStateService: ErrorStateService,
+    connectionStateService: ConnectionStateService, userMessageStateService: UserMessageStateService,
 ) :
     ConnectionServiceImpl(
         config = config, connectionStateService = connectionStateService,
-        errorStateService = errorStateService
+        userMessageStateService = userMessageStateService
     ) {
 
     companion object {

@@ -7,7 +7,6 @@ import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreen
 import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.navigation.ScreenNavigation
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
-import org.koin.core.qualifier._q
 import kotlin.system.exitProcess
 
 @Composable
@@ -32,19 +31,19 @@ fun ConnectionStateListenerWrapper(
 }
 
 @Composable
-fun HandleErrors(viewModel: CommonScreenViewModel<*,*>, okButtonText: String = "Ok", onOkClick: () -> Unit = {}){
-    val errorState = viewModel.commonScreenState.value.errorState
+fun HandleMessages(viewModel: CommonScreenViewModel<*,*>, okButtonText: String = "Ok", onOkClick: () -> Unit = {}){
+    val messageState = viewModel.commonScreenState.value.messageState
     //TODO: fatal error handling
     val nonFatalReaction =  {
         viewModel.onCommonEvent(CommonScreenEvent.ClearError)
         onOkClick()
     }
     val fatalReaction = { exitProcess(228) }
-    if (errorState?.errorMessage != null){
+    if (messageState?.userMessage != null){
         ErrorDialog(
-            message = errorState.errorMessage.errorMessage,
-            onOkClick = if (errorState.isFatalError) fatalReaction else nonFatalReaction,
-            okButtonText = errorState.errorMessage.okButton
+            message = messageState.userMessage.message,
+            onOkClick = if (messageState.isFatalError) fatalReaction else nonFatalReaction,
+            okButtonText = messageState.userMessage.okButton
         )
     }
 }
@@ -55,6 +54,11 @@ fun ClientFlowStateAwareness(
     navController: NavController,
 ){
     val state = viewModel.commonScreenState.value
+    val messageState = viewModel.commonScreenState.value.messageState
+    if (messageState?.userMessage != null){
+        //Prevent other screen navigation in case of message is showing
+        return
+    }
     if (state.clientFlowState == null){
         navigateIfNotTheSame(navController = navController, screenNavigation = ScreenNavigation.LoginScreen)
     }else{

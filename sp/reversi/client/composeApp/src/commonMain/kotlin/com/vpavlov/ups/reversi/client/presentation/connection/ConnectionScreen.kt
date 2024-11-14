@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
-import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
+import com.vpavlov.ups.reversi.client.presentation.common.component.HandleMessages
 import com.vpavlov.ups.reversi.client.presentation.navigation.ScreenNavigation
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -27,7 +27,7 @@ fun ConnectionScreen(
 //        viewModel = viewModel,
 //        navController = navController
 //    ) {
-    HandleErrors(
+    HandleMessages(
         viewModel = viewModel,
         okButtonText = "Reconnect"
     ) {

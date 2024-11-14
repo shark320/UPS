@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowStateAwareness
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
-import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
+import com.vpavlov.ups.reversi.client.presentation.common.component.HandleMessages
 import com.vpavlov.ups.reversi.client.presentation.common.component.InputDialog
 import com.vpavlov.ups.reversi.client.state.LobbyInfo
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
@@ -111,7 +110,7 @@ fun MenuScreen(
         isCreateNewLobbyDialogVisible = isCreateNewLobbyDialogVisible
     )
 
-    HandleErrors(viewModel)
+    HandleMessages(viewModel)
 }
 
 @Composable

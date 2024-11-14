@@ -2,6 +2,7 @@ package com.vpavlov.ups.reversi.client.di
 
 import com.vpavlov.ups.reversi.client.config.ConfigProvider
 import com.vpavlov.ups.reversi.client.presentation.connection.ConnectionScreenViewModel
+import com.vpavlov.ups.reversi.client.presentation.game.GameScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.login.LoginScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.menu.MenuScreenViewModel
@@ -9,7 +10,7 @@ import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
 import com.vpavlov.ups.reversi.client.service.api.state.GameStateService
 import com.vpavlov.ups.reversi.client.service.impl.ConnectionServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.PingServiceImpl
@@ -22,7 +23,7 @@ import com.vpavlov.ups.reversi.client.service.impl.offline.state.ClientStateServ
 import com.vpavlov.ups.reversi.client.service.impl.offline.state.ConnectionStateServiceOfflineImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.ClientStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.ConnectionStateServiceImpl
-import com.vpavlov.ups.reversi.client.service.impl.state.ErrorStateServiceImpl
+import com.vpavlov.ups.reversi.client.service.impl.state.UserMessageStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.GameStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.processor.ConnectToLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.CreateLobbyProcessor
@@ -52,7 +53,7 @@ val onlineModules = module {
     single<ConnectionService> {
         ConnectionServiceImpl(
             config = ConfigProvider.connectionConfig,
-            errorStateService = get(),
+            userMessageStateService = get(),
             connectionStateService = get(),
         )
     }
@@ -69,7 +70,8 @@ val onlineModules = module {
             pingProcessor = get(),
             getLobbiesProcessor = get(),
             connectionStateService = get(),
-            getLobbyStateProcessor = get()
+            getLobbyStateProcessor = get(),
+            getGameStateProcessor = get()
         )
     }
 
@@ -85,7 +87,7 @@ val messageProcessorsModule = module {
             config = ConfigProvider.connectionConfig,
             clientStateService = get(),
             connectionService = get(),
-            errorStateService = get()
+            userMessageStateService = get()
         )
     }
 
@@ -93,7 +95,7 @@ val messageProcessorsModule = module {
         HandshakeProcessor(
             config = ConfigProvider.connectionConfig,
             connectionService = get(),
-            errorStateService = get()
+            userMessageStateService = get()
         )
     }
 
@@ -101,7 +103,7 @@ val messageProcessorsModule = module {
         PingProcessor(
             config = ConfigProvider.connectionConfig,
             connectionService = get(),
-            errorStateService = get()
+            userMessageStateService = get()
         )
     }
 
@@ -109,7 +111,7 @@ val messageProcessorsModule = module {
         GetLobbiesProcessor(
             config = ConfigProvider.connectionConfig,
             connectionService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
             clientStateService = get()
         )
     }
@@ -119,7 +121,7 @@ val messageProcessorsModule = module {
             config = ConfigProvider.connectionConfig,
             clientStateService = get(),
             connectionService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
         )
     }
 
@@ -128,7 +130,7 @@ val messageProcessorsModule = module {
             config = ConfigProvider.connectionConfig,
             clientStateService = get(),
             connectionService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
         )
     }
 
@@ -137,7 +139,7 @@ val messageProcessorsModule = module {
             config = ConfigProvider.connectionConfig,
             clientStateService = get(),
             connectionService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
         )
     }
 
@@ -146,7 +148,7 @@ val messageProcessorsModule = module {
             config = ConfigProvider.connectionConfig,
             clientStateService = get(),
             connectionService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
         )
     }
 
@@ -155,7 +157,7 @@ val messageProcessorsModule = module {
             config = ConfigProvider.connectionConfig,
             clientStateService = get(),
             connectionService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
         )
     }
 
@@ -164,7 +166,8 @@ val messageProcessorsModule = module {
             config = ConfigProvider.connectionConfig,
             clientStateService = get(),
             connectionService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
+            gameStateService = get()
         )
     }
 
@@ -178,7 +181,7 @@ val offlineModules = module {
         ConnectionServiceOfflineImpl(
             config = ConfigProvider.connectionConfig,
             connectionStateService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
         )
     }
     single<ConnectionStateService> {
@@ -195,7 +198,7 @@ val sharedModules = module {
     viewModel {
         ConnectionScreenViewModel(
             connectionService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
             connectionStateService = get(),
             pingService = get(),
             handshakeProcessor = get(),
@@ -205,7 +208,7 @@ val sharedModules = module {
     viewModel {
         LoginScreenViewModel(
             clientStateService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
             connectionStateService = get(),
             pingService = get(),
             loginProcessor = get()
@@ -215,7 +218,7 @@ val sharedModules = module {
     viewModel {
         MenuScreenViewModel(
             connectionStateService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
             pingService = get(),
             clientStateService = get(),
             connectToLobbyProcessor = get(),
@@ -227,7 +230,18 @@ val sharedModules = module {
         LobbyScreenViewModel(
             clientStateService = get(),
             connectionStateService = get(),
-            errorStateService = get(),
+            userMessageStateService = get(),
+            pingService = get(),
+            exitLobbyProcessor = get(),
+            startGameProcessor = get()
+        )
+    }
+
+    viewModel {
+        GameScreenViewModel(
+            clientStateService = get(),
+            connectionStateService = get(),
+            userMessageStateService = get(),
             pingService = get(),
             exitLobbyProcessor = get(),
             startGameProcessor = get()
@@ -235,8 +249,8 @@ val sharedModules = module {
     }
 
 
-    single<ErrorStateService> {
-        ErrorStateServiceImpl()
+    single<UserMessageStateService> {
+        UserMessageStateServiceImpl()
     }
 
 }

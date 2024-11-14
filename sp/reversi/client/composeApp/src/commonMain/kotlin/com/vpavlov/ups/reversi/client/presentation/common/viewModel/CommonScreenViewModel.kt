@@ -7,15 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
 import com.vpavlov.ups.reversi.client.state.ClientState
 import com.vpavlov.ups.reversi.client.state.ConnectionState
-import com.vpavlov.ups.reversi.client.state.ErrorState
+import com.vpavlov.ups.reversi.client.state.ShowMessageState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 abstract class CommonScreenViewModel<EventType, StateType>(
-    protected val errorStateService: ErrorStateService,
+    protected val userMessageStateService: UserMessageStateService,
     protected val connectionStateService: ConnectionStateService,
     protected val clientStateService: ClientStateService
 ) : ViewModel() {
@@ -27,8 +27,8 @@ abstract class CommonScreenViewModel<EventType, StateType>(
     val state: State<StateType> = _state
 
     init {
-        errorStateService.getStateFlow().onEach { errorState ->
-            handleErrorState(errorState = errorState)
+        userMessageStateService.getStateFlow().onEach { errorState ->
+            handleErrorState(showMessageState = errorState)
         }.launchIn(viewModelScope)
 
         connectionStateService.getConnectionState().onEach {
@@ -58,8 +58,8 @@ abstract class CommonScreenViewModel<EventType, StateType>(
     fun onCommonEvent(commonScreenEvent: CommonScreenEvent) {
         when (commonScreenEvent) {
             CommonScreenEvent.ClearError -> {
-                _commonScreenState.value = commonScreenState.value.copy(errorState = null)
-                errorStateService.clearError()
+                _commonScreenState.value = commonScreenState.value.copy(messageState = null)
+                userMessageStateService.clearMessage()
             }
         }
     }
@@ -68,12 +68,12 @@ abstract class CommonScreenViewModel<EventType, StateType>(
 
     protected abstract fun initState(): MutableState<StateType>
 
-    protected fun handleErrorState(errorState: ErrorState) {
-        if (errorState.isError && errorState.errorMessage != null) {
+    protected fun handleErrorState(showMessageState: ShowMessageState) {
+        if (showMessageState.isShowMessage && showMessageState.message != null) {
             _commonScreenState.value = commonScreenState.value.copy(
-                errorState = CommonScreenErrorState(
-                    errorMessage = errorState.errorMessage,
-                    isFatalError = errorState.isFatal
+                messageState = CommonScreenErrorState(
+                    userMessage = showMessageState.message,
+                    isFatalError = showMessageState.isFatal
                 )
             )
         }

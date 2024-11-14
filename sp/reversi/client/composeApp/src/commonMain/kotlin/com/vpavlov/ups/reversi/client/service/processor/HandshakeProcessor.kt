@@ -6,16 +6,16 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
 import com.vpavlov.ups.reversi.client.domains.connection.message.Type
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
-import com.vpavlov.ups.reversi.client.state.ErrorMessage
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
+import com.vpavlov.ups.reversi.client.state.UserMessage
 
 class HandshakeProcessor(
     private val config: ConnectionConfig,
     connectionService: ConnectionService,
-    errorStateService: ErrorStateService
+    userMessageStateService: UserMessageStateService
 ): CommonProcessor(
     connectionService = connectionService,
-    errorStateService = errorStateService,
+    userMessageStateService = userMessageStateService,
 ) {
 
     operator fun invoke() = process{
@@ -35,16 +35,16 @@ class HandshakeProcessor(
 
     override fun onConnectionError(exception: Exception) {
         connectionService.connectionLost()
-        errorStateService.setError(
-            errorMessage = ErrorMessage("Could not connect to the server.", okButton = "Reconnect")
+        userMessageStateService.showError(
+            userMessage = UserMessage("Could not connect to the server.", okButton = "Reconnect")
         )
         LOGGER.error("Could not connect to the server.", exception)
     }
 
     private fun handleHandshakeError(){
         connectionService.handshakeError()
-        errorStateService.setError(
-            errorMessage = ErrorMessage(errorMessage = "Fatal error: could not process handshake.", okButton = "Exit"),
+        userMessageStateService.showError(
+            userMessage = UserMessage(message = "Fatal error: could not process handshake.", okButton = "Exit"),
             fatal = true
         )
     }

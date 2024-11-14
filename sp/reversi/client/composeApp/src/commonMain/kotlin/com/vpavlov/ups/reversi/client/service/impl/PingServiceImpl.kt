@@ -4,6 +4,7 @@ import com.vpavlov.ups.reversi.client.config.ConnectionConfig
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
+import com.vpavlov.ups.reversi.client.service.processor.GetGameStateProcessor
 import com.vpavlov.ups.reversi.client.service.processor.GetLobbiesProcessor
 import com.vpavlov.ups.reversi.client.service.processor.GetLobbyStateProcessor
 import com.vpavlov.ups.reversi.client.service.processor.PingProcessor
@@ -24,7 +25,8 @@ class PingServiceImpl(
     private val connectionStateService: ConnectionStateService,
     private val pingProcessor: PingProcessor,
     private val getLobbyStateProcessor: GetLobbyStateProcessor,
-    private val getLobbiesProcessor: GetLobbiesProcessor
+    private val getLobbiesProcessor: GetLobbiesProcessor,
+    private val getGameStateProcessor: GetGameStateProcessor
 ) : PingService {
 
     companion object {
@@ -79,7 +81,7 @@ class PingServiceImpl(
             when (clientFlowStateTmp) {
                 ClientFlowState.MENU -> getLobbiesProcessor()
                 ClientFlowState.LOBBY -> getLobbyStateProcessor()
-                ClientFlowState.GAME -> {}
+                ClientFlowState.GAME -> getGameStateProcessor()
             }
         }
     }

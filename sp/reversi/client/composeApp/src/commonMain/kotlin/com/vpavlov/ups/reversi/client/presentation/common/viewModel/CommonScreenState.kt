@@ -1,15 +1,15 @@
 package com.vpavlov.ups.reversi.client.presentation.common.viewModel
 
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
-import com.vpavlov.ups.reversi.client.state.ErrorMessage
+import com.vpavlov.ups.reversi.client.state.UserMessage
 
 data class CommonScreenState(
-    val errorState: CommonScreenErrorState? = null,
+    val messageState: CommonScreenErrorState? = null,
     val isConnectionAlive: Boolean = true,
     val clientFlowState: ClientFlowState? = null
 )
 
 data class CommonScreenErrorState(
-    val errorMessage: ErrorMessage,
+    val userMessage: UserMessage,
     val isFatalError: Boolean = false,
 )

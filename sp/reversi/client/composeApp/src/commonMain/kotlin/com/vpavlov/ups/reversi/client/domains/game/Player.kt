@@ -10,6 +10,16 @@ enum class PlayerCode {
         WHITE_PLAYER -> BLACK_PLAYER
         NO_PLAYER -> NO_PLAYER
     }
+
+    companion object{
+        fun getValueOrNull(key: String): PlayerCode? {
+            val codes = PlayerCode.values()
+            return codes.firstOrNull { code ->
+                code.name == key
+            }
+        }
+    }
+
 }
 
 

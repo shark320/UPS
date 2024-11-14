@@ -11,11 +11,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowStateAwareness
+import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
+import org.koin.compose.viewmodel.koinNavViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun GameScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: GameScreenViewModel = koinViewModel()
 ){
+
+    val state = viewModel.state.value
+    ClientFlowStateAwareness(
+        viewModel = viewModel,
+        navController = navController
+    )
+    ConnectionStateListenerWrapper(
+        viewModel = viewModel,
+        navController = navController
+    )
 
     Box(
         contentAlignment = Alignment.Center,

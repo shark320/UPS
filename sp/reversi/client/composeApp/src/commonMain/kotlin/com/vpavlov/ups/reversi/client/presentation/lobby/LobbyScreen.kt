@@ -38,9 +38,8 @@ import androidx.navigation.NavHostController
 import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowStateAwareness
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConfirmationDialog
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
-import com.vpavlov.ups.reversi.client.presentation.common.component.HandleErrors
+import com.vpavlov.ups.reversi.client.presentation.common.component.HandleMessages
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
-import com.vpavlov.ups.reversi.client.ui.theme.heavyBorderWidth
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -117,7 +116,7 @@ private fun Content(
 
 
 
-    HandleErrors(viewModel)
+    HandleMessages(viewModel)
 }
 
 @Composable

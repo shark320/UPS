@@ -4,9 +4,9 @@ import com.vpavlov.ups.reversi.client.domains.connection.message.Message
 import com.vpavlov.ups.reversi.client.domains.connection.message.Status
 import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
-import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
 import com.vpavlov.ups.reversi.client.service.exceptions.ConnectionException
-import com.vpavlov.ups.reversi.client.state.ErrorMessage
+import com.vpavlov.ups.reversi.client.state.UserMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.loggerOf
 
 open class CommonProcessor(
-    protected val errorStateService: ErrorStateService,
+    protected val userMessageStateService: UserMessageStateService,
     protected val connectionService: ConnectionService,
 ) {
 
@@ -34,9 +34,9 @@ open class CommonProcessor(
             } catch (e: ClosedReceiveChannelException) {
                 onConnectionError(e)
             } catch (e: Throwable) {
-                errorStateService.setError(
-                    errorMessage = ErrorMessage(
-                        errorMessage = "A fatal error during the message processing.",
+                userMessageStateService.showError(
+                    userMessage = UserMessage(
+                        message = "A fatal error during the message processing.",
                         okButton = "Exit"
                     ),
                     fatal = true
@@ -50,17 +50,17 @@ open class CommonProcessor(
 
     protected fun unexpectedErrorStatus(status: Status) {
         LOGGER.error("Unexpected response status: $status")
-        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status"))
+        userMessageStateService.showError(userMessage = UserMessage(message = "Unexpected error status"))
     }
 
     protected fun unexpectedErrorStatus(response: Message) {
         LOGGER.error("Unexpected response status: ${response.header.status}")
-        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected error status. Message: ${response.payload.getStringValue("msg")}"))
+        userMessageStateService.showError(userMessage = UserMessage(message = "Unexpected error status. Message: ${response.payload.getStringValue("msg")}"))
     }
 
     protected fun unexpectedStatus(response: Message) {
         LOGGER.error("Unexpected response status: ${response.header.status}")
-        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Unexpected response status: ${response.header.status}"))
+        userMessageStateService.showError(userMessage = UserMessage(message = "Unexpected response status: ${response.header.status}"))
     }
 
     protected open fun onConnectionError(exception: Exception) {
@@ -70,7 +70,7 @@ open class CommonProcessor(
 
     protected fun malformedResponse(subtype: Subtype) {
         LOGGER.error("Malformed response for the subtype [$subtype]")
-        errorStateService.setError(errorMessage = ErrorMessage(errorMessage = "Malformed response for the type [$subtype]"))
+        userMessageStateService.showError(userMessage = UserMessage(message = "Malformed response for the type [$subtype]"))
     }
 
 

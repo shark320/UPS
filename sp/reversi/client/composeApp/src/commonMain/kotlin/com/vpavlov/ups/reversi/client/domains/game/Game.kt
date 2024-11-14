@@ -12,19 +12,22 @@ data class MoveCoordinates(
 )
 
 class Game(
-    val whitePlayer: Player,
-    val blackPlayer: Player,
+    players: List<Player>
 ) {
 
-    val gameConfig = GameConfig()
+    private lateinit var whitePlayer: Player
 
-    var currentPlayer = whitePlayer
+    private lateinit var blackPlayer: Player
 
-    val gameEngine = GameEngine(
+    private val gameConfig = GameConfig()
+
+    private var currentPlayer: Player
+
+    private val gameEngine = GameEngine(
         gameConfig = gameConfig
     )
 
-    var lastMove = MoveCoordinates(
+    private var lastMove = MoveCoordinates(
         x = DEFAULT_INIT_X,
         y = DEFAULT_INIT_Y
     )
@@ -32,9 +35,39 @@ class Game(
     val board: Board
         get() = gameEngine.board
 
-    fun isLastMoveChanged(getLastMove: MoveCoordinates) = lastMove == getLastMove
+    init {
+        if (players.size != 2){
+            throw IllegalArgumentException("Should be exactly 2 players.")
+        }
+        var isBlackSet = false
+        var isWhiteSet = false
+        players.forEach { player->
 
-    fun isCurrentPlayerChanged(getCurrentPlayerUsername: String) = currentPlayer.username == getCurrentPlayerUsername
+            when(player.code){
+                PlayerCode.BLACK_PLAYER -> {
+                    if (isBlackSet){
+                        throw IllegalArgumentException("Player with code '${player.code}' is duplicated")
+                    }
+                    blackPlayer = player
+                    isBlackSet = true
+                }
+                PlayerCode.WHITE_PLAYER -> {
+                    if (isWhiteSet){
+                        throw IllegalArgumentException("Player with code '${player.code}' is duplicated")
+                    }
+                    whitePlayer = player
+                    isWhiteSet = true
+                }
+                PlayerCode.NO_PLAYER -> throw IllegalArgumentException("Player with code '${player.code}' could not be processed.")
+            }
+        }
+        currentPlayer = whitePlayer
+    }
+
+
+    fun isLastMoveChanged(getLastMove: MoveCoordinates) = lastMove != getLastMove
+
+    fun isCurrentPlayerChanged(getCurrentPlayerUsername: String) = currentPlayer.username != getCurrentPlayerUsername
 
     fun performMoveForCurrentPlayer(move: MoveCoordinates): Boolean{
         val isSuccess = gameEngine.processMove(move, currentPlayer.code)
@@ -55,5 +88,14 @@ class Game(
 
     fun isMoveValid(move: MoveCoordinates) = gameEngine.isValidMove(move, currentPlayer.code)
 
+    fun getPlayer(username: String): Player?{
+        if (whitePlayer.username == username){
+            return whitePlayer
+        }
+        if (blackPlayer.username == username){
+            return blackPlayer
+        }
+        return null
+    }
 
 }

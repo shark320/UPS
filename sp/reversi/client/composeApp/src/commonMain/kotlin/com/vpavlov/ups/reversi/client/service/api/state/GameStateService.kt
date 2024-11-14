@@ -10,8 +10,9 @@ interface GameStateService {
 
     fun getStateFlow(): StateFlow<GameState?>
 
+    fun isInitialized(): Boolean
+
     fun updateState(
-        game: Game = getStateFlow().value!!.game,
         players: List<Player> = getStateFlow().value!!.players,
         isOpponentConnected: Boolean = getStateFlow().value!!.isOpponentConnected,
         currentPlayer: Player = getStateFlow().value!!.currentPlayer,
