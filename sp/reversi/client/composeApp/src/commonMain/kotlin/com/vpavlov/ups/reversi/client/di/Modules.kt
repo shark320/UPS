@@ -10,6 +10,7 @@ import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ErrorStateService
+import com.vpavlov.ups.reversi.client.service.api.state.GameStateService
 import com.vpavlov.ups.reversi.client.service.impl.ConnectionServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.PingServiceImpl
 import com.vpavlov.ups.reversi.client.service.processor.GetLobbiesProcessor
@@ -22,6 +23,7 @@ import com.vpavlov.ups.reversi.client.service.impl.offline.state.ConnectionState
 import com.vpavlov.ups.reversi.client.service.impl.state.ClientStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.ConnectionStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.impl.state.ErrorStateServiceImpl
+import com.vpavlov.ups.reversi.client.service.impl.state.GameStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.processor.ConnectToLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.CreateLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.ExitLobbyProcessor
@@ -69,6 +71,10 @@ val onlineModules = module {
             connectionStateService = get(),
             getLobbyStateProcessor = get()
         )
+    }
+
+    single<GameStateService> {
+        GameStateServiceImpl()
     }
 
 }

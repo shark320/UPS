@@ -4,5 +4,4 @@ data class Lobby(
     val host: String,
     val players: List<String>,
     val name: String,
-    val game: Game? = null
 )

@@ -1,12 +1,13 @@
 package com.vpavlov.ups.reversi.client.state
 
+import com.vpavlov.ups.reversi.client.domains.game.Game
 import com.vpavlov.ups.reversi.client.domains.game.Lobby
 
 data class ClientState(
     val username: String,
     val flowState: ClientFlowState,
     val lobbiesList: List<LobbyInfo> = emptyList(),
-    val currentLobby: Lobby? = null
+    val currentLobby: Lobby? = null,
 )
 
 enum class ClientFlowState{

@@ -1,5 +1,6 @@
 package com.vpavlov.ups.reversi.client.service.api.state
 
+import com.vpavlov.ups.reversi.client.domains.game.Game
 import com.vpavlov.ups.reversi.client.domains.game.Lobby
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
 import com.vpavlov.ups.reversi.client.state.ClientState

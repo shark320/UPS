@@ -1,5 +1,6 @@
 package com.vpavlov.ups.reversi.client.service.impl.state
 
+import com.vpavlov.ups.reversi.client.domains.game.Game
 import com.vpavlov.ups.reversi.client.domains.game.Lobby
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.state.ClientFlowState
@@ -11,8 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 
 open class ClientStateServiceImpl: ClientStateService {
 
-    protected val _state = MutableStateFlow<ClientState?>(null)
-    protected val state: StateFlow<ClientState?> = _state.asStateFlow()
+    private val _state = MutableStateFlow<ClientState?>(null)
+    private val state: StateFlow<ClientState?> = _state.asStateFlow()
 
     @Synchronized
     override fun getStateFlow(): StateFlow<ClientState?>  = state
@@ -22,13 +23,13 @@ open class ClientStateServiceImpl: ClientStateService {
         username: String,
         flowState: ClientFlowState,
         lobbiesList: List<LobbyInfo>,
-        currentLobby: Lobby?
+        currentLobby: Lobby?,
     ) {
         _state.value = state.value!!.copy(
             username = username,
             flowState = flowState,
             lobbiesList = lobbiesList,
-            currentLobby = currentLobby
+            currentLobby = currentLobby,
         )
     }
 
