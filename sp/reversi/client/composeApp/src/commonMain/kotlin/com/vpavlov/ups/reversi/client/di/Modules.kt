@@ -244,7 +244,8 @@ val sharedModules = module {
             userMessageStateService = get(),
             pingService = get(),
             exitLobbyProcessor = get(),
-            startGameProcessor = get()
+            startGameProcessor = get(),
+            gameStateService = get()
         )
     }
 

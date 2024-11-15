@@ -51,7 +51,8 @@ class GameScreenViewModel(
         _state.value = state.value.copy(
             currentPlayer = gameState.currentPlayer,
             board = game.board,
-            possibleMoves = possibleMoves.asList()
+            possibleMoves = possibleMoves.asList(),
+            players = gameState.players
         )
     }
 
@@ -63,7 +64,10 @@ class GameScreenViewModel(
     }
 
     private fun processPlayerMove(moveCoordinates: MoveCoordinates) {
-
+        if (commonScreenState.value.username != state.value.currentPlayer?.username){
+            LOGGER.debug("There is opponents player move.")
+        }
+        LOGGER.debug("Processing player move $moveCoordinates.")
     }
 
     override fun initState(): MutableState<GameScreenState> = mutableStateOf(GameScreenState())

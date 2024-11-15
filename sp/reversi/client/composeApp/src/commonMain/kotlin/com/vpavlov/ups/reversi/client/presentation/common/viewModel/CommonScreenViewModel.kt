@@ -52,7 +52,8 @@ abstract class CommonScreenViewModel<EventType, StateType>(
 
     protected fun handleClientStateUpdate(clientState: ClientState?){
         _commonScreenState.value = commonScreenState.value.copy(
-            clientFlowState = clientState?.flowState
+            clientFlowState = clientState?.flowState,
+            username = clientState?.username
         )
     }
 

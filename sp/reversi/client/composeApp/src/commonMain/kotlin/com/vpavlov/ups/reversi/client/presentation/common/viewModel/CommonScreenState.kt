@@ -6,7 +6,8 @@ import com.vpavlov.ups.reversi.client.state.UserMessage
 data class CommonScreenState(
     val messageState: CommonScreenErrorState? = null,
     val isConnectionAlive: Boolean = true,
-    val clientFlowState: ClientFlowState? = null
+    val clientFlowState: ClientFlowState? = null,
+    val username: String? = null
 )
 
 data class CommonScreenErrorState(

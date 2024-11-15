@@ -7,6 +7,17 @@ class GameEngine(gameConfig: GameConfig) {
 
     val board: Board = Board(rows = gameConfig.boardWidth, cols = gameConfig.boardHeight)
 
+    init{
+        initializedBoard(DEFAULT_INIT_X, DEFAULT_INIT_Y)
+    }
+
+    private fun initializedBoard(initX: Int, initY: Int){
+        board.setAt(initX, initY, PlayerCode.WHITE_PLAYER)
+        board.setAt(initX+ 1, initY, PlayerCode.BLACK_PLAYER)
+        board.setAt(initX, initY + 1, PlayerCode.BLACK_PLAYER)
+        board.setAt(initX + 1, initY + 1, PlayerCode.WHITE_PLAYER)
+    }
+
     fun getPossibleMovesCount(player: PlayerCode): Int {
         val (movesCount, _) = getPossibleMoves(player)
         return movesCount
