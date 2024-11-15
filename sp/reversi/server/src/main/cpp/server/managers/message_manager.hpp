@@ -37,22 +37,37 @@ private:
     std::shared_ptr<message>
     process_login(const std::shared_ptr<message> &request, const std::shared_ptr<client_connection> &client_connection);
 
-    static std::shared_ptr<message> bad_request(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
-
-    static std::shared_ptr<message> bad_request(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, const std::string &msg);
-
-    static std::shared_ptr<message> not_allowed(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
-
-    static std::shared_ptr<message> not_allowed(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, const std::string &msg);
-
-    static std::shared_ptr<message> unauthorized(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
+    static std::shared_ptr<message>
+    bad_request(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client);
 
     static std::shared_ptr<message>
-    unauthorized(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, const std::string &msg);
+    bad_request(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client, const std::string &msg);
 
-    static std::shared_ptr<message> not_found(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
+    static std::shared_ptr<message>
+    not_allowed(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client);
 
-    static std::shared_ptr<message> not_found(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, const std::string &msg);
+    static std::shared_ptr<message>
+    not_allowed(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client, const std::string &msg);
+
+    static std::shared_ptr<message>
+    unauthorized(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client);
+
+    static std::shared_ptr<message>
+    unauthorized(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client,
+                 const std::string &msg);
+
+    static std::shared_ptr<message>
+    not_found(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client);
+
+    static std::shared_ptr<message>
+    not_found(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client, const std::string &msg);
+
+    static std::shared_ptr<message>
+    moved_permanently(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client);
+
+    static std::shared_ptr<message>
+    moved_permanently(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client,
+                      const std::string &msg);
 
 
     std::shared_ptr<message> process_create_new_game(const std::shared_ptr<message> &request,
@@ -64,14 +79,31 @@ private:
     std::shared_ptr<message> process_start_the_game(const std::shared_ptr<message> &request,
                                                     const std::shared_ptr<client_connection> &client_connection);
 
-    static std::shared_ptr<message> process_get_game_state(const std::shared_ptr<message> &request,
-                                                    const std::shared_ptr<client_connection> &client_connection);
-
-    std::shared_ptr<message> process_game_move(const std::shared_ptr<message> &request,
-                                                    const std::shared_ptr<client_connection> &client_connection);
-
     std::shared_ptr<message> process_connect_to_the_lobby(const std::shared_ptr<message> &request,
                                                           const std::shared_ptr<client_connection> &client_connection);
+
+    //*******************GAME MOVE PROCESSING*******************
+
+    std::shared_ptr<message> process_game_move(const std::shared_ptr<message> &request,
+                                               const std::shared_ptr<client_connection> &client_connection);
+
+    static std::shared_ptr<message> process_game_move_invalid_move(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
+
+    static std::shared_ptr<message> process_game_move_success(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, int move_x, int move_y);
+
+    static std::shared_ptr<message> process_game_move_invalid_player(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
+
+
+    //*******************GAME STATE PROCESSING*******************
+
+    std::shared_ptr<message> process_get_game_state(const std::shared_ptr<message> &request,
+                                                    const std::shared_ptr<client_connection> &client_connection);
+
+    [[nodiscard]] std::shared_ptr<message> process_get_game_state_terminated(
+            const std::shared_ptr<message> &request,
+            const std::shared_ptr<client> &client
+    );
+
 
     [[nodiscard]] bool check_identifier(const std::shared_ptr<message> &request) const;
 
@@ -81,8 +113,9 @@ private:
 
     static bool is_ping_request(const std::shared_ptr<header> &header);
 
-    static std::shared_ptr<message> invalid_state(flow_state state, const std::shared_ptr<message> &request,const std::shared_ptr<client>& client,
-                                                  const std::shared_ptr<log4cxx::Logger> &client_logger);
+    static std::shared_ptr<message>
+    invalid_state(flow_state state, const std::shared_ptr<message> &request, const std::shared_ptr<client> &client,
+                  const std::shared_ptr<log4cxx::Logger> &client_logger);
 
     static void add_lobby_info(const std::shared_ptr<lobby> &lobby, const std::shared_ptr<payload> &response_payload);
 

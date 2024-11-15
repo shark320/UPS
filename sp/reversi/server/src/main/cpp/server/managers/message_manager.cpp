@@ -431,7 +431,7 @@ std::shared_ptr<message> process_get_game_state_game_over(
     return std::make_shared<message>(response_header, response_payload);
 }
 
-std::shared_ptr<message> process_get_game_state_terminated(
+std::shared_ptr<message> message_manager::process_get_game_state_terminated(
         const std::shared_ptr<message> &request,
         const std::shared_ptr<client> &client
 ) {
@@ -440,7 +440,7 @@ std::shared_ptr<message> process_get_game_state_terminated(
     const auto response_payload = std::make_shared<payload>();
     response_header->set_status(status::MOVED_PERMANENTLY);
 
-    client->update_flow_state(flow_state::MENU);
+    this->_lobby_manager->exit_lobby(client);
 
     response_payload->set_value("state",
                                 std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
@@ -479,7 +479,10 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
     const auto opponent_client = game->get_opponent_client(client);
 
     if (opponent_client == nullptr) {
-        return not_found(request, client, "The opponent player for the client is not found.");
+        return process_get_game_state_terminated(
+                request,
+                client
+        );
     }
 
     const auto current_player_client = game->get_current_player_client();
@@ -521,8 +524,82 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
 
 std::shared_ptr<message> message_manager::process_game_move(const std::shared_ptr<message> &request,
                                                             const std::shared_ptr<client_connection> &client_connection) {
-    return std::shared_ptr<message>();
+    const auto client_logger = client_connection->get_logger();
+    const auto client = client_connection->get_client();
+    const auto response_header = std::make_shared<header>(request->get_header());
+    const auto response_payload = std::make_shared<payload>();
+    const auto lobby = client->get_lobby();
+
+    if (lobby == nullptr || !client->is_in_state({flow_state::GAME})) {
+        return invalid_state(client->get_flow_state(), request, client, client_logger);
+    }
+
+    const auto game = lobby->get_game();
+
+    if (game == nullptr) {
+        return not_found(request, client, "The game for the client is not found.");
+    }
+
+    const auto move_x = request->get_payload()->get_integer("x");
+    const auto move_y = request->get_payload()->get_integer("y");
+
+    const auto move_result = game->process_move(move_x->value(), move_y->value(), client);
+
+    switch(move_result){
+        case move_result::INVALID_COORDINATES:
+            return process_game_move_invalid_move(request, client);
+        case SUCCESS:
+            return process_game_move_success(request, client, move_x->value(), move_y->value());
+        case INVALID_PLAYER:
+            return process_game_move_invalid_player(request, client);
+        case NO_PLAYER:
+            return not_found(request, client, "The player is not found.");
+        case GAME_OVER:
+            return not_found(request, client, "The game is not found or is over.");
+    }
+
+    return std::make_shared<message>(response_header, response_payload);
 }
+
+std::shared_ptr<message> message_manager::process_game_move_invalid_move(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client) {
+    const auto response_header = std::make_shared<header>(request->get_header());
+    const auto response_payload = std::make_shared<payload>();
+
+    response_header->set_status(status::NOT_ALLOWED);
+
+    response_payload->set_value("msg", std::make_shared<string>("Invalid move coordinates."));
+    response_payload->set_value("state",
+                                std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
+
+    return std::make_shared<message>(response_header, response_payload);
+}
+
+std::shared_ptr<message> message_manager::process_game_move_success(const std::shared_ptr<message> &request,
+                                                                    const std::shared_ptr<client> &client, int move_x, int move_y) {
+    const auto response_header = std::make_shared<header>(request->get_header());
+    const auto response_payload = std::make_shared<payload>();
+
+    response_header->set_status(status::OK);
+    response_payload->set_value("x", std::make_shared<integer>(move_x));
+    response_payload->set_value("y", std::make_shared<integer>(move_y));
+
+    return std::make_shared<message>(response_header, response_payload);
+}
+
+std::shared_ptr<message> message_manager::process_game_move_invalid_player(const std::shared_ptr<message> &request,
+                                                                           const std::shared_ptr<client> &client) {
+    const auto response_header = std::make_shared<header>(request->get_header());
+    const auto response_payload = std::make_shared<payload>();
+
+    response_header->set_status(status::CONFLICT);
+
+    response_payload->set_value("msg", std::make_shared<string>("Not the player move"));
+    response_payload->set_value("state",
+                                std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
+
+    return std::make_shared<message>(response_header, response_payload);
+}
+
 
 
 std::shared_ptr<message>
@@ -619,6 +696,28 @@ std::shared_ptr<objects_vector> message_manager::get_lobby_player_codes(const st
 
     return lobby_player_codes_payload;
 }
+
+std::shared_ptr<message>
+message_manager::moved_permanently(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client,
+                                   const std::string &msg) {
+    const auto _header = std::make_shared<header>(request->get_header());
+    const auto _payload = std::make_shared<payload>();
+    _header->set_status(status::MOVED_PERMANENTLY);
+    _payload->set_value("msg", std::make_shared<string>(msg));
+    if (client != nullptr) {
+        _payload->set_value("state", std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
+    }
+
+    return std::make_shared<message>(_header, _payload);
+}
+
+std::shared_ptr<message>
+message_manager::moved_permanently(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client) {
+    return moved_permanently(request, client, "Moved Permanently");
+}
+
+
+
 
 
 

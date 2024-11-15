@@ -349,6 +349,15 @@ std::shared_ptr<string> payload::get_string(const std::string &key) {
     return nullptr;
 }
 
+std::shared_ptr<integer> payload::get_integer(const std::string &key) {
+    auto value_obj = get_value(key);
+    if (std::shared_ptr<integer> value = std::dynamic_pointer_cast<integer>(value_obj)){
+        return value;
+    }
+
+    return nullptr;
+}
+
 
 
 

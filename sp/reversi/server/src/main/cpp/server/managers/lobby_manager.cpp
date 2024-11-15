@@ -21,6 +21,7 @@ bool lobby_manager::is_name_taken_unsafe(const std::string &name) {
 }
 
 void lobby_manager::exit_lobby(const std::shared_ptr<client> &player) {
+    std::unique_lock<std::shared_mutex> unique_lock(*this->shared_mutex);
     auto lobby = player->get_lobby();
     if (lobby == nullptr) {
         return;
@@ -28,8 +29,10 @@ void lobby_manager::exit_lobby(const std::shared_ptr<client> &player) {
     LOGGER->debug(fmt::format("Removing player {} from the lobby {}", player->to_string(), lobby->to_string()));
     if (!lobby->remove_player(player)) {
         remove_lobby(lobby->get_name_unsafe());
+    } else{
+        (*this->_hosts)[lobby] = lobby->get_host();
     }
-    (*this->_hosts)[lobby] = lobby->get_host();
+    player->update_flow_state(flow_state::MENU)
 }
 
 void lobby_manager::remove_lobby(const std::string &name) {

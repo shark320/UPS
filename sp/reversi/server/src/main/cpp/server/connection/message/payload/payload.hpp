@@ -17,6 +17,8 @@ public:
 
     std::shared_ptr<string> get_string(const std::string& key);
 
+    std::shared_ptr<integer> get_integer(const std::string& key);
+
     std::shared_ptr<std::map<std::string, std::shared_ptr<object>>> get_data();
 
     std::string to_string();
