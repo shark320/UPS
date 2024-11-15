@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.loggerOf
 
@@ -48,6 +49,36 @@ open class CommonProcessor(
         return isComplete
     }
 
+    protected inline fun <T: ExecutionResult> processWithResult(errorResult: T,crossinline exchanger: suspend () -> T): StateFlow<T?> {
+        val result = MutableStateFlow<T?>(null)
+        CoroutineScope(Dispatchers.Default).launch {
+            var isError = false
+            try {
+                result.value = exchanger()
+            } catch (e: ConnectionException) {
+                onConnectionError(e)
+                isError = true
+            } catch (e: ClosedReceiveChannelException) {
+                onConnectionError(e)
+                isError = true
+            } catch (e: Throwable) {
+                userMessageStateService.showError(
+                    userMessage = UserMessage(
+                        message = "A fatal error during the message processing.",
+                        okButton = "Exit"
+                    ),
+                    fatal = true
+                )
+                LOGGER.error("Error during message processing.", e)
+                isError = true
+            }
+            if (isError){
+                result.value = errorResult
+            }
+        }
+        return result
+    }
+
     protected fun unexpectedErrorStatus(status: Status) {
         LOGGER.error("Unexpected response status: $status")
         userMessageStateService.showError(userMessage = UserMessage(message = "Unexpected error status"))
@@ -72,6 +103,7 @@ open class CommonProcessor(
         LOGGER.error("Malformed response for the subtype [$subtype]")
         userMessageStateService.showError(userMessage = UserMessage(message = "Malformed response for the type [$subtype]"))
     }
-
-
 }
+
+
+open class ExecutionResult ()

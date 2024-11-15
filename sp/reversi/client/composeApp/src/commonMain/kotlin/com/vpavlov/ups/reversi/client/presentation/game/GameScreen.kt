@@ -48,6 +48,5 @@ fun GameScreen(
                 Text(text = "Back")
             }
         }
-
     }
 }

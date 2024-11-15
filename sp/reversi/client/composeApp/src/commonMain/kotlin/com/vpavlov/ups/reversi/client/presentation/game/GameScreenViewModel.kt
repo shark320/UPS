@@ -2,6 +2,7 @@ package com.vpavlov.ups.reversi.client.presentation.game
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import com.vpavlov.ups.reversi.client.domains.game.MoveCoordinates
 import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreenEvent
 import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreenState
@@ -19,17 +20,24 @@ class GameScreenViewModel(
     private val pingService: PingService,
     private val exitLobbyProcessor: ExitLobbyProcessor,
     private val startGameProcessor: StartGameProcessor
-): CommonScreenViewModel<GameScreenEvent, GameScreenState>(
+) : CommonScreenViewModel<GameScreenEvent, GameScreenState>(
     userMessageStateService = userMessageStateService,
     connectionStateService = connectionStateService,
     clientStateService = clientStateService
 ) {
 
-    init{
+    init {
         pingService.start()
     }
 
     override fun onEvent(event: GameScreenEvent) {
+        when (event) {
+            GameScreenEvent.LeaveGame -> {}
+            is GameScreenEvent.PlayerMove -> processPlayerMove(event.moveCoordinates)
+        }
+    }
+
+    private fun processPlayerMove(moveCoordinates: MoveCoordinates) {
 
     }
 
