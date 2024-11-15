@@ -20,9 +20,11 @@ data class Message(
         }
     }
 
-    fun isError() = header.isError()
+    fun isError() = header.isClientError()
 
     fun isRedirect() = header.isRedirect()
 
     fun isOk() = header.isOk()
+
+    fun getStatusGroup() = header.getStatusGroup()
 }

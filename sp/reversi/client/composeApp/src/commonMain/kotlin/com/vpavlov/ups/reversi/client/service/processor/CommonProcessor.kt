@@ -49,7 +49,7 @@ open class CommonProcessor(
         return isComplete
     }
 
-    protected inline fun <T: ExecutionResult> processWithResult(errorResult: T,crossinline exchanger: suspend () -> T): StateFlow<T?> {
+    protected inline fun <T> processWithResult(errorResult: T,crossinline exchanger: suspend () -> T): StateFlow<T?> {
         val result = MutableStateFlow<T?>(null)
         CoroutineScope(Dispatchers.Default).launch {
             var isError = false
@@ -104,6 +104,3 @@ open class CommonProcessor(
         userMessageStateService.showError(userMessage = UserMessage(message = "Malformed response for the type [$subtype]"))
     }
 }
-
-
-open class ExecutionResult ()

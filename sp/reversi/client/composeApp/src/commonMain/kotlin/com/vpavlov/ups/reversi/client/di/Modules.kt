@@ -28,6 +28,7 @@ import com.vpavlov.ups.reversi.client.service.impl.state.GameStateServiceImpl
 import com.vpavlov.ups.reversi.client.service.processor.ConnectToLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.CreateLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.ExitLobbyProcessor
+import com.vpavlov.ups.reversi.client.service.processor.GameMoveProcessor
 import com.vpavlov.ups.reversi.client.service.processor.GetGameStateProcessor
 import com.vpavlov.ups.reversi.client.service.processor.GetLobbyStateProcessor
 import com.vpavlov.ups.reversi.client.service.processor.StartGameProcessor
@@ -171,6 +172,15 @@ val messageProcessorsModule = module {
         )
     }
 
+    single {
+        GameMoveProcessor(
+            config = ConfigProvider.connectionConfig,
+            clientStateService = get(),
+            connectionService = get(),
+            userMessageStateService = get(),
+            gameStateService = get(),
+        )
+    }
 
 
 }
@@ -245,7 +255,8 @@ val sharedModules = module {
             pingService = get(),
             exitLobbyProcessor = get(),
             startGameProcessor = get(),
-            gameStateService = get()
+            gameStateService = get(),
+            processGameMoveProcessor = get()
         )
     }
 

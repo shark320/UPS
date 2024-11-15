@@ -76,3 +76,30 @@ enum class Status(val code: Int) {
         }
     }
 }
+
+enum class StatusGroup{
+    SUCCESS,
+    REDIRECT,
+    CLIENT_ERROR,
+    SERVER_ERROR,
+    UNDEFINED;
+
+    companion object{
+        fun getStatusGroup(status: Status): StatusGroup{
+            val code = status.code
+            if (code in 200..299){
+                return SUCCESS
+            }
+            if (code in 300..399){
+                return REDIRECT
+            }
+            if (code in 400..499){
+                return CLIENT_ERROR
+            }
+            if (code in 500..599){
+                return SERVER_ERROR
+            }
+            return UNDEFINED
+        }
+    }
+}

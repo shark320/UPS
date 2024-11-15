@@ -77,10 +77,12 @@ data class Header(
         }
     }
 
-    fun isRedirect() = status.code in 300..399
+    fun getStatusGroup(): StatusGroup = StatusGroup.getStatusGroup(status)
 
-    fun isError() = status.code in 400..499
+    fun isRedirect() = getStatusGroup() == StatusGroup.REDIRECT
 
-    fun isOk() = status.code in 200..299
+    fun isClientError() = getStatusGroup() == StatusGroup.CLIENT_ERROR
+
+    fun isOk() = getStatusGroup() == StatusGroup.SUCCESS
 
 }

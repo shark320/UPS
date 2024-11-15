@@ -100,4 +100,6 @@ class Game(
     }
 
     fun getPossibleMoves(player: Player): Array<Boolean> = gameEngine.getPossibleMoves(player.code).second
+
+    fun getCurrentPlayer() = this.currentPlayer
 }
