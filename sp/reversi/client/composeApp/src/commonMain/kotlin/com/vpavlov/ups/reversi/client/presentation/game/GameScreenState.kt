@@ -1,8 +1,10 @@
 package com.vpavlov.ups.reversi.client.presentation.game
 
-import com.vpavlov.ups.reversi.client.domains.game.Game
+import com.vpavlov.ups.reversi.client.domains.game.Player
+import com.vpavlov.ups.reversi.client.game.Board
 
 data class GameScreenState(
-    val currentPlayerUsername: String? = null,
-    val game: Game? = null
+    val board: Board? = null,
+    val currentPlayer: Player? = null,
+    val possibleMoves: List<Boolean>? = null
 )

@@ -13,7 +13,7 @@ data class Board(
 
     private val cells = Array(rows * cols) { PlayerCode.NO_PLAYER }
 
-    fun getAt(x: Int, y: Int): PlayerCode = cells[0]
+    fun getAt(x: Int, y: Int): PlayerCode = cells[y * cols + x]
 
     fun setAt(x: Int, y: Int, player: PlayerCode) {
         cells[y * cols + x] = player

@@ -35,6 +35,7 @@ class Game(
     val board: Board
         get() = gameEngine.board
 
+
     init {
         if (players.size != 2){
             throw IllegalArgumentException("Should be exactly 2 players.")
@@ -98,4 +99,5 @@ class Game(
         return null
     }
 
+    fun getPossibleMoves(player: Player): Array<Boolean> = gameEngine.getPossibleMoves(player.code).second
 }

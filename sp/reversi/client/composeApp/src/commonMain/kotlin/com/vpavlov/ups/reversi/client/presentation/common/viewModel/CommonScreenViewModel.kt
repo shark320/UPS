@@ -13,12 +13,15 @@ import com.vpavlov.ups.reversi.client.state.ConnectionState
 import com.vpavlov.ups.reversi.client.state.ShowMessageState
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.apache.logging.log4j.kotlin.loggerOf
 
 abstract class CommonScreenViewModel<EventType, StateType>(
     protected val userMessageStateService: UserMessageStateService,
     protected val connectionStateService: ConnectionStateService,
     protected val clientStateService: ClientStateService
 ) : ViewModel() {
+
+    protected val LOGGER = loggerOf(this::class.java)
 
     protected val _commonScreenState = mutableStateOf(CommonScreenState())
     val commonScreenState: State<CommonScreenState> = _commonScreenState

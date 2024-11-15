@@ -12,7 +12,7 @@ class GameEngine(gameConfig: GameConfig) {
         return movesCount
     }
 
-    private fun getPossibleMoves(player: PlayerCode): Pair<Int, Array<Boolean>> {
+    fun getPossibleMoves(player: PlayerCode): Pair<Int, Array<Boolean>> {
         val moves = Array(board.rows * board.cols) { false }
         var movesCount = 0;
         for (x in 0..<board.cols) {

@@ -2,6 +2,7 @@ package com.vpavlov.ups.reversi.client.presentation.game
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.viewModelScope
 import com.vpavlov.ups.reversi.client.domains.game.MoveCoordinates
 import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreenEvent
@@ -9,9 +10,13 @@ import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreenState
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
+import com.vpavlov.ups.reversi.client.service.api.state.GameStateService
 import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
 import com.vpavlov.ups.reversi.client.service.processor.ExitLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.StartGameProcessor
+import com.vpavlov.ups.reversi.client.state.GameState
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class GameScreenViewModel(
     clientStateService: ClientStateService,
@@ -19,7 +24,8 @@ class GameScreenViewModel(
     userMessageStateService: UserMessageStateService,
     private val pingService: PingService,
     private val exitLobbyProcessor: ExitLobbyProcessor,
-    private val startGameProcessor: StartGameProcessor
+    private val startGameProcessor: StartGameProcessor,
+    private val gameStateService: GameStateService
 ) : CommonScreenViewModel<GameScreenEvent, GameScreenState>(
     userMessageStateService = userMessageStateService,
     connectionStateService = connectionStateService,
@@ -28,6 +34,25 @@ class GameScreenViewModel(
 
     init {
         pingService.start()
+
+        gameStateService.getStateFlow().onEach { gameState ->
+            gameStateUpdated(gameState)
+        }.launchIn(viewModelScope)
+    }
+
+    private fun gameStateUpdated(gameState: GameState?){
+        if (gameState == null){
+            LOGGER.warn("The updated game state is null!")
+            return
+        }
+        val game = gameState.game
+        val possibleMoves = game.getPossibleMoves(gameState.currentPlayer)
+
+        _state.value = state.value.copy(
+            currentPlayer = gameState.currentPlayer,
+            board = game.board,
+            possibleMoves = possibleMoves.asList()
+        )
     }
 
     override fun onEvent(event: GameScreenEvent) {
