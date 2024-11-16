@@ -32,7 +32,7 @@ void lobby_manager::exit_lobby(const std::shared_ptr<client> &player) {
     } else{
         (*this->_hosts)[lobby] = lobby->get_host();
     }
-    player->update_flow_state(flow_state::MENU)
+    player->update_flow_state(flow_state::MENU);
 }
 
 void lobby_manager::remove_lobby(const std::string &name) {

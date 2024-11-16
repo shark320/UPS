@@ -35,6 +35,10 @@ private:
 
     [[nodiscard]] move_result process_move_unsafe(b_size x, b_size y, const std::shared_ptr<player> &player);
 
+    [[nodiscard]] std::shared_ptr<player> get_client_player_unsafe(const std::shared_ptr<client> &client) const;
+
+    [[nodiscard]] std::shared_ptr<player> get_opponent_unsafe(const std::shared_ptr<player> &player) const;
+
 public:
     reversi_game(const std::shared_ptr<client> &white_player_client,
                  const std::shared_ptr<client> &black_player_client);
@@ -49,13 +53,15 @@ public:
 
     [[nodiscard]] std::shared_ptr<player> get_opponent(const std::shared_ptr<player> &player) const;
 
-    [[nodiscard]] std::string get_board_representation() const;
+//    [[nodiscard]] std::string get_board_representation() const;
 
     [[nodiscard]] move_result process_move(b_size x, b_size y, const std::shared_ptr<client> &client);
 
     [[nodiscard]] std::shared_ptr<move_coordinates> get_last_move() const;
 
     [[nodiscard]] std::shared_ptr<player> get_winner() const;
+
+    [[nodiscard]] std::shared_ptr<std::vector<int>> get_board_representation() const;
 
     [[nodiscard]] bool is_game_over() const;
 };

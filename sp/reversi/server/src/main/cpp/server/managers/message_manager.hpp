@@ -89,19 +89,23 @@ private:
 
     static std::shared_ptr<message> process_game_move_invalid_move(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
 
-    static std::shared_ptr<message> process_game_move_success(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client, int move_x, int move_y);
+    static std::shared_ptr<message> process_game_move_success(const std::shared_ptr<message> &request, const std::shared_ptr<client>& current_player, int move_x, int move_y);
 
     static std::shared_ptr<message> process_game_move_invalid_player(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
 
 
     //*******************GAME STATE PROCESSING*******************
 
-    std::shared_ptr<message> process_get_game_state(const std::shared_ptr<message> &request,
+    [[nodiscard]] std::shared_ptr<message> process_get_game_state(const std::shared_ptr<message> &request,
                                                     const std::shared_ptr<client_connection> &client_connection);
 
     [[nodiscard]] std::shared_ptr<message> process_get_game_state_terminated(
             const std::shared_ptr<message> &request,
             const std::shared_ptr<client> &client
+    );
+
+    [[nodiscard]] std::shared_ptr<objects_vector> convert_board_representation(
+            const std::shared_ptr<std::vector<int>>& board_cells
     );
 
 

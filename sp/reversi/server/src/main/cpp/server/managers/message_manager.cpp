@@ -510,6 +510,8 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
 
     const auto last_move = game->get_last_move();
 
+    const auto board_cells = convert_board_representation(game->get_board_representation());
+
     response_header->set_status(status::OK);
     response_payload->set_value("state",
                                 std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
@@ -519,6 +521,7 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
     response_payload->set_value("current_player", std::make_shared<string>(current_player_client->get_username()));
     response_payload->set_value("x", std::make_shared<integer>(last_move->x));
     response_payload->set_value("y", std::make_shared<integer>(last_move->y));
+    response_payload->set_value("board", board_cells);
     return std::make_shared<message>(response_header, response_payload);
 }
 
@@ -543,13 +546,17 @@ std::shared_ptr<message> message_manager::process_game_move(const std::shared_pt
     const auto move_x = request->get_payload()->get_integer("x");
     const auto move_y = request->get_payload()->get_integer("y");
 
+    if (move_x == nullptr || move_y == nullptr){
+        return bad_request(request, client, "Move coordinates are null!");
+    }
+
     const auto move_result = game->process_move(move_x->value(), move_y->value(), client);
 
     switch(move_result){
         case move_result::INVALID_COORDINATES:
             return process_game_move_invalid_move(request, client);
         case SUCCESS:
-            return process_game_move_success(request, client, move_x->value(), move_y->value());
+            return process_game_move_success(request, game->get_current_player_client(), move_x->value(), move_y->value());
         case INVALID_PLAYER:
             return process_game_move_invalid_player(request, client);
         case NO_PLAYER:
@@ -575,13 +582,14 @@ std::shared_ptr<message> message_manager::process_game_move_invalid_move(const s
 }
 
 std::shared_ptr<message> message_manager::process_game_move_success(const std::shared_ptr<message> &request,
-                                                                    const std::shared_ptr<client> &client, int move_x, int move_y) {
+                                                                    const std::shared_ptr<client> &current_player, int move_x, int move_y) {
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
 
     response_header->set_status(status::OK);
     response_payload->set_value("x", std::make_shared<integer>(move_x));
     response_payload->set_value("y", std::make_shared<integer>(move_y));
+    response_payload->set_value("current_player", std::make_shared<string>(current_player->get_username()));
 
     return std::make_shared<message>(response_header, response_payload);
 }
@@ -714,6 +722,14 @@ message_manager::moved_permanently(const std::shared_ptr<message> &request, cons
 std::shared_ptr<message>
 message_manager::moved_permanently(const std::shared_ptr<message> &request, const std::shared_ptr<client> &client) {
     return moved_permanently(request, client, "Moved Permanently");
+}
+
+std::shared_ptr<objects_vector> message_manager::convert_board_representation(const std::shared_ptr<std::vector<int>>& board_cells) {
+    const auto converted = std::make_shared<objects_vector>();
+    for (const auto cell_value: *board_cells){
+        converted->push_back(std::make_shared<integer>(cell_value));
+    }
+    return converted;
 }
 
 
