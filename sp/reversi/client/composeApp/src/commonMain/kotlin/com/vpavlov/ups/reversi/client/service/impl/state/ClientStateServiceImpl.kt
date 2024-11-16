@@ -18,6 +18,10 @@ open class ClientStateServiceImpl: ClientStateService {
     @Synchronized
     override fun getStateFlow(): StateFlow<ClientState?>  = state
 
+    override fun clearClientState() {
+        _state.value = null
+    }
+
     @Synchronized
     override fun updateState(
         username: String,

@@ -3,6 +3,7 @@ package com.vpavlov.ups.reversi.client.service.processor
 import com.vpavlov.ups.reversi.client.config.ConnectionConfig
 import com.vpavlov.ups.reversi.client.domains.connection.message.Header
 import com.vpavlov.ups.reversi.client.domains.connection.message.Message
+import com.vpavlov.ups.reversi.client.domains.connection.message.Payload
 import com.vpavlov.ups.reversi.client.domains.connection.message.Status
 import com.vpavlov.ups.reversi.client.domains.connection.message.StatusGroup
 import com.vpavlov.ups.reversi.client.domains.connection.message.Subtype
@@ -33,10 +34,13 @@ class GameMoveProcessor(
             val requestHeader = Header(
                 type = Type.POST,
                 identifier = config.identifier,
-                subtype = Subtype.GAME_STATE
+                subtype = Subtype.GAME_MOVE
             )
+            val requestPayload = Payload()
+            requestPayload.setValue("x", moveCoordinates.x)
+            requestPayload.setValue("y", moveCoordinates.y)
             val response =
-                connectionService.exchange(Message(header = requestHeader))
+                connectionService.exchange(Message(header = requestHeader, payload = requestPayload))
             return@processWithResult when (response.getStatusGroup()) {
                 StatusGroup.SUCCESS -> handleOk(response)
                 StatusGroup.REDIRECT -> {

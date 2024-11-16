@@ -40,6 +40,7 @@ import com.vpavlov.ups.reversi.client.domains.game.PlayerCode
 import com.vpavlov.ups.reversi.client.game.Board
 import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowStateAwareness
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
+import com.vpavlov.ups.reversi.client.presentation.common.component.HandleMessages
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
 import com.vpavlov.ups.reversi.client.utils.requireAllNotNull
 import org.koin.compose.viewmodel.koinViewModel
@@ -55,7 +56,7 @@ fun GameScreen(
     viewModel: GameScreenViewModel = koinViewModel()
 ) {
 
-
+    HandleMessages(viewModel)
     ClientFlowStateAwareness(
         viewModel = viewModel,
         navController = navController

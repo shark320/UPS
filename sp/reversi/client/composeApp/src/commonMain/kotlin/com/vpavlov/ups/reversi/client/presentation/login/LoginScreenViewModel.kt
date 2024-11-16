@@ -26,6 +26,7 @@ class LoginScreenViewModel(
 ) {
 
     init {
+        clientStateService.clearClientState()
         clientStateService.getStateFlow().onEach { clientState ->
             clientState?.let {
                 _state.value = state.value.copy(
