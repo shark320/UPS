@@ -3,19 +3,26 @@ package com.vpavlov.ups.reversi.client.game
 import com.vpavlov.ups.reversi.client.domains.game.MoveCoordinates
 import com.vpavlov.ups.reversi.client.domains.game.PlayerCode
 
-class GameEngine(gameConfig: GameConfig) {
+class GameEngine(
+    gameConfig: GameConfig,
+    boardCells: List<Int>?
+) {
 
     val board: Board = Board(rows = gameConfig.boardWidth, cols = gameConfig.boardHeight)
 
     init{
-        initializedBoard(DEFAULT_INIT_X, DEFAULT_INIT_Y)
+        initializedBoard(DEFAULT_INIT_X, DEFAULT_INIT_Y, boardCells)
     }
 
-    private fun initializedBoard(initX: Int, initY: Int){
-        board.setAt(initX, initY, PlayerCode.WHITE_PLAYER)
-        board.setAt(initX+ 1, initY, PlayerCode.BLACK_PLAYER)
-        board.setAt(initX, initY + 1, PlayerCode.BLACK_PLAYER)
-        board.setAt(initX + 1, initY + 1, PlayerCode.WHITE_PLAYER)
+    private fun initializedBoard(initX: Int, initY: Int, boardCells: List<Int>?){
+        if (boardCells == null){
+            board.setAt(initX, initY, PlayerCode.WHITE_PLAYER)
+            board.setAt(initX+ 1, initY, PlayerCode.BLACK_PLAYER)
+            board.setAt(initX, initY + 1, PlayerCode.BLACK_PLAYER)
+            board.setAt(initX + 1, initY + 1, PlayerCode.WHITE_PLAYER)
+        } else {
+            board.copyValues(boardCells)
+        }
     }
 
     fun getPossibleMovesCount(player: PlayerCode): Int {

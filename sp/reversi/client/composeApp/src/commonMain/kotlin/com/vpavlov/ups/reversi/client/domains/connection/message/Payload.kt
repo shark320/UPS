@@ -24,11 +24,11 @@ private var KEY_SEPARATOR = "="
 private var LIST_SEPARATOR = ","
 
 
-val LIST_PATTERN: Pattern = Pattern.compile("^\\[((\"[^\"]*(?:\",\"[^\"]*)*\")|\\d+(?:,\\d+)*)*]$")
+val LIST_PATTERN: Pattern = Pattern.compile("^\\[((\"[^\"]*(?:\",\"[^\"]*)*\")|-?\\d+(?:,-?\\d+)*)*]$")
 
 val EMPTY_LIST_PATTERN: Pattern = Pattern.compile("^\\[\\s*]$")
 
-val LIST_INT_PATTERN: Pattern = Pattern.compile("^\\[(\\d+(?:,\\d+)*)]$")
+val LIST_INT_PATTERN: Pattern = Pattern.compile("^\\[(-?\\d+(?:,-?\\d+)*)]$")
 
 val LIST_STRING_PATTERN: Pattern = Pattern.compile("^\\[(\"[^\"]*(?:\",\"[^\"]*)*\")]$")
 
@@ -93,6 +93,14 @@ data class Payload(val data: MutableMap<String, Any?> = mutableMapOf()) {
         val value = getValue(key) ?: return null
         if (value is Int){
             return value
+        }
+        return null
+    }
+
+    fun getListOfIntegers(key: String): List<Int>?{
+        val value = getValue(key)
+        if (value is List<*> && checkListTypes(value, Int::class)) {
+            return value as List<Int>
         }
         return null
     }

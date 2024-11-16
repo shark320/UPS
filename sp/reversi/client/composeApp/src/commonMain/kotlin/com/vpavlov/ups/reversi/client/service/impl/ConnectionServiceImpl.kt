@@ -74,8 +74,9 @@ open class ConnectionServiceImpl(
     }
 
     override suspend fun exchange(request: Message): Message {
-        mutex.withLock(this) {
-            try{
+
+        mutex.withLock {
+            try {
                 if (writeChannel == null || readChannel == null) {
                     throw ConnectionException("No available read or write channel fot the socket.")
                 }
@@ -85,12 +86,13 @@ open class ConnectionServiceImpl(
                 //TODO catch error
                 writeChannel!!.writeStringUtf8(constructed)
                 return readMessageUnsafe()
-            }catch (e: Throwable){
-                when (e){
-                    is IOException, is ClosedReceiveChannelException ->{
+            } catch (e: Throwable) {
+                when (e) {
+                    is IOException, is ClosedReceiveChannelException -> {
                         connectionStateService.connectionLost()
                         throw ConnectionException(e)
                     }
+
                     else -> {
                         LOGGER.error("", e)
                         throw FatalException(e)
@@ -100,6 +102,7 @@ open class ConnectionServiceImpl(
             }
 
         }
+
     }
 
     override fun handshakePerformed() {
@@ -140,7 +143,7 @@ open class ConnectionServiceImpl(
         return message
     }
 
-    override fun connectionLost(){
+    override fun connectionLost() {
         connectionStateService.connectionLost()
     }
 

@@ -12,7 +12,8 @@ data class MoveCoordinates(
 )
 
 class Game(
-    players: List<Player>
+    players: List<Player>,
+    boardCells: List<Int>?
 ) {
 
     private lateinit var whitePlayer: Player
@@ -24,7 +25,8 @@ class Game(
     private var currentPlayer: Player
 
     private val gameEngine = GameEngine(
-        gameConfig = gameConfig
+        gameConfig = gameConfig,
+        boardCells = boardCells
     )
 
     private var lastMove = MoveCoordinates(

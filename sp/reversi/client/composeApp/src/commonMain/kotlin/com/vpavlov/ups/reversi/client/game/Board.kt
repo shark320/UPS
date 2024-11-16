@@ -19,5 +19,12 @@ data class Board(
         cells[y * cols + x] = player
     }
 
+    fun copyValues(cells: List<Int>) {
+        cells.forEachIndexed { index, cell ->
+            this.cells[index] = PlayerCode.getFromCodeOrNull(cell)
+                ?: throw IllegalArgumentException("Could not parse player code from value '$cell'!")
+        }
+    }
+
 
 }

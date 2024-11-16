@@ -106,6 +106,7 @@ class GetGameStateProcessor(
         val currentPlayerUsername = response.payload.getStringValue("current_player")
         val lastMoveX = response.payload.getIntegerOrNull("x")
         val lastMoveY = response.payload.getIntegerOrNull("y")
+        val boardCells = response.payload.getListOfIntegers("board")
 
         if (!requireAllNotNull(
                 state,
@@ -114,7 +115,8 @@ class GetGameStateProcessor(
                 isOpponentConnected,
                 currentPlayerUsername,
                 lastMoveX,
-                lastMoveY
+                lastMoveY,
+                boardCells
             )
         ) {
             malformedResponse(
@@ -144,7 +146,8 @@ class GetGameStateProcessor(
             if (!gameStateService.isInitialized()) {
                 gameStateService.initState(
                     game = Game(
-                        players = players
+                        players = players,
+                        boardCells = boardCells
                     ),
                     players = players,
                     isOpponentConnected = isOpponentConnected!!,
