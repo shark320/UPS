@@ -411,7 +411,7 @@ std::shared_ptr<message> message_manager::process_start_the_game(const std::shar
     return std::make_shared<message>(response_header, response_payload);
 }
 
-std::shared_ptr<message> process_get_game_state_game_over(
+std::shared_ptr<message> message_manager::process_get_game_state_game_over(
         const std::shared_ptr<message> &request,
         const std::shared_ptr<client> &client,
         const std::shared_ptr<objects_vector> &lobby_players_payload,
@@ -421,7 +421,7 @@ std::shared_ptr<message> process_get_game_state_game_over(
     const auto response_payload = std::make_shared<payload>();
     response_header->set_status(status::RESET);
 
-    client->update_flow_state(flow_state::MENU);
+    this->_lobby_manager->exit_lobby(client);
 
     response_payload->set_value("state",
                                 std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
@@ -519,8 +519,6 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
     response_payload->set_value("player_codes", lobby_player_codes_payload);
     response_payload->set_value("is_opponent_connected", std::make_shared<boolean>(opponent_client->is_connected()));
     response_payload->set_value("current_player", std::make_shared<string>(current_player_client->get_username()));
-    response_payload->set_value("x", std::make_shared<integer>(last_move->x));
-    response_payload->set_value("y", std::make_shared<integer>(last_move->y));
     response_payload->set_value("board", board_cells);
     return std::make_shared<message>(response_header, response_payload);
 }

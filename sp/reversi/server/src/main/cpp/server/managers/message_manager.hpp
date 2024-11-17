@@ -108,6 +108,13 @@ private:
             const std::shared_ptr<std::vector<int>>& board_cells
     );
 
+    [[nodiscard]] std::shared_ptr<message> process_get_game_state_game_over(
+            const std::shared_ptr<message> &request,
+            const std::shared_ptr<client> &client,
+            const std::shared_ptr<objects_vector> &lobby_players_payload,
+            const std::shared_ptr<player> &winner
+    )
+
 
     [[nodiscard]] bool check_identifier(const std::shared_ptr<message> &request) const;
 
