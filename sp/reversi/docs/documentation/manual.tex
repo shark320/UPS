@@ -96,7 +96,7 @@
 
 \chapter{Task}
 
-Create a multiplayer game 'Reversi'. Solution should contain a server (written in C), which can process many players and at the same time can save game state. Client application (written in Kotlin), should support client login. After a login, client should continue with a last known state. \\
+Create a multiplayer game 'Reversi'. Solution should contain a server (written in C) with TCP scoket, which can process many players and at the same time can save game state. Client application (written in Kotlin), should support client login. After a login, client should continue with a last known state. \\
 
 Implemented solution should be stable and be able to handle unexpected behavior (wrong input, client/server lost connection).
 
@@ -162,23 +162,54 @@ The most challenging part will be to ensure multi-thread clients handing on serv
 \end{enumerate}
 
 \chapter{Custom data-interchange format}
+\label{chap:custom_data_format}
 
-For a data-interchange format a string with semicolon delimiters was chosen. Supported data types can be found in the Table \ref{tab:payload_data_types}
+For a data-interchange format for payload a string with semicolon delimiters was chosen. Supported data types can be found in the Table \ref{tab:payload_data_types}. A payload then can be composed into a string, which then can be transmitted via TCP socket. Also, the payload can be easily parsed from a string into objects format using regex expressions.
 
 \begin{table}[h]
 	\centering
 	\begin{tabular}{|l|l|l|}
 		\hline
-		\textbf{Data Type} & \textbf{Syntax} & \textbf{Example} \\ \hline
-		Integer & key=int_value 		& key=123 				\\ \hline
-		String 	& key="string_value"	& key="123"				\\ \hline
-		Boolean	& key=bool_value		& key=true				\\ \hline
+		\textbf{Data Type} & \textbf{Syntax} & \textbf{Example} 	\\ \hline
+		Integer & key=\{int\_value\} & key=123 \\ \hline
+		String 	& key="\{string\_value\}" & key="123" \\ \hline
+		Boolean	& key=\{bool\_value\} & key=true \\ \hline
+		Integer Array	& key= [\{int\_value0\},\{int\_value1\}] & key=[1,2,3,4] \\ \hline
+		String Array	& key= ["\{string\_value0\}","\{string\_value1\}"] & key=[“str1”, “str2”] \\ \hline
+		No Value	& key=null & key=null \\ \hline
 	\end{tabular}
 	\caption{Payload supported data types.}
 	\label{tab:payload_data_types}
 \end{table}
 
+\chapter{Communication Protocol}
 
+Communication protocol is inspired by \ac{REST} style and \ac{HTTP}. Any information transmitting is driven by a client (client sends a request to a server and waits for a response).
+
+Each message (request or response) contains a header, which has predefined constant length, and a payload, which contains useful information (may be empty for some cases).
+
+\section{Header}
+
+Message \textit{header} has length of 17 bytes and contains 5 sections described in Table \ref{tab:header_sections}. Header has always constant structure: \texttt{[Identificator,Length,Type,Subtype,Status]}.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|l|l|l|}
+		\hline
+		\textbf{Section} & \textbf{Length (bytes)} & \textbf{Data Type} & \textbf{Description}	\\ \hline
+		\textbf{Identificator} & 4 & String & Unique identificator for client-server connection \\ \hline
+		\textbf{Length} & 7 & Integer & Length of the message payload (max is 9999999) \\ \hline
+		\textbf{Type} & 1 & Integer & Message Type \\ \hline
+		\textbf{Subtype} & 2 & Integer & Message Subtype \\ \hline
+		\textbf{Status} & 3 & Integer & Response status \\ \hline
+	\end{tabular}
+	\caption{Header sections}
+	\label{tab:header_sections}
+\end{table}
+
+\section{Payload}
+
+Message \textit{payload} is optional. It uses \nameref{chap:custom_data_format} for data transmitting. \textit{Payload} can have variable length up to 9999999 bytes. The message \textit{payload} length is defined in the message \textit{header}, in case of empty payload zero value in the \textit{header} is set.
 % _____________________________________________________________________________
 %
 %
@@ -205,6 +236,7 @@ For a data-interchange format a string with semicolon delimiters was chosen. Sup
 \acro{CMP}[CMP]{Compose multi-platform}
 \acro{JSON}[JSON]{JavaScript Object Notation}
 \acro{XML}[XML]{Extensible Markup Language}
+\acro{HTTP}[HTTP]{Hypertext Transfer Protocol}
 \end{acronym}
 
 
