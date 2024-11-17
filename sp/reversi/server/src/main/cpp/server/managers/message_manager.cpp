@@ -556,7 +556,7 @@ std::shared_ptr<message> message_manager::process_game_move(const std::shared_pt
         case move_result::INVALID_COORDINATES:
             return process_game_move_invalid_move(request, client);
         case SUCCESS:
-            return process_game_move_success(request, game->get_current_player_client(), move_x->value(), move_y->value());
+            return process_game_move_success(request, game->get_current_player_client(), game);
         case INVALID_PLAYER:
             return process_game_move_invalid_player(request, client);
         case NO_PLAYER:
@@ -582,14 +582,17 @@ std::shared_ptr<message> message_manager::process_game_move_invalid_move(const s
 }
 
 std::shared_ptr<message> message_manager::process_game_move_success(const std::shared_ptr<message> &request,
-                                                                    const std::shared_ptr<client> &current_player, int move_x, int move_y) {
+                                                                    const std::shared_ptr<client> &current_player, const std::shared_ptr<reversi_game>& game) {
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
 
+    const auto board_cells = convert_board_representation(game->get_board_representation());
+
     response_header->set_status(status::OK);
-    response_payload->set_value("x", std::make_shared<integer>(move_x));
-    response_payload->set_value("y", std::make_shared<integer>(move_y));
+    response_payload->set_value("x", std::make_shared<integer>(game->get_last_move()->x));
+    response_payload->set_value("y", std::make_shared<integer>(game->get_last_move()->y));
     response_payload->set_value("current_player", std::make_shared<string>(current_player->get_username()));
+    response_payload->set_value("board", board_cells);
 
     return std::make_shared<message>(response_header, response_payload);
 }

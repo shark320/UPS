@@ -89,7 +89,7 @@ private:
 
     static std::shared_ptr<message> process_game_move_invalid_move(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
 
-    static std::shared_ptr<message> process_game_move_success(const std::shared_ptr<message> &request, const std::shared_ptr<client>& current_player, int move_x, int move_y);
+    static std::shared_ptr<message> process_game_move_success(const std::shared_ptr<message> &request, const std::shared_ptr<client>& current_player, const std::shared_ptr<reversi_game>& game);
 
     static std::shared_ptr<message> process_game_move_invalid_player(const std::shared_ptr<message> &request, const std::shared_ptr<client>& client);
 
@@ -104,7 +104,7 @@ private:
             const std::shared_ptr<client> &client
     );
 
-    [[nodiscard]] std::shared_ptr<objects_vector> convert_board_representation(
+    [[nodiscard]] static std::shared_ptr<objects_vector> convert_board_representation(
             const std::shared_ptr<std::vector<int>>& board_cells
     );
 
