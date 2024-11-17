@@ -102,7 +102,7 @@ private fun GameBoard(viewModel: GameScreenViewModel) {
         for (y in 0..<board.rows) {
             Row {
                 for (x in 0..<board.cols) {
-                    val cellCode = board.getAt(y, x)
+                    val cellCode = board.getAt(x, y)
                     val isPossibleMove = possibleMoves[y * board.cols + x]
                     GameBoardCell(
                         cellCode,

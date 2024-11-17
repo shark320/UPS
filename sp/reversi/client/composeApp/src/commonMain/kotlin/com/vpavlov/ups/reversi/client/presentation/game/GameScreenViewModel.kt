@@ -79,6 +79,7 @@ class GameScreenViewModel(
     private fun processPlayerMove(moveCoordinates: MoveCoordinates) {
         if (commonScreenState.value.username != state.value.currentPlayer?.username){
             LOGGER.debug("There is opponents player move.")
+            return
         }
         if (game == null){
             LOGGER.warn("The game is null!")

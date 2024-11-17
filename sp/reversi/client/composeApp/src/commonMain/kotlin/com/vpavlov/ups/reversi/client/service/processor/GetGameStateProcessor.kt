@@ -158,8 +158,10 @@ class GetGameStateProcessor(
                 gameStateService.updateState(
                     currentPlayer = currentPlayer,
                     lastMoveCoordinates = lastMoveCoordinates,
+
                     players = players,
-                    isOpponentConnected = isOpponentConnected!!
+                    isOpponentConnected = isOpponentConnected!!,
+                    boardCells = boardCells
                 )
             }
         } catch (e: Throwable) {

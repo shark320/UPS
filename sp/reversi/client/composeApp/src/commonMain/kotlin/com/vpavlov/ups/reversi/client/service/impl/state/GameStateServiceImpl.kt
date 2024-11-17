@@ -24,13 +24,18 @@ class GameStateServiceImpl: GameStateService {
         players: List<Player>,
         isOpponentConnected: Boolean,
         currentPlayer: Player,
-        lastMoveCoordinates: MoveCoordinates
+        lastMoveCoordinates: MoveCoordinates,
+        boardCells: List<Int>?
     ) {
         //TODO: check if player usernames are sync with the game
         val game = state.value!!.game
-        if (game.isCurrentPlayerChanged(currentPlayer.username)){
-            game.performMoveForCurrentPlayer(lastMoveCoordinates)
+//        if (game.isCurrentPlayerChanged(currentPlayer.username)){
+//            game.performMoveForCurrentPlayer(lastMoveCoordinates)
+//        }
+        if (boardCells != null){
+            game.updateBoard(boardCells)
         }
+
         _state.value = state.value!!.copy(
             players = players,
             isOpponentConnected = isOpponentConnected,

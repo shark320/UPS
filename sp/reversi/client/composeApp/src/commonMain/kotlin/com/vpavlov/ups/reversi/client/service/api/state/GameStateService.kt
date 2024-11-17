@@ -16,7 +16,8 @@ interface GameStateService {
         players: List<Player> = getStateFlow().value!!.players,
         isOpponentConnected: Boolean = getStateFlow().value!!.isOpponentConnected,
         currentPlayer: Player = getStateFlow().value!!.currentPlayer,
-        lastMoveCoordinates: MoveCoordinates = getStateFlow().value!!.lastMoveCoordinates
+        lastMoveCoordinates: MoveCoordinates = getStateFlow().value!!.lastMoveCoordinates,
+        boardCells: List<Int>? = null
     )
 
     fun initState(

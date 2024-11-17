@@ -89,9 +89,10 @@ class GameMoveProcessor(
         val x = response.payload.getIntegerOrNull("x")
         val y = response.payload.getIntegerOrNull("y")
         val currentPlayerUsername = response.payload.getStringValue("current_player")
+        val boardCells = response.payload.getListOfIntegers("board")
 
 
-        if (!requireAllNotNull(x, y, currentPlayerUsername)) {
+        if (!requireAllNotNull(x, y, currentPlayerUsername, boardCells)) {
             malformedResponse(
                 subtype = response.header.subtype,
             )
@@ -107,7 +108,8 @@ class GameMoveProcessor(
 
         gameStateService.updateState(
             lastMoveCoordinates = MoveCoordinates(x!!, y!!),
-            currentPlayer = currentPlayer
+            currentPlayer = currentPlayer,
+             boardCells = boardCells
         )
 
         return MoveProcessingResult.OK

@@ -34,7 +34,7 @@ val LIST_STRING_PATTERN: Pattern = Pattern.compile("^\\[(\"[^\"]*(?:\",\"[^\"]*)
 
 val STRING_PATTERN: Pattern = Pattern.compile("^\"([^\"]*)\"$")
 
-val INT_PATTERN: Pattern = Pattern.compile("^\\d+$")
+val INT_PATTERN: Pattern = Pattern.compile("^-?\\d+$")
 
 val BOOL_PATTERN: Pattern = Pattern.compile("^(true|false)$")
 
