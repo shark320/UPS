@@ -63,6 +63,8 @@ public:
 
     [[nodiscard]] std::shared_ptr<std::vector<int>> get_board_representation() const;
 
+    [[nodiscard]] std::shared_ptr<board> get_board() const;
+
     [[nodiscard]] bool is_game_over() const;
 };
 

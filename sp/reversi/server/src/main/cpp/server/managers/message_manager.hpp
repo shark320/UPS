@@ -113,7 +113,7 @@ private:
             const std::shared_ptr<client> &client,
             const std::shared_ptr<objects_vector> &lobby_players_payload,
             const std::shared_ptr<player> &winner
-    )
+    );
 
 
     [[nodiscard]] bool check_identifier(const std::shared_ptr<message> &request) const;

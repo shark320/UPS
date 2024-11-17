@@ -134,5 +134,10 @@ std::shared_ptr<std::vector<int>> reversi_game::get_board_representation() const
     return board_vector;
 }
 
+std::shared_ptr<board> reversi_game::get_board() const {
+    std::shared_lock<std::shared_mutex> shared_lock(*this->_shared_mutex);
+    return this->_engine->get_board();
+}
+
 
 

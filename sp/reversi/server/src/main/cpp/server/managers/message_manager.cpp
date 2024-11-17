@@ -462,7 +462,15 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
         return invalid_state(client->get_flow_state(), request, client, client_logger);
     }
 
-    if (lobby->is_terminated()) {
+    const auto game = lobby->get_game();
+
+    if (game == nullptr) {
+        return not_found(request, client, "The game for the client is not found.");
+    }
+
+    const auto game_winner = game->get_winner();
+
+    if (lobby->is_terminated() && game_winner == nullptr) {
         client_logger->warn(fmt::format("The game in the lobby {} is terminated", lobby->get_name()));
         return process_get_game_state_terminated(
                 request,
@@ -470,11 +478,6 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
         );
     }
 
-    const auto game = lobby->get_game();
-
-    if (game == nullptr) {
-        return not_found(request, client, "The game for the client is not found.");
-    }
 
     const auto opponent_client = game->get_opponent_client(client);
 
@@ -491,7 +494,7 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
         return not_found(request, client, "The current player for the game is not found.");
     }
 
-    const auto game_winner = game->get_winner();
+
 
 
     const auto lobby_players_payload = get_lobby_players(lobby);
@@ -512,6 +515,10 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
 
     const auto board_cells = convert_board_representation(game->get_board_representation());
 
+    const auto board_size = std::make_shared<objects_vector>();
+    board_size->push_back(std::make_shared<integer>(game->get_board()->get_cols()));
+    board_size->push_back(std::make_shared<integer>(game->get_board()->get_rows()));
+
     response_header->set_status(status::OK);
     response_payload->set_value("state",
                                 std::make_shared<string>(flow_state_mapper::get_string(client->get_flow_state())));
@@ -520,6 +527,7 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
     response_payload->set_value("is_opponent_connected", std::make_shared<boolean>(opponent_client->is_connected()));
     response_payload->set_value("current_player", std::make_shared<string>(current_player_client->get_username()));
     response_payload->set_value("board", board_cells);
+    response_payload->set_value("board_size", board_size);
     return std::make_shared<message>(response_header, response_payload);
 }
 
