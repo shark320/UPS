@@ -100,6 +100,84 @@ Create a multiplayer game 'Reversi'. Solution should contain a server (written i
 
 Implemented solution should be stable and be able to handle unexpected behavior (wrong input, client/server lost connection).
 
+\chapter{Game rules}
+
+Player color (white and black) is distributed randomly between two players. White player begins. Each turn, the player places one piece on the board with their color facing up.
+
+Game starts with placing 4 pieces (2 of each color) in the middle of the board, so called \textit{initial board state}, which can be seen in the Figure \ref{fig:Initial_game_state}.
+
+Each piece played must be laid adjacent to an opponent's piece so that the opponent's piece or a row of opponent's pieces is flanked by the new piece and another piece of the player's color. All of the opponent's pieces between these two pieces are 'captured' and turned over to match the player's color.
+
+It can happen that a piece is played so that pieces or rows of pieces in more than one direction are trapped between the new piece played and other pieces of the same color. In this case, all the pieces in all viable directions are turned over.
+
+The game is over when neither player has a legal move (i.e. a move that captures at least one opposing piece) or when the board is full.
+
+\begin{figure}[h!]
+	\centering
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/game-initial-state.png}
+    \end{minipage}
+	\caption{Possible game initial state.}
+	\label{fig:Initial_game_state}
+\end{figure}
+
+\chapter{Task Analysis}
+
+Due to a task restriction of using any existing data-interchange format (like \textit{\ac{JSON}} or \textit{\ac{XML}}), a proprietary one should be created to be used in communication between server and client. Flexible data-interchange format should improve extensibility of requests and responses.
+The most challenging part will be to ensure multi-thread clients handing on server side, and proper error/unexpected behavior handing on both sides.
+
+\section{Key Components for Implementation}
+
+\begin{enumerate}
+	\item \textbf{Game engine} - this component will be response for all game-related processes.
+		\begin{itemize}
+			\item \textbf{Game board}  - create a data structure to store current game state.
+			\item \textbf{Move validation} - check if player move is correct and can be processed.
+			\item \textbf{Move processing} - process a correct move within all possible directions.
+		\end{itemize}
+
+	\item \textbf{Communication protocol}
+		\begin{itemize}
+			\item \textbf{\ac{REST}} - \ac{REST}-like connection protocol will be used for communication between client\footnote{From now the \textit{client} will be used in the meaning of a client application, connected to the server.} and server. It means, that whole communication will work in the way one client request will have one server response. Server will not send any non-client requested data.
+			\item \textbf{Message header} - Each message should have a header of a predefined length. The header should contain an identifier (to be sure that the socket is used by correct client), and a payload length (can be zero in case of empty payload).
+			\item \textbf{Message payload} - The payload is not mandatory. Payload should have a predefined structure to ensure correct composition, parsing and to make it easily extendable with additional values.
+			\item \textbf{HTTP-like codes} - Each header should contain HTTP-like status code for easy flow and error handling.
+			\item \textbf{Operation codes} - Each header should contain so-called \textit{operation code} to differentiate message types handling.
+		\end{itemize}
+	\item \textbf{Server components}
+		\begin{itemize}
+			\item \textbf{Clients handling} - each client will have its own thread on server side, which will process every client request.
+			\item \textbf{Operations synchronization} - every data-related action should be synchronized to avoid concurrent resource access.
+			\item \textbf{Client timeouts} - if a client has not performed a request for the last \textbf{N} minutes (N is configurable), then the client should be disconnected and related socket should be closed.
+			\item \textbf{Invalid client operations} - server should correctly react on any client's invalid operation (malformed request, action which is not possible in the current client state).
+			\item \textbf{Client flow state} - each client can be in a one of the flow state: [\textit{LOGIN, MENU, LOBBY, GAME}] \footnote{Described more detailed in the [section ref]}. The client flow state should be synchronized between server and client, and the server value will be the only source of truth \footnote{It means, that a client-side flow state for some reason does not match server-side value, then it should be adjusted on the client side.}.
+		\end{itemize}
+	\item \textbf{Client components} - Entire client application will be implemented using \ac{KMP} for backend and frontend.
+		\begin{itemize}
+			\item \textbf{\ac{UI}} - Easy and user-friendly \ac{UI} will be implemented using \ac{CMP}.
+			\item \textbf{State synchronization} - Client state should be server-driven and synchronized to avoid inconsistent client state.
+			\item \textbf{Continue on client login} - After login, client should synchronize state with server and continue from a state, where client was.
+		\end{itemize}
+\end{enumerate}
+
+\chapter{Custom data-interchange format}
+
+For a data-interchange format a string with semicolon delimiters was chosen. Supported data types can be found in the Table \ref{tab:payload_data_types}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\textbf{Data Type} & \textbf{Syntax} & \textbf{Example} \\ \hline
+		Integer & key=int_value 		& key=123 				\\ \hline
+		String 	& key="string_value"	& key="123"				\\ \hline
+		Boolean	& key=bool_value		& key=true				\\ \hline
+	\end{tabular}
+	\caption{Payload supported data types.}
+	\label{tab:payload_data_types}
+\end{table}
+
 
 % _____________________________________________________________________________
 %
@@ -108,6 +186,26 @@ Implemented solution should be stable and be able to handle unexpected behavior 
 %
 % _____________________________________________________________________________
 %
+
+\appendix
+% _____________________________________________________________________________
+%
+%
+%		APPENDIX CHAPTER
+%
+% _____________________________________________________________________________
+%
+\chapter{List of Abbreviations}\label{app:abbreviations}
+
+% Определение аббревиатур
+\begin{acronym}
+\acro{UI}[UI]{User Interface}
+\acro{REST}[REST]{Representational State Transfer}
+\acro{KMP}[KMP]{Kotlin multi-platform}
+\acro{CMP}[CMP]{Compose multi-platform}
+\acro{JSON}[JSON]{JavaScript Object Notation}
+\acro{XML}[XML]{Extensible Markup Language}
+\end{acronym}
 
 
 % _____________________________________________________________________________
