@@ -7,5 +7,6 @@ data class GameScreenState(
     val board: Board? = null,
     val currentPlayer: Player? = null,
     val possibleMoves: List<Boolean>? = null,
-    val players: List<Player>? = null
+    val players: List<Player>? = null,
+    val isOpponentConnected: Boolean = true
 )

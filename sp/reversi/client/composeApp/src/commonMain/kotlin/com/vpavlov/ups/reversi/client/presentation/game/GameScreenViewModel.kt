@@ -65,14 +65,24 @@ class GameScreenViewModel(
             currentPlayer = gameState.currentPlayer,
             board = game!!.board,
             possibleMoves = possibleMoves.asList(),
-            players = gameState.players
+            players = gameState.players,
+            isOpponentConnected = gameState.isOpponentConnected
         )
     }
 
     override fun onEvent(event: GameScreenEvent) {
         when (event) {
-            GameScreenEvent.LeaveGame -> {}
+            GameScreenEvent.LeaveGame -> exitLobby()
             is GameScreenEvent.PlayerMove -> processPlayerMove(event.moveCoordinates)
+        }
+    }
+
+    private fun exitLobby() {
+        pingService.stop()
+        exitLobbyProcessor().onEach { done ->
+            if (done) {
+                pingService.start()
+            }
         }
     }
 
