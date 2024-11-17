@@ -24,7 +24,7 @@ class GameStateServiceImpl: GameStateService {
         players: List<Player>,
         isOpponentConnected: Boolean,
         currentPlayer: Player,
-        lastMoveCoordinates: MoveCoordinates,
+//        lastMoveCoordinates: MoveCoordinates,
         boardCells: List<Int>?
     ) {
         //TODO: check if player usernames are sync with the game
@@ -40,7 +40,7 @@ class GameStateServiceImpl: GameStateService {
             players = players,
             isOpponentConnected = isOpponentConnected,
             currentPlayer = currentPlayer,
-            lastMoveCoordinates = lastMoveCoordinates
+//            lastMoveCoordinates = lastMoveCoordinates
         )
     }
 
@@ -50,14 +50,14 @@ class GameStateServiceImpl: GameStateService {
         players: List<Player>,
         isOpponentConnected: Boolean,
         currentPlayer: Player,
-        lastMoveCoordinates: MoveCoordinates
+//        lastMoveCoordinates: MoveCoordinates
     ) {
         _state.value = GameState(
             game = game,
             players = players,
             isOpponentConnected = isOpponentConnected,
             currentPlayer = currentPlayer,
-            lastMoveCoordinates = lastMoveCoordinates
+//            lastMoveCoordinates = lastMoveCoordinates
         )
     }
 }

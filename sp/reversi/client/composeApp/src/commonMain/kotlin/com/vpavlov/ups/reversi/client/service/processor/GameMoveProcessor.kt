@@ -107,7 +107,7 @@ class GameMoveProcessor(
 
 
         gameStateService.updateState(
-            lastMoveCoordinates = MoveCoordinates(x!!, y!!),
+//            lastMoveCoordinates = MoveCoordinates(x!!, y!!),
             currentPlayer = currentPlayer,
              boardCells = boardCells
         )

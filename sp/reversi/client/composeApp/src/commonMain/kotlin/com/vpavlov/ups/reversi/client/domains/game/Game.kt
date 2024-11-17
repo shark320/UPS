@@ -13,14 +13,13 @@ data class MoveCoordinates(
 
 class Game(
     players: List<Player>,
-    boardCells: List<Int>?
+    boardCells: List<Int>?  ,
+    private val gameConfig: GameConfig = GameConfig()
 ) {
 
     private lateinit var whitePlayer: Player
 
     private lateinit var blackPlayer: Player
-
-    private val gameConfig = GameConfig()
 
     private var currentPlayer: Player
 

@@ -9,5 +9,5 @@ data class GameState(
     val players: List<Player>,
     val isOpponentConnected: Boolean,
     val currentPlayer: Player,
-    val lastMoveCoordinates: MoveCoordinates
+//    val lastMoveCoordinates: MoveCoordinates
 )

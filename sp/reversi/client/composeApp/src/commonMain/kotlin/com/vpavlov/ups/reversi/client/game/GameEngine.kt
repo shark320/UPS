@@ -5,13 +5,17 @@ import com.vpavlov.ups.reversi.client.domains.game.PlayerCode
 
 class GameEngine(
     gameConfig: GameConfig,
-    boardCells: List<Int>?
+    boardCells: List<Int>? = null
 ) {
 
     val board: Board = Board(rows = gameConfig.boardWidth, cols = gameConfig.boardHeight)
 
     init{
-        initializedBoard(DEFAULT_INIT_X, DEFAULT_INIT_Y, boardCells)
+        //initializedBoard(DEFAULT_INIT_X, DEFAULT_INIT_Y, boardCells)
+        if (boardCells != null){
+            board.copyValues(boardCells)
+        }
+
     }
 
     private fun initializedBoard(initX: Int, initY: Int, boardCells: List<Int>?){

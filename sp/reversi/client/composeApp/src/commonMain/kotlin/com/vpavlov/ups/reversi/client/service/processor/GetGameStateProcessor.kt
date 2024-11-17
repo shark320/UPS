@@ -10,6 +10,7 @@ import com.vpavlov.ups.reversi.client.domains.game.Game
 import com.vpavlov.ups.reversi.client.domains.game.MoveCoordinates
 import com.vpavlov.ups.reversi.client.domains.game.Player
 import com.vpavlov.ups.reversi.client.domains.game.PlayerCode
+import com.vpavlov.ups.reversi.client.game.GameConfig
 import com.vpavlov.ups.reversi.client.service.api.ConnectionService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
 import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
@@ -104,9 +105,10 @@ class GetGameStateProcessor(
         val playerCodes = response.payload.getListOfStrings("player_codes")
         val isOpponentConnected = response.payload.getBooleanOrNull("is_opponent_connected")
         val currentPlayerUsername = response.payload.getStringValue("current_player")
-        val lastMoveX = response.payload.getIntegerOrNull("x")
-        val lastMoveY = response.payload.getIntegerOrNull("y")
+//        val lastMoveX = response.payload.getIntegerOrNull("x")
+//        val lastMoveY = response.payload.getIntegerOrNull("y")
         val boardCells = response.payload.getListOfIntegers("board")
+        val boardSize = response.payload.getListOfIntegers("board_size")
 
         if (!requireAllNotNull(
                 state,
@@ -114,10 +116,12 @@ class GetGameStateProcessor(
                 playerCodes,
                 isOpponentConnected,
                 currentPlayerUsername,
-                lastMoveX,
-                lastMoveY,
-                boardCells
-            )
+//                lastMoveX,
+//                lastMoveY,
+                boardCells,
+                boardSize
+            ) ||
+            boardSize!!.size != 2
         ) {
             malformedResponse(
                 subtype = response.header.subtype,
@@ -138,26 +142,27 @@ class GetGameStateProcessor(
                 throw IllegalStateException("Could not find current player by name '$currentPlayerUsername'")
             }
 
-            val lastMoveCoordinates = MoveCoordinates(
-                x = lastMoveX!!,
-                y = lastMoveY!!
-            )
+//            val lastMoveCoordinates = MoveCoordinates(
+//                x = lastMoveX!!,
+//                y = lastMoveY!!
+//            )
 
             if (!gameStateService.isInitialized()) {
                 gameStateService.initState(
                     game = Game(
                         players = players,
-                        boardCells = boardCells
+                        boardCells = boardCells,
+                        gameConfig = GameConfig(boardWidth = boardSize[0], boardHeight = boardSize[1])
                     ),
                     players = players,
                     isOpponentConnected = isOpponentConnected!!,
                     currentPlayer = currentPlayer,
-                    lastMoveCoordinates = lastMoveCoordinates
+//                    lastMoveCoordinates = lastMoveCoordinates
                 )
             } else {
                 gameStateService.updateState(
                     currentPlayer = currentPlayer,
-                    lastMoveCoordinates = lastMoveCoordinates,
+//                    lastMoveCoordinates = lastMoveCoordinates,
 
                     players = players,
                     isOpponentConnected = isOpponentConnected!!,
