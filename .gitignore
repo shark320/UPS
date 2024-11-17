@@ -1,7 +1,7 @@
 ﻿sandboxes/sb3/cmake-build-debug
 sandboxes/sb3/cmake-build-debug-wsl
 sp/poker/server/cmake-build-debug
-docs
+/docs
 sp/poker/client/logs
 sp/poker/client/target
 sp/poker/server/.idea

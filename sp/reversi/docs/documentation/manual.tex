@@ -1,0 +1,394 @@
+% *****************************************************************************
+%
+%        FASThesis Manual
+%        (FASThesis Class File Documentation)
+%
+%        Faculty of Applied Sciences
+%        University of West Bohemia
+%
+%        Manual & Explanatory Document
+%        Copyright (c) 2022-2024 Kamil Ekštein, Dept. of Computer Science
+%        and Engineering, Faculty of Applied Sciences, UWB
+%
+%        Version:  0.93
+%		 Encoding: UTF-8
+%		 TeXer:    pdflatex
+%
+%        Last modification on 14-Feb-2024 by KE
+%
+% *****************************************************************************
+
+% _____________________________________________________________________________
+%
+%
+%	     DOCUMENT HEADER
+%
+% _____________________________________________________________________________
+\documentclass[english, bc, kiv, he, iso690alph, pdf, viewonly]{fasthesis}
+\usepackage{acronym}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{float}
+\title{Decomposition of a 3D object represented by a surface with multiple boundaries into a set of parallel
+fibres}
+%\worktypespec{Technická zpráva}% <== this command is only applicable if 'oth' switch is used above
+\author{Volodymyr}{Pavlov}{}{}
+\supervisor{Doc. Ing. Josef Kohout, Ph.D.}
+% \stagworkid{}% <== the unique identifier of the work in the STAG information system
+% \auxfrontmattercontent{% <== this command only makes sense if 'oth' switch is used above
+	% \section*{Test}%
+	% Tento text bude vložen do front matteru\dots
+% }
+\assignment{resources/A21B0235P_Zadani.pdf}
+\signdate{29}{10}{2024}{In Pilsen}% <== the longest local name in the Czech Rep.
+
+\addbibresource{manual.bib}% <== the file with the bibliographical database to be used throughout the text
+% _____________________________________________________________________________
+%
+%
+%	     DOCUMENT FRONTMATTER TEXTS
+%
+% _____________________________________________________________________________
+%
+\abstract{This bachelor's thesis focuses on the decomposition of muscles into mechanical fibers for modeling the function of real muscle fibers. It provides an analysis of existing methods Kukačka and Hoang and proposes a modification of Hoang's method, utilizing data on the shape of surface fibers to optimize the internal configuration of generated fibers. The thesis also includes the implementation of the modified algorithm and its testing on real-world data.}
+% *** English abstract ***
+{Tato bakalářská práce se zaměřuje na dekompozici svalů na mechanická vlákna pro modelování funkce reálných svalových vláken. Poskytuje analýzu stávajících metod Kukačka a Hoang a navrhuje úpravu Hoangovy metody, která využívá data o tvaru povrchových vláken k optimalizaci vnitřní konfigurace generovaných vláken. Práce rovněž zahrnuje implementaci upraveného algoritmu a jeho testování na reálných datech.}
+
+\keywords{health informatics, muscle fibers, even distribution, polygons, optimal assignment, Kukačka, Hoang, shortest path along the surface of a 3D}
+
+% _____________________________________________________________________________
+%
+%        ACKNOWLEDGEMENT
+% _____________________________________________________________________________
+%
+\acknowledgement{I would first like to express my sincere gratitude to my supervisor, Doc. Ing. Josef Kohout, Ph.D., for his invaluable advice, guidance, and support. I would also like to thank Ing. Kamil Ekštein, Ph.D., for creating the \LaTeX{}  template with stylistic and typographic formatting for writing this bachelor's thesis. My thanks extend to Ing. Martin and Ing. František Pártl for teaching me C++ and to Doc. Ing. Roman Mouček, Ph.D., for instructing me on effective project management.
+}
+% _____________________________________________________________________________
+%
+%
+%	     DOCUMENT TEXT BEGINNING
+%
+% _____________________________________________________________________________
+%
+\begin{document}
+\frontpages[tm] % or notm if the `trademark' declaration is not needed
+\tableofcontents
+% 
+% -x---- ADDITIONAL COLOUR DEFINITIONS ----------------------------------------
+%
+\makeatletter%
+\ifx\FASThesis@style\c@fullcolor%
+	\definecolor{fascolor}{cmyk}{0.06, 0.27, 1.0, 0.12}%
+	\definecolor{fascolordk}{cmyk}{0.05, 0.28, 1.0, 0.24}%
+\else%
+	\definecolor{fascolor}{cmyk}{0, 0, 0, 0.6}%
+	\definecolor{fascolordk}{cmyk}{0, 0, 0, 0.75}%
+\fi%
+\makeatother%
+\lstdefinestyle{plainsrc}{
+	backgroundcolor=\color{fascolor!10},
+	basicstyle=\ttzfamily\footnotesize,
+	numberstyle=\tiny\color{fascolordk},
+	numbers=left,
+	numbersep=5pt,
+	keepspaces=true,
+	tabsize=2,
+	extendedchars=true,
+	literate={á}{{\'a}}1 {č}{{\v{c}}}1 {ď}{{\v{d}}}1 {é}{{\'e}}1 {ě}{{\v{e}}}1 {è}{{\`{e}}}1 {í}{{\'{\i}}}1 {ľ}{{\v{l}}}1 {ň}{{\v{n}}}1 {ó}{{\'o}}1 {ŕ}{{\'r}}1 {ř}{{\v{r}}}1 {š}{{\v{s}}}1 {ť}{{\v{t}}}1 {ú}{{\'u}}1 {ů}{{\r{u}}}1 {ý}{{\'y}}1 {ž}{{\v{z}}}1
+	{Á}{{\'A}}1 {Č}{{\v{C}}}1 {Ď}{{\v{D}}}1 {É}{{\'E}}1 {Ě}{{\v{E}}}1 {È}{{\`{E}}}1 {Í}{{\'I}}1 {Ľ}{{\v{L}}}1 {Ň}{{\v{N}}}1 {Ó}{{\'O}}1 {Ŕ}{{\'R}}1 {Ř}{{\v{R}}}1 {Š}{{\v{S}}}1 {Ť}{{\v{T}}}1 {Ú}{{\'U}}1 {Ů}{{\r{U}}}1 {Ý}{{\'Y}}1 {Ž}{{\v{Z}}}1
+}
+% -x---- END OF ADDITIONAL COLOUR DEFINITIONS ---------------------------------
+% _____________________________________________________________________________
+%
+%
+%        CHAPTER
+%
+% _____________________________________________________________________________
+%
+\chapter{Introduction}
+
+The structural complexity of skeletal muscles, with their intricate organization of fibers and multiple boundaries, poses significant challenges for accurate modeling in medical applications. Muscle fibers are arranged in bundles with unique orientations and are connected by surrounding tissues that contribute to overall muscle function and flexibility. Understanding and effectively modeling these fiber arrangements is essential in medical fields, particularly for skeletal modulation—where modifying or enhancing the musculoskeletal structure is critical for therapies in rehabilitation, surgery, and prosthetic design.
+\\
+
+This thesis builds on an existing computational method named Hoang, for decomposing 3D objects with complex boundary conditions into sets of parallel fibers. However, as it stands, the method requires further refinement to address the unique challenges posed by muscle fiber decomposition, where high accuracy in boundary representation and fiber orientation is essential for clinical application. 
+\\
+
+This research proposes a new approach to decomposition problem that supports multiple boundaries and tries to minimize entanglement of inner fibres, but can be used in connection with any already existing decomposition method. In this thesis, it will be used with Hoang method, which is very promising to become the superior method (in terms of the quality of the created fibres).
+
+\chapter{Muscle Wrapping 2.0}
+
+\textbf{Muscle Wrapping 2.0} is a collaborative project between the Department of Computer Science and Engineering at the University of West Bohemia and the Department of Civil and Environmental Engineering at Imperial College London. It aims to develop tools compatible with \textbf{OpenSim}\footnote{\textbf{OpenSim} is an open-source software platform used for biomechanical modeling, simulation, and analysis of musculoskeletal systems. Developed initially at Stanford University, it enables researchers, clinicians, and educators to create and test models of the human body, simulate movements, and analyze muscle forces, joint mechanics, and motor control. (more on \cite{OS24})} for biomechanical simulation, focusing on the realistic wrapping of muscles around bones and their decomposition into mechanical "lines of action" to support detailed biomechanical analysis.
+
+\section{Purpose and Applications}
+\textbf{Muscle Wrapping 2.0} is used to simulate how muscles\footnote{Means muscle-tendon unit.} wrap around bones in movement and decompose these muscles into simplified, biomechanical lines of action, which can then be analyzed to predict forces and moments. These models are particularly useful for personalized biomechanical studies, clinical simulations, and advanced educational tools.
+
+\newpage
+\section{Structure and Main Components}
+The project is structured into two primary applications:
+\begin{itemize}
+	\item \textbf{OsimMuscleGeneratorTool}: A plugin for \textbf{OpenSim 4.0}, it generates user-defined numbers of muscle fibers as straight-line segments. It uses a musculoskeletal model and motion data to output fiber lengths and moment arms, dynamically adjusting to joint motions. Optionally, it can represent fibers as actuators in OpenSim models.
+	\item \textbf{AttachmentEstimation}: A tool that estimates muscle attachment points on bones, crucial for setting up accurate biomechanical models.
+\end{itemize}
+
+These applications, along with test examples and cadaver data, provide a comprehensive framework for muscle modeling, facilitating more realistic and computationally efficient musculoskeletal simulations.
+
+
+\chapter{Muscle Decomposition}
+
+Muscle decomposition is a fundamental process in computer graphics and biomedical simulation, critical for modeling the complex structures and movements within the human musculoskeletal system. Understanding muscle decomposition allows for the creation of realistic simulations of muscle structure and function, which are essential for applications ranging from digital anatomy atlases to clinical biomechanics\\
+
+In recent years, advances in real-time modeling techniques, as highlighted in \cite{KK14}, have enabled more sophisticated and efficient representations of muscle fibers within muscle volumes. Traditional models often represent muscles using simplified geometric shapes or \textit{lines of action} (can be seen in Figure \ref{fig:Kukacka_lines_of_action}) that only approximate muscle behavior and structure. However, these simplifications often result in limitations, particularly in accurately predicting forces or visualizing complex anatomical structures for educational purposes. \\
+
+What we are trying to do, is to create a representation of the muscle \footnote{In the article, \textsl{muscle} means a combination of muscle belly and tendons, connected to it (so called muscle-tendon unit).} that shows a physiological correctness, in terms of forces impacting on bones (during movement). It does not need to be anatomically correct, and mostly it is not. Theoretically, and that is what \cite{KK14} is suggesting, with a proper decomposition scheme, you may decompose the volume of the muscle into anatomically correct fibres \footnote{From now, \textsl{fibres} or \textsl{fiber} will be used in therms of physiologically correct force-transmitting element, if else is not specified.}, but it would be very difficult. \\
+
+\newpage
+
+This chapter will delve into the principles of muscle decomposition, exploring both methods described in \cite{KK14} and \cite{HOA23}.
+
+\begin{figure}[h!]
+	\centering
+	\begin{minipage}[b]{0.8\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Kukacka_lines_of_action.png}
+    \end{minipage}
+	\caption{An example of the musculoskeletal model representing muscles by a set of lines of action (yellow).\cite{KK14}.}
+	\label{fig:Kukacka_lines_of_action}
+\end{figure}
+
+\newpage
+
+\section{Kukačka Method}
+
+Kukačka method for muscle decomposition, as described in \cite{KK14}, introduces a real-time approach to model muscle fibers within a muscle volume using computationally efficient and anatomically plausible techniques. Their approach aims to improve the realism of muscle models for applications like virtual physiological simulations, by accurately simulating the internal structure of muscles \footnote{Muscles with parallel or fusiform anatomical fiber templates.}.\\
+
+It is a computational approach that generates muscle fiber models based on predefined templates (see Figure \ref{fig:Kukacka_templates_example}) and a harmonic scalar field, which is computed from a muscle surface mesh with predefined attachment areas (see figure N). This approach allows the generation of fibers that match the shape, orientation, and distribution of real muscle fibers within the muscle volume. The method is particularly notable for enabling real-time performance, making it suitable for interactive applications. \\
+
+\begin{figure}[h!]
+	\centering
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Kukacka_templates_example_a.png}
+		\textbf{(a)} \textit{parallel}
+    \end{minipage}
+	\hspace{0.02\textwidth}
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Kukacka_templates_example_b.png}
+		\textbf{(b)} \textit{pennate}
+    \end{minipage}
+
+	\caption{An example of template \textit{parallel} \textbf{(a)} and \textit{pennate} \textbf{(b)}. The origin area is blue, the insertion area is red. Figure from \cite{KK14}.}
+	\label{fig:Kukacka_templates_example}
+\end{figure}
+
+This method is divided into two main processes (\textbf{\nameref{subsec:kk_harmonic_scalar_field}} and 
+\textbf{\nameref{subsec:kk_fiber_templates}}) that are ultimately merged to generate realistic muscle fibers within a muscle volume.
+
+\subsection{Harmonic Scalar Field Processing}
+\label{subsec:kk_harmonic_scalar_field}
+
+Harmonic Scalar Field Processing is a crucial part of his method for decomposing muscles into fibers, focusing on preparing the muscle surface mesh by defining attachment areas and segmenting the muscle into slices. \\
+
+The first step is to define the muscle's origin and insertion points—where the muscle attaches to bones. These attachment areas are defined by specific landmarks or points on the muscle surface. \\
+
+These attachment areas (origin and insertion) are projected onto the muscle surface mesh. This projection ensures that the origin and insertion points accurately align with the muscle's overall shape.\\
+
+After projecting the attachment areas, the mesh within these regions is removed, resulting in a surface mesh with two boundary loops: one for the origin and one for the insertion. This cut-out step is necessary to create a clear distinction between the start and end points for the muscle fibers. \\
+
+A harmonic scalar field is calculated over the muscle’s surface mesh. This field establishes a gradient or “flow” from the origin to the insertion, allowing for the gradual interpolation between these two areas (see Figure \ref{fig:Kukacka_scalar_field}).
+\\
+To define the scalar field, specific boundary conditions are set:
+\begin{itemize}
+	\item The scalar value at the origin boundary is assigned a minimum value. 
+	\item The scalar value at the insertion boundary is assigned a maximum value. 
+\end{itemize}
+
+\begin{figure}[h!]
+	\centering
+	\begin{minipage}[b]{0.8\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Kukacka_scalar_field.png}
+    \end{minipage}
+	\caption{Visualization of the scalar field computed on the surface of gluteus medius. Figure from \cite{KK14}.}
+	\label{fig:Kukacka_scalar_field}
+\end{figure}
+
+Based on the computed scalar field, the muscle is divided into a specified number of cross-sectional slices or isolines. The number of slices is user-defined, allowing control over the level of detail.
+
+These isolines serve as the base locations for where muscle fibers will eventually be placed. They give a structured way to map the internal muscle fibers from origin to insertion in a way that aligns with the muscle’s shape.
+
+\subsection{Fiber Templates Applying}
+\label{subsec:kk_fiber_templates}
+
+Fiber Templates Applying focuses on defining the internal fiber structure of the muscle by using predefined templates that represent different types of muscle architectures. These templates are morphed and aligned with the muscle mesh, allowing muscle fibers to be distributed realistically within the muscle volume. \\
+
+
+Each template defines a unit space (a cube or similar volume) with two attachment areas (origin and insertion) connected by an arbitrary number of fibers. These fibers are represented by composite Bézier curves that vary in degree depending on the muscle architecture (typically between degrees 2 to 4). \\
+
+The selected template is sliced into \textbf{N} parallel planes, where \textbf{N} is the same number of slices used in \textbf{\nameref{subsec:kk_harmonic_scalar_field}} to divide the muscle surface.
+\\
+
+These slices within the template provide a grid for positioning the fibers across the muscle volume. Each slice represents a cross-section of the template, which will be mapped onto the muscle mesh in the next steps. 
+
+\subsection{Generating Final Muscle Fibers}
+
+Mean Valuable Control (MVC) coordinates are used to optimize and smooth the alignment between the template slices and the muscle slices (For more details, see \cite{HF06}). MVC coordinates facilitate the deformation of the template so that it molds precisely to the contours of the muscle volume.  \\
+
+Once mapped to the muscle slices, fibers may need minor adjustments to reach the muscle boundaries precisely. Each fiber end is extended, if necessary, so that it touches the surface at both the origin and insertion. \\
+
+Finally, the fibers are smoothed to eliminate any abrupt angles or noise resulting from the interpolation process. This step ensures that fibers appear realistic and follow the natural curvature of the muscle. \\
+
+For more detailed process, see \cite{KK14}.
+
+\newpage
+\section{Hoang Method}
+
+The \textbf{Hoang muscle decomposition method} is a novel approach, outlined in the thesis by Duc Long Hoang \cite{HOA23}, aims to decompose skeletal muscles into internal fibers that can approximate real muscle structures and tendon behavior for biomechanical simulations. \\
+
+The \textbf{Hoang method} uses a 2D muscle mesh input and builds upon the \textbf{Kukačka} approach by computing a harmonic scalar field across the muscle surface and slicing it into segments. Unlike \textbf{Kukačka's}  reliance on fiber templates, the Hoang method adopts point distribution techniques inspired by \textbf{VIPER} \cite{Ang+19}, particularly leveraging \textsl{centroidal Voronoi diagrams} (CVD) to achieve an even distribution of points within the muscle slices. These points act as representative markers for generating muscle fibers. \\
+Advanced description is in \cite{HOA23}.
+
+\subsection{Preprocessing}
+
+The process begins with a 2D muscle surface mesh, which includes defined attachment areas corresponding to the muscle's origin and insertion points. These points mark where the muscle connects to bones. \\
+
+A harmonic scalar field is computed over the muscle surface mesh. This field creates a gradient from the origin to the insertion, guiding the segmentation of the muscle into cross-sections. The harmonic field ensures smooth transitions and a logical flow across the muscle surface, which is critical for accurate fiber path modeling. \\
+
+The muscle is sliced into a series of iso-lines (cross-sectional contours) based on the computed harmonic scalar field. These slices represent equidistant sections of the muscle from the origin to the insertion. The number of slices is user-defined and determines the level of detail in the resulting fiber model. \\
+
+One of the main innovations of the Hoang method is the use of \textsl{centroidal Voronoi diagrams} to evenly distribute points within each muscle slice. This technique ensures that the distribution is uniform and covers the entire muscle cross-section without clustering or gaps. Unlike the \textbf{Kukačka} method, which uses fiber templates with predefined fiber paths, this method adapts dynamically to the shape of each muscle slice. \\
+
+The method accounts for non-planar, non-convex muscle slices. It finds \textit{best-fitting plane} (BFP) and projects every point of the polygon onto the plane to transform them into a workable planar polygon for point distribution (can be seen in Figure \ref{fig:Hoang_sclice_points_generation_a_b}). Then, \textbf{Hoang method} mappes them back to their original 3D form using an inverse transformation. Inverse transformation of the generated point is visualized in Figure \ref{fig:Hoang_sclice_points_generation_c_d}. \\ 
+
+\begin{figure}[h!]
+	\centering
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Hoang_sclice_points_generation_a.png}
+		\textbf{(a)} \textit{Muscle slice}
+    \end{minipage}
+	\hspace{0.02\textwidth}
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Hoang_sclice_points_generation_b.png}
+		\textbf{(b)} \textit{Mapped 2D polygon}
+    \end{minipage}
+
+	\caption{Transformation of the initial muscle slice contour \textbf{(a)} into 2D polygon \textbf{(b)}. Figure from \cite{HOA23}.}
+	\label{fig:Hoang_sclice_points_generation_a_b}
+\end{figure}
+
+\begin{figure}[h!]
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Hoang_sclice_points_generation_c.png}
+		\textbf{(a)} \textit{Generated points}
+    \end{minipage}
+	\hspace{0.02\textwidth}
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Hoang_sclice_points_generation_d.png}
+		\textbf{(b)} \textit{Mapped generated points}
+    \end{minipage}
+
+	\caption{Points generation inside a planar polygon \textbf{(a)}. Mapping planar polygon with generated points back onto initial contour \textbf{(b)}. Tese two polygons do not necessarily correlate to each other. Figure from \cite{HOA23}.}
+
+	\label{fig:Hoang_sclice_points_generation_c_d}
+\end{figure}
+
+\subsection{Fibers Construction}
+
+To construct continuous fibers across slices, the Hoang method applies the \textsl{Kuhn-Munkres algorithm} \cite{Kuh55}. This optimization algorithm connects points from one slice to the next in a way that minimizes the total length of the fibers and preserves continuity. The cost function for matching includes parameters such as Euclidean distance and cosine distance to maintain a balance between the shortest path and smooth transitions in fiber direction. The algorithm uses a linear combination of normalized Euclidean and cosine distances to optimize the matching process.  \\
+
+Once the points have been optimally matched across all slices, the method generates muscle fibers by connecting these points, forming continuous, realistic paths that represent muscle fiber trajectories.
+Visualization of the fibers construction is in Figure \ref{fig:Hoang_fiber_connection}
+
+\subsection{Postprocessing}
+
+A \textit{smoothing} step is applied to the fibers to eliminate any abrupt angular changes or inconsistencies, resulting in smoother and more anatomically faithful representations. This step is essential for achieving a visually and functionally coherent model that can be used in simulations. \\ 
+The result of the \textit{smoothing} can be seen in the Figure \ref{fig:Hoang_fiber_connection}
+
+\newpage
+\begin{figure}[h!]
+	\centering
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Hoang_fiber_connection_a.png}
+		\textbf{(a)} \textit{Two slices}
+    \end{minipage}
+	\hspace{0.02\textwidth}
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Hoang_fiber_connection_b.png}
+		\textbf{(b)} \textit{Three slices}
+    \end{minipage}
+	\\
+	\vspace{0.5cm} % Vertical space between rows
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Hoang_fiber_connection_c.png}
+		\textbf{(c)} \textit{Four slices}
+    \end{minipage}
+	\hspace{0.02\textwidth}
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Hoang_fiber_connection_d.png}
+		\textbf{(d)} \textit{Five slices}
+    \end{minipage}
+	\\
+	\vspace{0.5cm} % Vertical space between rows
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Hoang_fiber_connection_e.png}
+		\textbf{(e)} \textit{Six slices}
+    \end{minipage}
+	\hspace{0.02\textwidth}
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Hoang_fiber_connection_f.png}
+		\textbf{(f)} \textit{View from different angle}
+    \end{minipage}
+	\\
+	\vspace{0.5cm} % Vertical space between rows
+	\begin{minipage}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/Hoang_fiber_connection_g.png}
+    \end{minipage}
+	\\
+	\textbf{(g)} \textit{Result with line smoothing turned on}
+	\caption{The process of connecting fiber points of 7 fibers across 6 slices. Although fibers are crossing each other starting from subfigure \textbf{(b)}, it is due to the 2D view and if seen from different angles (subfigure \textbf{(f)}) the fibers behave correctly. From subfigure \textbf{(g)} we can observe the impact of smoothing on the fibers. Figure from \cite{HOA23}}
+	\label{fig:Hoang_fiber_connection}
+\end{figure}
+
+% _____________________________________________________________________________
+%
+%
+%	     DOCUMENT FRONTMATTER TEXTS
+%
+% _____________________________________________________________________________
+%
+
+
+% _____________________________________________________________________________
+%
+%
+%        BACK MATTER (BIBLIOGRAPHY, LISTS, ...)
+%
+% _____________________________________________________________________________
+%
+\backmatter
+\printbibliography
+\listoffigures
+\listoftables
+\listoflistings
+% _____________________________________________________________________________
+%
+%		BACK COVER
+% _____________________________________________________________________________
+%
+%\setbackpagepic{img/fav}
+%\setqrcodebaseurl{https://mycloud.org/show=pdf&docid=}
+%\setbackpageqrcode{54321}
+\setbackpageqrcode
+\backpage
+\end{document}
