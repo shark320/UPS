@@ -210,6 +210,41 @@ Message \textit{header} has length of 17 bytes and contains 5 sections described
 \section{Payload}
 
 Message \textit{payload} is optional. It uses \nameref{chap:custom_data_format} for data transmitting. \textit{Payload} can have variable length up to 9999999 bytes. The message \textit{payload} length is defined in the message \textit{header}, in case of empty payload zero value in the \textit{header} is set.
+
+\chapter{Client Flow}
+
+Each client has its own flow state, which is synchronized between server and client. It's used to show correct \ac{UI} screen to a player, to perform correct ping/get-state requests from a client, restrict or permit some user actions and to make a client able to continue from a state it was after reconnection (in case if the client is stored in server's cache). A client can be in four states: \textbf{No State}, \textbf{Menu}, \textbf{Login} and \textbf{Game}. Detailed description of client's states can be found in Table \ref{tab:client_flow_states}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{lp{325pt}}
+	
+		\textbf{No State} & If a client has no state, it means that login was not performed and a client state could not be fetched from a server. In this case a user is asked to login. \newline \\
+
+		\textbf{Menu} & This state means, that the client is logged in, but has no lobby or game assigned. In this case open lobbies list is displayed to a user. Player can create a new lobby, or connect to am existing one. \newline \\
+
+		\textbf{Lobby} & In this state client is assigned to a lobby, but game was not started. Lobby screen is displayed to a user. Player can leave the lobby, or start the game in case if he/she is a lobby host and there are enough players. \newline \\
+
+		\textbf{Game} & In this state game is already started and client is participating it. User is allowed to make game moves or leave the game. If one of the game players leaves, the game is terminated for all players.
+
+	\end{tabular}
+	\caption{Client flow states.}
+	\label{tab:client_flow_states}
+\end{table}
+
+\newpage
+
+Some player actions (e.g. creating a new lobby or leaving current lobby) can affect current client flow state, which will lead to \ac{UI} changes. If the client state is changed on server side (e.g. game is terminated), then client-side flow state value is adjusted to ensure consistency with a server. Entire client flow overview can be seen in Figure \ref{fig:client_flow_overview}.
+
+\begin{figure}[h!]
+	\centering
+	\begin{minipage}[b]{1.0\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/client-flow.png}
+    \end{minipage}
+	\caption{Client flow overview.}
+	\label{fig:client_flow_overview}
+\end{figure}
 % _____________________________________________________________________________
 %
 %
