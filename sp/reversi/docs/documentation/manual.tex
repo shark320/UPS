@@ -335,6 +335,54 @@ A simple ping request-response which is used to check if the server is online. C
 	\label{tab:ping_server_response}
 \end{table}
 
+\newpage
+
+\subsection{Handshake}
+It is used to verify new client connection. If handshake was not performed, any other requests from client are aborted. Client request and server response structures can be seen in Table \ref{tab:handshake_client_request} and Table \ref{tab:handshake_server_response}.
+
+\begin{table}[h]
+	\centering
+	\begin{minipage}[b]{1.0\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & POST \\ \hline
+			\textbf{Subtype} & 12 & HANDSHAKE \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} \\
+	\vspace{0.5cm}
+	\begin{minipage}[b]{1.0\textwidth}
+		\centering
+		\textit{Request payload is empty.}
+	\end{minipage}	
+	\caption{Handshake client request}
+	\label{tab:handshake_client_request}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{minipage}[b]{1.0\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & POST \\ \hline
+			\textbf{Subtype} & 12 & HANDSHAKE \\ \hline
+			\textbf{Status} & 200 & OK \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} \\
+	\vspace{0.5cm}
+	\begin{minipage}[b]{1.0\textwidth}
+		\centering
+		\textit{Response payload is empty.}
+	\end{minipage}	
+	\caption{Handshake sever response}
+	\label{tab:handshake_server_response}
+\end{table}
+
 % _____________________________________________________________________________
 %
 %
