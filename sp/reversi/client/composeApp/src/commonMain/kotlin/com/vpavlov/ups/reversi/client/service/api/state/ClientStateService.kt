@@ -13,7 +13,10 @@ interface ClientStateService {
 
     fun clearClientState()
 
+    fun clearLogin()
+
     fun updateState(
+        isLoggedIn: Boolean = getStateFlow().value!!.isLoggedIn,
         username: String = getStateFlow().value!!.username,
         flowState: ClientFlowState = getStateFlow().value!!.flowState,
         lobbiesList: List<LobbyInfo> = getStateFlow().value!!.lobbiesList,

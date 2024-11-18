@@ -22,14 +22,25 @@ open class ClientStateServiceImpl: ClientStateService {
         _state.value = null
     }
 
+    override fun clearLogin() {
+        if (_state.value == null){
+            return
+        }
+        updateState(
+            isLoggedIn = false
+        )
+    }
+
     @Synchronized
     override fun updateState(
+        isLoggedIn: Boolean,
         username: String,
         flowState: ClientFlowState,
         lobbiesList: List<LobbyInfo>,
         currentLobby: Lobby?,
     ) {
         _state.value = state.value!!.copy(
+            isLoggedIn = isLoggedIn,
             username = username,
             flowState = flowState,
             lobbiesList = lobbiesList,
@@ -41,6 +52,7 @@ open class ClientStateServiceImpl: ClientStateService {
     @Synchronized
     override fun initState(username: String, flowState: ClientFlowState) {
         _state.value = ClientState(
+            isLoggedIn = true,
             username = username,
             flowState = flowState
         )

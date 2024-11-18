@@ -32,7 +32,9 @@ class MenuScreenViewModel(
         pingService.start()
 
         clientStateService.getStateFlow().onEach { clientState ->
-            clientStateUpdated(clientState!!)
+            if (clientState != null){
+                clientStateUpdated(clientState)
+            }
         }.launchIn(viewModelScope)
     }
 

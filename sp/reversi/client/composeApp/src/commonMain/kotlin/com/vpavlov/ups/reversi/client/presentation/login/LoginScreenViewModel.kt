@@ -25,26 +25,31 @@ class LoginScreenViewModel(
     clientStateService = clientStateService
 ) {
 
+    private var initializedClientName: String? = null
+
     init {
-        clientStateService.clearClientState()
         clientStateService.getStateFlow().onEach { clientState ->
             clientState?.let {
+                initializedClientName = it.username
                 _state.value = state.value.copy(
-                    loggedIn = true,
-                    waitingResponse = false
+                    loggedIn = it.isLoggedIn
                 )
             }
         }.launchIn(viewModelScope)
+        if (initializedClientName != null && !state.value.loggedIn){
+            processLogin(initializedClientName)
+        }
     }
 
     override fun onEvent(event: LoginScreenEvent) {
         when (event) {
             is LoginScreenEvent.UsernameEntered -> usernameEntered(event.username)
-            LoginScreenEvent.ProcessLoginScreen -> processLogin()
+            LoginScreenEvent.ProcessLoginScreen -> processLogin(state.value.username)
         }
     }
 
     private fun usernameEntered(username: String) {
+
         _state.value = state.value.copy(
             username = username,
             usernameError = username.isNotEmpty() && !isValidUsername(username),
@@ -52,9 +57,13 @@ class LoginScreenViewModel(
         )
     }
 
-    private fun processLogin() {
+    private fun processLogin(username: String?) {
+        if (username == null){
+            LOGGER.warn("Could not login, username is null.")
+            return
+        }
         pingService.stop()
-        loginProcessor(state.value.username).onEach { isComplete ->
+        loginProcessor(username).onEach { isComplete ->
             _state.value = state.value.copy(waitingResponse = !isComplete)
         }.launchIn(viewModelScope)
     }

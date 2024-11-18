@@ -35,12 +35,14 @@ class PingServiceImpl(
 
     private var isRunning = AtomicBoolean(false)
     private var clientFlowState: ClientFlowState? = null
+    private var isLoggedIn: Boolean = false
     private var job: Job? = null
 
 
     init {
         clientStateService.getStateFlow().onEach { clientState ->
             clientFlowState = clientState?.flowState
+            isLoggedIn = clientState?.isLoggedIn ?: false
             LOGGER.debug("Client state updated: $clientFlowState")
         }.launchIn(CoroutineScope(Dispatchers.Default))
 
@@ -75,7 +77,7 @@ class PingServiceImpl(
             return
         }
         val clientFlowStateTmp = clientFlowState
-        if (clientFlowStateTmp == null) {
+        if (clientFlowStateTmp == null || !isLoggedIn) {
             pingProcessor()
         } else {
             when (clientFlowStateTmp) {

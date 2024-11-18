@@ -4,6 +4,7 @@ import com.vpavlov.ups.reversi.client.domains.game.Game
 import com.vpavlov.ups.reversi.client.domains.game.Lobby
 
 data class ClientState(
+    val isLoggedIn: Boolean = false,
     val username: String,
     val flowState: ClientFlowState,
     val lobbiesList: List<LobbyInfo> = emptyList(),

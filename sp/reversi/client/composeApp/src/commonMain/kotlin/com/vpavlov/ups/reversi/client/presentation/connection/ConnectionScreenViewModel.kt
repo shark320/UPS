@@ -27,6 +27,7 @@ class ConnectionScreenViewModel(
 ) {
 
     init {
+        clientStateService.clearLogin()
         connectionService.connect()
 
         connectionStateService.isAliveFLow().onEach { isAlive ->

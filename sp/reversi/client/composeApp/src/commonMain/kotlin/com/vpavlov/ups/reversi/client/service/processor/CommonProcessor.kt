@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.loggerOf
+import java.util.concurrent.Semaphore
+import java.util.concurrent.atomic.AtomicBoolean
 
 open class CommonProcessor(
     protected val userMessageStateService: UserMessageStateService,
@@ -24,10 +26,17 @@ open class CommonProcessor(
 
     protected val LOGGER = loggerOf(this::class.java)
 
+    protected val semaphore = Semaphore(1)
+
+    protected var isProcessing = AtomicBoolean(false)
+
 
     protected inline fun process(crossinline exchanger: suspend () -> Unit): StateFlow<Boolean> {
         val isComplete = MutableStateFlow(false)
         CoroutineScope(Dispatchers.Default).launch {
+            if (!semaphore.tryAcquire()) {
+                return@launch
+            }
             try {
                 exchanger()
             } catch (e: ConnectionException) {
@@ -44,12 +53,16 @@ open class CommonProcessor(
                 )
                 LOGGER.error("Error during message processing.", e)
             }
+            semaphore.release()
             isComplete.value = true
         }
         return isComplete
     }
 
-    protected inline fun <T> processWithResult(errorResult: T,crossinline exchanger: suspend () -> T): StateFlow<T?> {
+    protected inline fun <T> processWithResult(
+        errorResult: T,
+        crossinline exchanger: suspend () -> T
+    ): StateFlow<T?> {
         val result = MutableStateFlow<T?>(null)
         CoroutineScope(Dispatchers.Default).launch {
             var isError = false
@@ -72,7 +85,7 @@ open class CommonProcessor(
                 LOGGER.error("Error during message processing.", e)
                 isError = true
             }
-            if (isError){
+            if (isError) {
                 result.value = errorResult
             }
         }
@@ -86,7 +99,15 @@ open class CommonProcessor(
 
     protected fun unexpectedErrorStatus(response: Message) {
         LOGGER.error("Unexpected response status: ${response.header.status}")
-        userMessageStateService.showError(userMessage = UserMessage(message = "Unexpected error status. Message: ${response.payload.getStringValue("msg")}"))
+        userMessageStateService.showError(
+            userMessage = UserMessage(
+                message = "Unexpected error status. Message: ${
+                    response.payload.getStringValue(
+                        "msg"
+                    )
+                }"
+            )
+        )
     }
 
     protected fun unexpectedStatus(response: Message) {
