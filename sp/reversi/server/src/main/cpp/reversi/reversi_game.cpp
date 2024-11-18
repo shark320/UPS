@@ -2,13 +2,14 @@
 
 
 reversi_game::reversi_game(const std::shared_ptr<client> &white_player_client,
-                           const std::shared_ptr<client> &black_player_client) {
+                           const std::shared_ptr<client> &black_player_client,
+                           const std::shared_ptr<game_config>& _game_config) {
     this->_engine = std::make_shared<reversi_engine>();
     //TODO: random player color distribution
     this->_white_player = std::make_shared<player>(white_player_client, player_code::WHITE_PLAYER);
     this->_black_player = std::make_shared<player>(black_player_client, player_code::BLACK_PLAYER);
     this->_current_player = this->_white_player;
-    this->_engine->create_board(DEFAULT_BOARD_WIDTH, DEFAULT_BOARD_HEIGHT, DEFAULT_INIT_X, DEFAULT_INIT_Y);
+    this->_engine->create_board(_game_config->board_width, _game_config->board_height, _game_config->init_x, _game_config->init_y);
 }
 
 std::shared_ptr<player> reversi_game::get_client_player(const std::shared_ptr<client> &client) const {

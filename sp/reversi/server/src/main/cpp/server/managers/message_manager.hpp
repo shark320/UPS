@@ -6,10 +6,12 @@
 #include "../connection/message/message.hpp"
 #include "../config/server_config.hpp"
 #include "../connection/connection_config/connection_config.hpp"
+#include "../../reversi/config/game_config.hpp"
 
 class message_manager {
 private:
     std::shared_ptr<connection_config> _config;
+    std::shared_ptr<game_config> _game_config;
     std::shared_ptr<client_manager> _client_manager;
     std::shared_ptr<lobby_manager> _lobby_manager;
 
@@ -141,7 +143,7 @@ public:
     std::shared_ptr<message>
     process(const std::shared_ptr<message> &request, const std::shared_ptr<client_connection> &client_connection);
 
-    explicit message_manager(const std::shared_ptr<connection_config> &connection_config);
+    explicit message_manager(const std::shared_ptr<connection_config> &connection_config, const std::shared_ptr<game_config>& _game_config);
 
     void set_client_manager(const std::shared_ptr<client_manager> &client_manager);
 

@@ -220,7 +220,9 @@ void server::check_client_timeouts_thread() {
                 timeout = true;
             }
             if (timeout) {
+                shared_lock.unlock();
                 close_client_connection(client);
+                shared_lock.lock();
                 clients_to_remove.push_back(id);
             }
         }

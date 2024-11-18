@@ -107,8 +107,8 @@ void message_manager::set_lobby_manager(const std::shared_ptr<lobby_manager> &lo
     this->_lobby_manager = lobby_manager;
 }
 
-message_manager::message_manager(const std::shared_ptr<connection_config> &connection_config) : _config(
-        connection_config) {
+message_manager::message_manager(const std::shared_ptr<connection_config> &connection_config , const std::shared_ptr<game_config>& _game_config) : _config(
+        connection_config), _game_config(_game_config) {
 
 }
 
@@ -397,7 +397,7 @@ std::shared_ptr<message> message_manager::process_start_the_game(const std::shar
         return unauthorized(request, client, msg);
     }
 
-    if (!lobby->start_game()) {
+    if (!lobby->start_game(this->_game_config)) {
         std::string msg = "Not enough players in the lobby.";
         client_logger->error(msg);
         return not_allowed(request, client, msg);

@@ -5,6 +5,7 @@
 
 class client;
 class reversi_game;
+class game_config;
 
 class lobby {
 private:
@@ -36,7 +37,7 @@ public:
 
     [[nodiscard]] bool is_started() const;
 
-    [[nodiscard]] bool start_game();
+    [[nodiscard]] bool start_game( const std::shared_ptr<game_config>& _game_config);
 
     [[nodiscard]] bool is_started_unsafe() const;
 

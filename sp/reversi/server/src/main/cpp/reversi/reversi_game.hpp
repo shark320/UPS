@@ -3,6 +3,7 @@
 #include "engine/reversi_engine.hpp"
 #include "../server/connection/client/client.hpp"
 #include "../game/player/player.hpp"
+#include "config/game_config.hpp"
 
 class player;
 
@@ -41,7 +42,9 @@ private:
 
 public:
     reversi_game(const std::shared_ptr<client> &white_player_client,
-                 const std::shared_ptr<client> &black_player_client);
+                 const std::shared_ptr<client> &black_player_client,
+                 const std::shared_ptr<game_config>& _game_config
+                 );
 
     [[nodiscard]] std::shared_ptr<player> get_client_player(const std::shared_ptr<client> &client) const;
 

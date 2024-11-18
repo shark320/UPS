@@ -4,6 +4,7 @@
 #include "server/config/server_config.hpp"
 #include "server/server.hpp"
 #include "fmt/format.h"
+#include "reversi/config/game_config.hpp"
 #include <log4cxx/basicconfigurator.h>
 #include <log4cxx/xml/domconfigurator.h>
 
@@ -23,9 +24,10 @@ int main(int argc, char *argv[]) {
     }else{
         auto _server_config = std::make_shared<server_config>(configuration::get_file("config"));
         auto _connection_config = std::make_shared<connection_config>(configuration::get_file("config"));
+        auto _game_config = std::make_shared<game_config>(configuration::get_file("config"));
         LOGGER->debug(fmt::format("Server config: {}", _server_config->to_string()));
         LOGGER->debug(fmt::format("Connection config: {}", _connection_config->to_string()));
-        auto _message_manager = std::make_shared<message_manager>(_connection_config);
+        auto _message_manager = std::make_shared<message_manager>(_connection_config, _game_config);
         std::shared_ptr<server> _server = std::make_shared<server>(_server_config, _message_manager);
         _server->start();
     }

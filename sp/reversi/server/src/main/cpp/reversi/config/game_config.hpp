@@ -1,35 +1,25 @@
 #pragma once
 
 #include <string>
+#include <memory>
 #include "../board/board.hpp"
+#include "SimpleIni.h"
 
 
 class game_config {
 private:
-    b_size board_width;
-    b_size board_height;
-    b_size init_x;
-    b_size init_y;
+
 
 public:
     game_config(b_size bw, b_size bh, b_size ix, b_size iy);
 
+    game_config(const std::shared_ptr<CSimpleIniA>& ini_config);
+
     game_config();
 
-    [[nodiscard]] b_size get_board_width() const;
-
-    void set_board_width(b_size bw);
-
-    [[nodiscard]] b_size get_board_height() const;
-
-    void set_board_height(b_size bh);
-
-    [[nodiscard]] b_size get_init_x() const;
-
-    void set_init_x(b_size ix);
-
-    [[nodiscard]] b_size get_init_y() const;
-
-    void set_init_y(b_size iy);
+    const b_size board_width;
+    const b_size board_height;
+    const b_size init_x;
+    const b_size init_y;
 };
 
