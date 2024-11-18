@@ -378,6 +378,92 @@ It is used to verify new client connection. If handshake was not performed, any 
 	\label{tab:handshake_request_response}
 \end{table}
 
+\newpage
+\subsection{Login}
+This request i subtype is used to perform client login (see Table \ref{tab:login_client_request}). If login is accepted by server, OK response is returned (see Table \ref{tab:login_server_response_ok}). Otherwise, if username is already in use, CONFLICT response is sent (see Table \ref{tab:login_server_response_nok}). 
+
+\begin{table}[h]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & POST \\ \hline
+			\textbf{Subtype} & 02 & LOGIN \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{username} & string & Username for login. \\ \hline
+		\end{tabular} \\
+		\textit{Request payload.}
+	\end{minipage}	
+	\caption{Login client request.}
+	\label{tab:login_client_request}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & POST \\ \hline
+			\textbf{Subtype} & 02 & LOGIN \\ \hline
+			\textbf{Status} & 200 & OK \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{95pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Login server response - OK.}
+	\label{tab:login_server_response_ok}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & POST \\ \hline
+			\textbf{Subtype} & 02 & LOGIN \\ \hline
+			\textbf{Status} & 409 & CONFLICT \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{95pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{msg} & string & Error message. \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Login server response - NOK - username declined.}
+	\label{tab:login_server_response_nok}
+\end{table}
+
+
 % _____________________________________________________________________________
 %
 %
