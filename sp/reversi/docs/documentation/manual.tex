@@ -58,7 +58,7 @@
 %	     DOCUMENT TEXT BEGINNING
 %
 % _____________________________________________________________________________
-%
+
 \begin{document}
 \frontpages[notm] % or notm if the `trademark' declaration is not needed
 \tableofcontents
@@ -245,6 +245,96 @@ Some player actions (e.g. creating a new lobby or leaving current lobby) can aff
 	\caption{Client flow overview.}
 	\label{fig:client_flow_overview}
 \end{figure}
+
+\chapter{Requests and Responses}
+
+In this chapter used client requests and server responses will be described. On some request types there can be more than one response type, \ac{HTTP}-like response codes are used to differentiate response processing.
+
+Each request has its own type (see Table \ref{tab:request_types}) and subtype (see Table \ref{tab:request_subtypes}), which indicates how it should be processed on server. They are a mandatory part os a message header. 
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\textbf{Type} & \textbf{Code} & \textbf{Description} \\ \hline
+		GET & 1 & Is used to retrieve information from a server. \\ \hline
+		POST & 2 & Is used to change/post some information on a server. \\ \hline
+	\end{tabular}
+	\caption{Request types.}
+	\label{tab:request_types}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\textbf{Subtype} & \textbf{Code} & \textbf{Description} \\ \hline
+		PING & 01 & Is used to ping a server. \\ \hline
+		LOGIN & 02 & Is used to perform client login. \\ \hline
+		CREATE\_GAME & 03 & Is used to perform creating a new game. \\ \hline
+		LOBBY\_EXIT & 04 & Is used to exit a lobby or game. \\ \hline
+		START\_GAME & 06 & Is used to start a game. \\ \hline
+		LOBBIES\_LIST & 07 & Is used to get open lobbies list. \\ \hline
+		LOBBY\_CONNECT & 08 & Is used to perform client connection to a lobby. \\ \hline
+		GAME\_STATE & 09 & Is used to retrieve current game state. \\ \hline
+		GAME\_MOVE & 10 & Is used to perform a player game move. \\ \hline
+		LOBBY\_STATE & 11 & Is used to retrieve current lobby state. \\ \hline
+		HANDSHAKE & 12 & Is used to perform a client-server handshake. \\ \hline
+	\end{tabular}
+	\caption{Request subtypes.}
+	\label{tab:request_subtypes}
+\end{table}
+
+
+\section{Common}
+These requests and responses are used when a client is not logged in.
+
+\subsection{Ping}
+A simple ping request-response which is used to check if the server is online. Client request and server response structures can be seen in Table \ref{tab:ping_client_request} and Table \ref{tab:ping_server_response}.
+
+\begin{table}[h]
+	\centering
+	\begin{minipage}[b]{1.0\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 1 & GET \\ \hline
+			\textbf{Subtype} & 01 & PING \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} \\
+	\vspace{0.5cm}
+	\begin{minipage}[b]{1.0\textwidth}
+		\centering
+		\textit{Request payload is empty.}
+	\end{minipage}	
+	\caption{Ping client request}
+	\label{tab:ping_client_request}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{minipage}[b]{1.0\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 1 & GET \\ \hline
+			\textbf{Subtype} & 01 & PING \\ \hline
+			\textbf{Status} & 200 & OK \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} \\
+	\vspace{0.5cm}
+	\begin{minipage}[b]{1.0\textwidth}
+		\centering
+		\textit{Response payload is empty.}
+	\end{minipage}	
+	\caption{Ping sever response}
+	\label{tab:ping_server_response}
+\end{table}
+
 % _____________________________________________________________________________
 %
 %
