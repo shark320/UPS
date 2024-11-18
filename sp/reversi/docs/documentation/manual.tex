@@ -290,11 +290,11 @@ Each request has its own type (see Table \ref{tab:request_types}) and subtype (s
 These requests and responses are used when a client is not logged in.
 
 \subsection{Ping}
-A simple ping request-response which is used to check if the server is online. Client request and server response structures can be seen in Table \ref{tab:ping_client_request} and Table \ref{tab:ping_server_response}.
+A simple ping request-response which is used to check if the server is online. Client request and server response structures can be seen in Table \ref{tab:ping_request_response}.
 
 \begin{table}[h]
 	\centering
-	\begin{minipage}[b]{1.0\textwidth}
+	\begin{minipage}[b]{0.45\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -303,19 +303,9 @@ A simple ping request-response which is used to check if the server is online. C
 			\textbf{Subtype} & 01 & PING \\ \hline
 		\end{tabular} \\
 		\textit{Request header.}
-	\end{minipage} \\
-	\vspace{0.5cm}
-	\begin{minipage}[b]{1.0\textwidth}
-		\centering
-		\textit{Request payload is empty.}
-	\end{minipage}	
-	\caption{Ping client request}
-	\label{tab:ping_client_request}
-\end{table}
-
-\begin{table}[h]
-	\centering
-	\begin{minipage}[b]{1.0\textwidth}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.45\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -325,17 +315,20 @@ A simple ping request-response which is used to check if the server is online. C
 			\textbf{Status} & 200 & OK \\ \hline
 		\end{tabular} \\
 		\textit{Response header.}
-	\end{minipage} \\
-	\vspace{0.5cm}
-	\begin{minipage}[b]{1.0\textwidth}
+	\end{minipage} \newline
+
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\textit{Request payload is empty.}
+	\end{minipage}	
+	\hfill
+	\begin{minipage}[b]{0.45\textwidth}
 		\centering
 		\textit{Response payload is empty.}
 	\end{minipage}	
-	\caption{Ping sever response}
-	\label{tab:ping_server_response}
+	\caption{Ping request/response.}
+	\label{tab:ping_request_response}
 \end{table}
-
-\newpage
 
 \subsection{Handshake}
 It is used to verify new client connection. If handshake was not performed, any other requests from client are aborted. Client request and server response structures can be seen in Table \ref{tab:handshake_request_response}.
