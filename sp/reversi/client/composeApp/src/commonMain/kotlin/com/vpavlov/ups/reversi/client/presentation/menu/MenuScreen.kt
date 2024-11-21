@@ -74,7 +74,7 @@ fun MenuScreen(
                 modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
+                TopBarRow(viewModel = viewModel)
                 Text(
                     text = "Open Lobbies",
                     textAlign = TextAlign.Center,
@@ -107,7 +107,7 @@ fun MenuScreen(
                 onClick = {
                     isCreateNewLobbyDialogVisible.value = true
                 }
-                ) {
+            ) {
                 Text(
                     modifier = Modifier.padding(8.dp),
                     text = "Create new lobby"
@@ -125,12 +125,17 @@ fun MenuScreen(
 }
 
 @Composable
-private fun TopBarRow(viewModel: MenuScreenViewModel){
+private fun TopBarRow(viewModel: MenuScreenViewModel) {
     var isConfirmationMessageVisible by remember { mutableStateOf(false) }
+    val commonState = viewModel.commonScreenState.value
+    val username = commonState.username ?: ""
     Row(
-        modifier = Modifier.fillMaxWidth()
-    ){
-        Spacer(modifier = Modifier.weight(1f))
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Username: $username"
+        )
+        Spacer(modifier = Modifier.width(16.dp))
         OutlinedButton(
             onClick = {
                 isConfirmationMessageVisible = true
@@ -138,12 +143,12 @@ private fun TopBarRow(viewModel: MenuScreenViewModel){
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color.Red,
             ),
-            border = BorderStroke(2.dp, Color.Red),
-        ){
-            Text("Exit Lobby", fontWeight = FontWeight.Bold)
+            border = BorderStroke(0.dp, Color.Transparent),
+        ) {
+            Text("Logout", fontWeight = FontWeight.Bold)
         }
     }
-    if (isConfirmationMessageVisible){
+    if (isConfirmationMessageVisible) {
         ConfirmationDialog(
             title = "Logout confirmation",
             message = "Are You sure you want to logout?",

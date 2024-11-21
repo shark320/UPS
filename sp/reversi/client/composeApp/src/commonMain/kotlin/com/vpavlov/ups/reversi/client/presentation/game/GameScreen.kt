@@ -50,6 +50,7 @@ import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionSt
 import com.vpavlov.ups.reversi.client.presentation.common.component.HandleMessages
 import com.vpavlov.ups.reversi.client.presentation.common.component.OnTopCircularProgressIndicator
 import com.vpavlov.ups.reversi.client.presentation.common.component.WaitingScreenAwareness
+import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
 import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreenEvent
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
 import com.vpavlov.ups.reversi.client.utils.requireAllNotNull
@@ -96,42 +97,50 @@ fun GameScreen(
                 contentColor = Color.Red,
             ),
             border = BorderStroke(2.dp, Color.Red),
-        ){
+        ) {
             Text(text = "Leave")
         }
     }
 
 
-    Box(
-        contentAlignment = Alignment.Center,
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorScheme.background)
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+        TopBar(viewModel = viewModel)
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colorScheme.background)
         ) {
-            Text(text = "Game", fontSize = 25.sp)
-            PlayersList(state = viewModel.state.value)
-            Spacer(modifier = Modifier.height(24.dp))
-            GameBoard(
-                viewModel = viewModel
-            )
-            Button(
-                onClick = {
-                    isConfirmationMessageVisible = true
-                },
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color.Red,
-                ),
-                border = BorderStroke(2.dp, Color.Red),
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Leave")
+                Text(text = "Game", fontSize = 25.sp)
+                Spacer(modifier = Modifier.height(16.dp))
+                PlayersList(state = viewModel.state.value)
+                Spacer(modifier = Modifier.height(24.dp))
+                GameBoard(
+                    viewModel = viewModel
+                )
+                Button(
+                    onClick = {
+                        isConfirmationMessageVisible = true
+                    },
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color.Red,
+                    ),
+                    border = BorderStroke(2.dp, Color.Red),
+                ) {
+                    Text(text = "Leave")
+                }
             }
         }
     }
 
-    if (isConfirmationMessageVisible){
+    if (isConfirmationMessageVisible) {
         ConfirmationDialog(
             title = "Leave the Game Confirmation",
             message = "Are You sure you want to leave the game?",
@@ -281,6 +290,7 @@ private fun DisplayPlayer(player: Player, isCurrentPlayer: Boolean, number: Int)
                     tint = Color.Black
                 )
             }
+
             PlayerCode.WHITE_PLAYER -> {
                 Icon(
                     imageVector = Icons.Filled.AccountCircle,
@@ -288,6 +298,7 @@ private fun DisplayPlayer(player: Player, isCurrentPlayer: Boolean, number: Int)
                     tint = Color.White
                 )
             }
+
             PlayerCode.NO_PLAYER -> {}
         }
         if (isCurrentPlayer) {
@@ -299,5 +310,18 @@ private fun DisplayPlayer(player: Player, isCurrentPlayer: Boolean, number: Int)
         }
 
 
+    }
+}
+
+@Composable
+private fun TopBar(viewModel: CommonScreenViewModel<*, *>) {
+    val commonState = viewModel.commonScreenState.value
+    val username = commonState.username ?: ""
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(16.dp)
+    ) {
+        Text(
+            text = "Username: $username"
+        )
     }
 }

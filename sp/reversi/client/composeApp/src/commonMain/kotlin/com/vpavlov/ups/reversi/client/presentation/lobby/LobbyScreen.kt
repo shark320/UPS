@@ -3,10 +3,12 @@ package com.vpavlov.ups.reversi.client.presentation.lobby
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,6 +42,7 @@ import com.vpavlov.ups.reversi.client.presentation.common.component.Confirmation
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
 import com.vpavlov.ups.reversi.client.presentation.common.component.HandleMessages
 import com.vpavlov.ups.reversi.client.presentation.common.component.WaitingScreenAwareness
+import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -61,7 +64,7 @@ fun LobbyScreen(
             navController = navController
         )
     }
-
+    HandleMessages(viewModel)
 }
 
 @Composable
@@ -71,60 +74,58 @@ private fun Content(
 ) {
     val state = viewModel.state.value
     WaitingScreenAwareness(viewModel = viewModel)
-    ClientFlowStateAwareness(
-        viewModel = viewModel,
-        navController = navController
-    )
-    ConnectionStateListenerWrapper(
-        viewModel = viewModel,
-        navController = navController
-    )
     Box(
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.TopCenter,
         modifier = Modifier
             .fillMaxSize()
             .background(colorScheme.background)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth(0.5f)
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Lobby: ${state.lobby}", fontSize = 25.sp)
-            Spacer(modifier = Modifier.height(24.dp))
-            PlayersList(
-                state.host,
-                state.players
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            Row {
-                if (state.username == state.host) {
-                    Button(
-                        onClick = {
-                            viewModel.onEvent(LobbyScreenEvent.StartGame)
-                        },
-                    ) {
-                        Text(text = "Start Game")
-                    }
-                }
-                Spacer(modifier = Modifier.width(16.dp))
-                ExitLobbyButton(
-                    viewModel = viewModel
+            TopBar(viewModel = viewModel)
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth(0.5f).fillMaxHeight()
+            ) {
+                Text("Lobby: ${state.lobby}", fontSize = 25.sp)
+                Spacer(modifier = Modifier.height(24.dp))
+                PlayersList(
+                    state.host,
+                    state.players
                 )
+                Spacer(modifier = Modifier.height(24.dp))
+                Row {
+                    if (state.username == state.host) {
+                        Button(
+                            onClick = {
+                                viewModel.onEvent(LobbyScreenEvent.StartGame)
+                            },
+                        ) {
+                            Text(text = "Start Game")
+                        }
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    ExitLobbyButton(
+                        viewModel = viewModel
+                    )
+                }
             }
-
-
         }
+
+
+
     }
-
-
-
-    HandleMessages(viewModel)
 }
+
 
 @Composable
 private fun ExitLobbyButton(
     viewModel: LobbyScreenViewModel,
-){
+) {
     var isConfirmationMessageVisible by remember { mutableStateOf(false) }
     OutlinedButton(
         onClick = {
@@ -134,11 +135,11 @@ private fun ExitLobbyButton(
             contentColor = Color.Red,
         ),
         border = BorderStroke(2.dp, Color.Red),
-    ){
+    ) {
         Text("Exit Lobby", fontWeight = FontWeight.Bold)
     }
 
-    if (isConfirmationMessageVisible){
+    if (isConfirmationMessageVisible) {
         ConfirmationDialog(
             title = "Exit Lobby Confirmation",
             message = "Are You sure you want to exit the lobby?",
@@ -207,5 +208,18 @@ private fun DisplayPlayer(player: String?, isHost: Boolean, number: Int) {
         }
 
 
+    }
+}
+
+@Composable
+private fun TopBar(viewModel: CommonScreenViewModel<*,*>) {
+    val commonState = viewModel.commonScreenState.value
+    val username = commonState.username ?: ""
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(16.dp)
+    ) {
+        Text(
+            text = "Username: $username"
+        )
     }
 }
