@@ -10,6 +10,7 @@ import com.vpavlov.ups.reversi.client.service.api.state.ConnectionStateService
 import com.vpavlov.ups.reversi.client.service.api.state.UserMessageStateService
 import com.vpavlov.ups.reversi.client.service.processor.ConnectToLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.CreateLobbyProcessor
+import com.vpavlov.ups.reversi.client.service.processor.LogoutProcessor
 import com.vpavlov.ups.reversi.client.state.ClientState
 import com.vpavlov.ups.reversi.client.utils.isValidLobbyName
 import kotlinx.coroutines.flow.launchIn
@@ -20,6 +21,7 @@ class MenuScreenViewModel(
     userMessageStateService: UserMessageStateService,
     private val pingService: PingService,
     private val connectToLobbyProcessor: ConnectToLobbyProcessor,
+    private val logoutProcessor: LogoutProcessor,
     clientStateService: ClientStateService,
     private val createLobbyProcessor: CreateLobbyProcessor,
 ) : CommonScreenViewModel<MenuScreenEvent, MenuScreenState>(
@@ -53,6 +55,9 @@ class MenuScreenViewModel(
                 _state.value = state.value.copy(
                     lobbyNameInputState = LobbyNameInputState()
                 )
+            }
+            is MenuScreenEvent.Logout -> {
+                logoutProcessor()
             }
         }
     }

@@ -27,6 +27,7 @@ enum class Subtype(val id: Int) {
     LOGIN(2),
     CREATE_GAME(3),
     LOBBY_EXIT(4),
+    LOGOUT(5),
     START_GAME(6),
     LOBBIES_LIST(7),
     LOBBY_CONNECT(8),

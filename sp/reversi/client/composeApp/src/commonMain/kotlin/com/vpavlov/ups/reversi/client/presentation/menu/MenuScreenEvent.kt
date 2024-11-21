@@ -9,4 +9,6 @@ interface MenuScreenEvent {
     data class LobbyNameEntered(val lobbyName: String): MenuScreenEvent
 
     data object LobbyNameInputCancelled: MenuScreenEvent
+
+    data object Logout: MenuScreenEvent
 }
