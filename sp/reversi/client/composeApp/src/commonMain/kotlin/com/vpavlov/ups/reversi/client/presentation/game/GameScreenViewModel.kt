@@ -80,6 +80,9 @@ class GameScreenViewModel(
     private fun exitLobby() {
         pingService.stop()
         exitLobbyProcessor().onEach { finished ->
+            if (finished){
+                pingService.stop()
+            }
             defaultFinishedHandler(finished)
         }.launchIn(viewModelScope)
     }

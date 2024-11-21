@@ -61,7 +61,11 @@ class MenuScreenViewModel(
     }
 
     private fun logout(){
+        pingService.stop()
         logoutProcessor().onEach { finished ->
+            if (finished){
+                pingService.start()
+            }
             defaultFinishedHandler(finished)
         }.launchIn(viewModelScope)
     }
@@ -80,13 +84,21 @@ class MenuScreenViewModel(
         if (!isValidLobbyName(lobbyName)){
             return
         }
+        pingService.stop()
         createLobbyProcessor(lobbyName).onEach { finished ->
+            if (finished){
+                pingService.stop()
+            }
             defaultFinishedHandler(finished)
         }.launchIn(viewModelScope)
     }
 
     private fun connectToLobby(lobby: String) {
+        pingService.stop()
         connectToLobbyProcessor(lobby).onEach { finished ->
+            if (finished){
+                pingService.stop()
+            }
             defaultFinishedHandler(finished)
         }.launchIn(viewModelScope)
     }
