@@ -56,10 +56,14 @@ class MenuScreenViewModel(
                     lobbyNameInputState = LobbyNameInputState()
                 )
             }
-            is MenuScreenEvent.Logout -> {
-                logoutProcessor()
-            }
+            is MenuScreenEvent.Logout -> logout()
         }
+    }
+
+    private fun logout(){
+        logoutProcessor().onEach { finished ->
+            defaultFinishedHandler(finished)
+        }.launchIn(viewModelScope)
     }
 
     private fun lobbyNameEntered(lobbyName: String) {
@@ -76,11 +80,15 @@ class MenuScreenViewModel(
         if (!isValidLobbyName(lobbyName)){
             return
         }
-        createLobbyProcessor(lobbyName)
+        createLobbyProcessor(lobbyName).onEach { finished ->
+            defaultFinishedHandler(finished)
+        }.launchIn(viewModelScope)
     }
 
     private fun connectToLobby(lobby: String) {
-        connectToLobbyProcessor(lobby)
+        connectToLobbyProcessor(lobby).onEach { finished ->
+            defaultFinishedHandler(finished)
+        }.launchIn(viewModelScope)
     }
 
     override fun initState(): MutableState<MenuScreenState> = mutableStateOf(MenuScreenState())

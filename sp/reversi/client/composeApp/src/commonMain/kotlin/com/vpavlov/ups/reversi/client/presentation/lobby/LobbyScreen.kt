@@ -39,6 +39,7 @@ import com.vpavlov.ups.reversi.client.presentation.common.component.ClientFlowSt
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConfirmationDialog
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
 import com.vpavlov.ups.reversi.client.presentation.common.component.HandleMessages
+import com.vpavlov.ups.reversi.client.presentation.common.component.WaitingScreenAwareness
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -69,6 +70,7 @@ private fun Content(
     navController: NavHostController
 ) {
     val state = viewModel.state.value
+    WaitingScreenAwareness(viewModel = viewModel)
     ClientFlowStateAwareness(
         viewModel = viewModel,
         navController = navController

@@ -7,7 +7,9 @@ data class CommonScreenState(
     val messageState: CommonScreenErrorState? = null,
     val isConnectionAlive: Boolean = true,
     val clientFlowState: ClientFlowState? = null,
-    val username: String? = null
+    val username: String? = null,
+    val isWaitingScreen: Boolean = false,
+    val waitingScreenText: String = ""
 )
 
 data class CommonScreenErrorState(

@@ -65,6 +65,7 @@ class LoginScreenViewModel(
         pingService.stop()
         loginProcessor(username).onEach { isComplete ->
             _state.value = state.value.copy(waitingResponse = !isComplete)
+            defaultFinishedHandler(isComplete)
         }.launchIn(viewModelScope)
     }
 

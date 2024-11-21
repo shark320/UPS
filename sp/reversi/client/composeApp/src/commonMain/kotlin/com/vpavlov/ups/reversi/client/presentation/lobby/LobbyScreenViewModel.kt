@@ -2,6 +2,7 @@ package com.vpavlov.ups.reversi.client.presentation.lobby
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.viewModelScope
 import com.vpavlov.ups.reversi.client.presentation.common.viewModel.CommonScreenViewModel
 import com.vpavlov.ups.reversi.client.service.api.PingService
 import com.vpavlov.ups.reversi.client.service.api.state.ClientStateService
@@ -11,6 +12,7 @@ import com.vpavlov.ups.reversi.client.service.processor.ExitLobbyProcessor
 import com.vpavlov.ups.reversi.client.service.processor.StartGameProcessor
 import com.vpavlov.ups.reversi.client.state.ClientState
 import com.vpavlov.ups.reversi.client.state.UserMessage
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class LobbyScreenViewModel(
@@ -38,11 +40,9 @@ class LobbyScreenViewModel(
 
     private fun exitLobby() {
         pingService.stop()
-        exitLobbyProcessor().onEach { done ->
-            if (done) {
-                pingService.start()
-            }
-        }
+        exitLobbyProcessor().onEach { finished ->
+            defaultFinishedHandler(finished)
+        }.launchIn(viewModelScope)
     }
 
     private fun startGame() {
@@ -55,7 +55,9 @@ class LobbyScreenViewModel(
             )
             return
         }
-        startGameProcessor()
+        startGameProcessor().onEach { finished ->
+            defaultFinishedHandler(finished)
+        }.launchIn(viewModelScope)
     }
 
     override fun handleClientStateUpdateCst(clientState: ClientState?) {

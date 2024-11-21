@@ -49,6 +49,7 @@ import com.vpavlov.ups.reversi.client.presentation.common.component.Confirmation
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
 import com.vpavlov.ups.reversi.client.presentation.common.component.HandleMessages
 import com.vpavlov.ups.reversi.client.presentation.common.component.OnTopCircularProgressIndicator
+import com.vpavlov.ups.reversi.client.presentation.common.component.WaitingScreenAwareness
 import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreenEvent
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
 import com.vpavlov.ups.reversi.client.utils.requireAllNotNull
@@ -67,6 +68,7 @@ fun GameScreen(
     var isConfirmationMessageVisible by remember { mutableStateOf(false) }
     val state = viewModel.state.value
 
+    WaitingScreenAwareness(viewModel = viewModel)
     HandleMessages(viewModel)
     ClientFlowStateAwareness(
         viewModel = viewModel,

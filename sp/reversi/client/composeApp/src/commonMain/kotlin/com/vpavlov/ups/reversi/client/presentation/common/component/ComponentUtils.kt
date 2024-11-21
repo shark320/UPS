@@ -11,7 +11,7 @@ import kotlin.system.exitProcess
 
 @Composable
 fun ConnectionStateListenerWrapper(
-    viewModel: CommonScreenViewModel<*,*>,
+    viewModel: CommonScreenViewModel<*, *>,
     navController: NavController,
     content: @Composable () -> Unit = {}
 ) {
@@ -31,15 +31,19 @@ fun ConnectionStateListenerWrapper(
 }
 
 @Composable
-fun HandleMessages(viewModel: CommonScreenViewModel<*,*>, okButtonText: String = "Ok", onOkClick: () -> Unit = {}){
+fun HandleMessages(
+    viewModel: CommonScreenViewModel<*, *>,
+    okButtonText: String = "Ok",
+    onOkClick: () -> Unit = {}
+) {
     val messageState = viewModel.commonScreenState.value.messageState
     //TODO: fatal error handling
-    val nonFatalReaction =  {
+    val nonFatalReaction = {
         viewModel.onCommonEvent(CommonScreenEvent.ClearError)
         onOkClick()
     }
     val fatalReaction = { exitProcess(228) }
-    if (messageState?.userMessage != null){
+    if (messageState?.userMessage != null) {
         ErrorDialog(
             message = messageState.userMessage.message,
             onOkClick = if (messageState.isFatalError) fatalReaction else nonFatalReaction,
@@ -50,27 +54,41 @@ fun HandleMessages(viewModel: CommonScreenViewModel<*,*>, okButtonText: String =
 
 @Composable
 fun ClientFlowStateAwareness(
-    viewModel: CommonScreenViewModel<*,*>,
+    viewModel: CommonScreenViewModel<*, *>,
     navController: NavController,
-){
+) {
     val state = viewModel.commonScreenState.value
     val messageState = viewModel.commonScreenState.value.messageState
-    if (messageState?.userMessage != null){
+    if (messageState?.userMessage != null) {
         //Prevent other screen navigation in case of message is showing
         return
     }
-    if (state.clientFlowState == null){
-        navigateIfNotTheSame(navController = navController, screenNavigation = ScreenNavigation.LoginScreen)
-    }else{
-        when(state.clientFlowState){
+    if (state.clientFlowState == null) {
+        navigateIfNotTheSame(
+            navController = navController,
+            screenNavigation = ScreenNavigation.LoginScreen
+        )
+    } else {
+        when (state.clientFlowState) {
             ClientFlowState.MENU -> {
-                navigateIfNotTheSame(navController = navController, screenNavigation = ScreenNavigation.MenuScreen)
+                navigateIfNotTheSame(
+                    navController = navController,
+                    screenNavigation = ScreenNavigation.MenuScreen
+                )
             }
+
             ClientFlowState.LOBBY -> {
-                navigateIfNotTheSame(navController = navController, screenNavigation = ScreenNavigation.LobbyScreen)
+                navigateIfNotTheSame(
+                    navController = navController,
+                    screenNavigation = ScreenNavigation.LobbyScreen
+                )
             }
+
             ClientFlowState.GAME -> {
-                navigateIfNotTheSame(navController = navController, screenNavigation = ScreenNavigation.GameScreen)
+                navigateIfNotTheSame(
+                    navController = navController,
+                    screenNavigation = ScreenNavigation.GameScreen
+                )
             }
         }
     }
@@ -78,11 +96,18 @@ fun ClientFlowStateAwareness(
 }
 
 @Composable
-private fun navigateIfNotTheSame(navController: NavController, screenNavigation: ScreenNavigation){
-    if (navController.currentBackStackEntry?.destination?.route != screenNavigation.toString()){
+private fun navigateIfNotTheSame(navController: NavController, screenNavigation: ScreenNavigation) {
+    if (navController.currentBackStackEntry?.destination?.route != screenNavigation.toString()) {
         navController.navigate(
             route = screenNavigation.toString(),
             navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
         )
     }
+}
+
+@Composable
+fun WaitingScreenAwareness(viewModel: CommonScreenViewModel<*, *>) {
+    val state = viewModel.commonScreenState.value
+    OnTopCircularProgressIndicator(state.isWaitingScreen, text = state.waitingScreenText)
+
 }

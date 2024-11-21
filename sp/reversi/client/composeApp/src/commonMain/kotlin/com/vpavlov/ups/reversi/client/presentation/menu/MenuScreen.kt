@@ -41,6 +41,7 @@ import com.vpavlov.ups.reversi.client.presentation.common.component.Confirmation
 import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionStateListenerWrapper
 import com.vpavlov.ups.reversi.client.presentation.common.component.HandleMessages
 import com.vpavlov.ups.reversi.client.presentation.common.component.InputDialog
+import com.vpavlov.ups.reversi.client.presentation.common.component.WaitingScreenAwareness
 import com.vpavlov.ups.reversi.client.presentation.lobby.LobbyScreenEvent
 import com.vpavlov.ups.reversi.client.state.LobbyInfo
 import com.vpavlov.ups.reversi.client.ui.theme.defaultCornerRadius
@@ -53,6 +54,7 @@ fun MenuScreen(
 ) {
     val state = viewModel.state.value
     val isCreateNewLobbyDialogVisible = remember { mutableStateOf(false) }
+    WaitingScreenAwareness(viewModel = viewModel)
     ClientFlowStateAwareness(
         viewModel = viewModel,
         navController = navController

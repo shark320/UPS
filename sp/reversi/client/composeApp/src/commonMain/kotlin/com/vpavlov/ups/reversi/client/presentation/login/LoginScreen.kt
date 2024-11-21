@@ -17,6 +17,7 @@ import com.vpavlov.ups.reversi.client.presentation.common.component.ConnectionSt
 import com.vpavlov.ups.reversi.client.presentation.common.component.CustomOutlinedTextField
 import com.vpavlov.ups.reversi.client.presentation.common.component.HandleMessages
 import com.vpavlov.ups.reversi.client.presentation.common.component.OnTopCircularProgressIndicator
+import com.vpavlov.ups.reversi.client.presentation.common.component.WaitingScreenAwareness
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -31,6 +32,7 @@ fun LoginScreen(
         viewModel = viewModel,
         navController = navController
     )
+    WaitingScreenAwareness(viewModel = viewModel)
     ConnectionStateListenerWrapper(
         viewModel = viewModel,
         navController = navController

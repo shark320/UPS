@@ -83,4 +83,29 @@ abstract class CommonScreenViewModel<EventType, StateType>(
         }
     }
 
+    @Synchronized
+    protected fun showWaitingScreen(waitingScreenText: String = ""){
+        _commonScreenState.value = commonScreenState.value.copy(
+            isWaitingScreen = true,
+            waitingScreenText = waitingScreenText
+        )
+    }
+
+    @Synchronized
+    protected fun hideWaitingScreen(){
+        _commonScreenState.value = commonScreenState.value.copy(
+            isWaitingScreen = false,
+            waitingScreenText = ""
+        )
+    }
+
+    @Synchronized
+    protected fun defaultFinishedHandler(finished: Boolean){
+        if (finished){
+            hideWaitingScreen()
+        } else{
+            showWaitingScreen()
+        }
+    }
+
 }

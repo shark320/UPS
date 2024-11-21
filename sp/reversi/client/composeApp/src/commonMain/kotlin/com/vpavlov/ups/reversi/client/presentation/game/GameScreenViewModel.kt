@@ -79,11 +79,9 @@ class GameScreenViewModel(
 
     private fun exitLobby() {
         pingService.stop()
-        exitLobbyProcessor().onEach { done ->
-            if (done) {
-                pingService.start()
-            }
-        }
+        exitLobbyProcessor().onEach { finished ->
+            defaultFinishedHandler(finished)
+        }.launchIn(viewModelScope)
     }
 
     private fun processPlayerMove(moveCoordinates: MoveCoordinates) {
@@ -101,17 +99,7 @@ class GameScreenViewModel(
         }
         processMoveJob?.cancel()
         processMoveJob = processGameMoveProcessor(moveCoordinates).onEach { result ->
-//            if (result == null){
-//                return@onEach
-//            }
-//            when(result){
-//                MoveProcessingResult.INVALID_MOVE -> {}
-//                MoveProcessingResult.UNEXPECTED_ERROR -> {}
-//                MoveProcessingResult.WRONG_PLAYER -> {}
-//                MoveProcessingResult.OK -> {
-//                    game!!.
-//                }
-//            }
+            defaultFinishedHandler(result != null)
         }.launchIn(viewModelScope)
     }
 
