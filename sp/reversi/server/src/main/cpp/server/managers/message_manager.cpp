@@ -41,6 +41,8 @@ message_manager::process_post(const std::shared_ptr<message> &request,
             return process_handshake(request, client_connection);
         case subtype::LOGIN:
             return process_login(request, client_connection);
+        case subtype::LOGOUT:
+            return process_logout(request, client_connection);
         case subtype::CREATE_GAME:
             return process_create_new_game(request, client_connection);
         case subtype::LOBBY_EXIT:
@@ -617,6 +619,20 @@ std::shared_ptr<message> message_manager::process_game_move_invalid_player(const
     return std::make_shared<message>(response_header, response_payload);
 }
 
+std::shared_ptr<message>
+message_manager::process_logout(const std::shared_ptr<message> &request,
+                                const std::shared_ptr<client_connection> &client_connection) {
+    const auto client_logger = client_connection->get_logger();
+    const auto response_header = std::make_shared<header>(request->get_header());
+    const auto response_payload = std::make_shared<payload>();
+
+    client_logger->debug("Processing client logout.");
+    this->_client_manager->logout_client(client_connection);
+
+    response_header->set_status(status::OK);
+    return std::make_shared<message>(response_header, response_payload);
+}
+
 
 
 std::shared_ptr<message>
@@ -740,6 +756,8 @@ std::shared_ptr<objects_vector> message_manager::convert_board_representation(co
     }
     return converted;
 }
+
+
 
 
 

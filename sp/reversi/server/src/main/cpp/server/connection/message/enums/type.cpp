@@ -29,6 +29,7 @@ const std::unordered_map<int, subtype> subtype_mapper::subtype_map = {
         {2, subtype::LOGIN},
         {3, subtype::CREATE_GAME},
         {4, subtype::LOBBY_EXIT},
+        {5, subtype::LOGOUT},
         {6, subtype::START_GAME},
         {7, subtype::LOBBIES_LIST},
         {8, subtype::LOBBY_CONNECT},

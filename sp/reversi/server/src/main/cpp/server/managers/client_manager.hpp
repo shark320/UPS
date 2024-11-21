@@ -33,5 +33,7 @@ public:
 
     [[nodiscard]] std::shared_ptr<client> login_client(const std::string& username, const std::shared_ptr<client_connection>& connection);
 
+    void logout_client(const std::shared_ptr<client_connection>& connection);
+
 };
 

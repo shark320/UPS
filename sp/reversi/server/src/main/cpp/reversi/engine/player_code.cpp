@@ -11,4 +11,5 @@ std::string player_code_mapper::get_string(player_code player_code) {
         case player_code::BLACK_PLAYER: return "BLACK_PLAYER";
         case player_code::NO_PLAYER: return "NO_PLAYER";
     }
+    return "NO_PLAYER";
 }

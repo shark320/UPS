@@ -117,6 +117,11 @@ private:
             const std::shared_ptr<player> &winner
     );
 
+    //*******************LOGOUT PROCESSING*******************
+
+    std::shared_ptr<message> process_logout(const std::shared_ptr<message> &request,
+                                            const std::shared_ptr<client_connection> &client_connection);
+
 
     [[nodiscard]] bool check_identifier(const std::shared_ptr<message> &request) const;
 
