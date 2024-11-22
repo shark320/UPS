@@ -273,9 +273,10 @@ Each request has its own type (see Table \ref{tab:request_types}) and subtype (s
 		LOGIN & 02 & Is used to perform client login. \\ \hline
 		CREATE\_GAME & 03 & Is used to perform creating a new game. \\ \hline
 		LOBBY\_EXIT & 04 & Is used to exit a lobby or game. \\ \hline
+		LOGOUT & 05 & Is used to perform client logout. \\ \hline
 		START\_GAME & 06 & Is used to start a game. \\ \hline
 		LOBBIES\_LIST & 07 & Is used to get open lobbies list. \\ \hline
-		LOBBY\_CONNECT & 08 & Is used to perform client connection to a lobby. \\ \hline
+		LOBBY\_CNCT & 08 & Is used to perform client connection to a lobby. \\ \hline
 		GAME\_STATE & 09 & Is used to retrieve current game state. \\ \hline
 		GAME\_MOVE & 10 & Is used to perform a player game move. \\ \hline
 		LOBBY\_STATE & 11 & Is used to retrieve current lobby state. \\ \hline
@@ -287,7 +288,7 @@ Each request has its own type (see Table \ref{tab:request_types}) and subtype (s
 
 
 \section{Common}
-These requests and responses are used when a client is not logged in.
+These requests and responses are used when a client is not logged in or for performing actions with its login.
 
 \subsection{Ping}
 A simple ping request-response which is used to check if the server is online. Client request and server response structures can be seen in Table \ref{tab:ping_request_response}.
@@ -299,8 +300,8 @@ A simple ping request-response which is used to check if the server is online. C
 		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
-			\textbf{Type} & 1 & GET \\ \hline
-			\textbf{Subtype} & 01 & PING \\ \hline
+			\textbf{Type} & 1 & \footnotesize{GET} \\ \hline
+			\textbf{Subtype} & 01 & \footnotesize{PING} \\ \hline
 		\end{tabular} \\
 		\textit{Request header.}
 	\end{minipage} 
@@ -310,9 +311,9 @@ A simple ping request-response which is used to check if the server is online. C
 		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
-			\textbf{Type} & 1 & GET \\ \hline
-			\textbf{Subtype} & 01 & PING \\ \hline
-			\textbf{Status} & 200 & OK \\ \hline
+			\textbf{Type} & 1 & \footnotesize{GET} \\ \hline
+			\textbf{Subtype} & 01 & \footnotesize{PING} \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} \newline
@@ -340,8 +341,8 @@ It is used to verify new client connection. If handshake was not performed, any 
 		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
-			\textbf{Type} & 2 & POST \\ \hline
-			\textbf{Subtype} & 12 & HANDSHAKE \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 12 & \footnotesize{HANDSHAKE} \\ \hline
 		\end{tabular} \\
 		\textit{Request header.}
 	\end{minipage} 
@@ -351,9 +352,9 @@ It is used to verify new client connection. If handshake was not performed, any 
 		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
-			\textbf{Type} & 2 & POST \\ \hline
-			\textbf{Subtype} & 12 & HANDSHAKE \\ \hline
-			\textbf{Status} & 200 & OK \\ \hline
+				\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 12 & \footnotesize{HANDSHAKE} \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} \newline
@@ -382,15 +383,15 @@ This request i subtype is used to perform client login (see Table \ref{tab:login
 		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
-			\textbf{Type} & 2 & POST \\ \hline
-			\textbf{Subtype} & 02 & LOGIN \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 02 & \footnotesize{LOGIN} \\ \hline
 		\end{tabular} \\
 		\textit{Request header.}
 	\end{minipage} 
 	\hfill
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{0.5\textwidth}
 		\centering
-		\begin{tabular}{|l|l|l|}
+		\begin{tabular}{|l|l|p{70pt}|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{username} & string & Username for login. \\ \hline
@@ -408,19 +409,19 @@ This request i subtype is used to perform client login (see Table \ref{tab:login
 		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
-			\textbf{Type} & 2 & POST \\ \hline
-			\textbf{Subtype} & 02 & LOGIN \\ \hline
-			\textbf{Status} & 200 & OK \\ \hline
+				\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 02 & \footnotesize{LOGIN} \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
 	\hfill
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{0.5\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{95pt}|}
+		\begin{tabular}{|l|l|p{70pt}|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
-			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+			\textbf{state} & string & Client flow state. \\ \hline
 		\end{tabular} \\
 		\textit{Response payload.}
 	\end{minipage}	
@@ -436,15 +437,208 @@ This request i subtype is used to perform client login (see Table \ref{tab:login
 			\hline
 			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
 			\textbf{Type} & 2 & POST \\ \hline
-			\textbf{Subtype} & 02 & LOGIN \\ \hline
-			\textbf{Status} & 409 & CONFLICT \\ \hline
+			\textbf{Subtype} & 02 & \footnotesize{LOGIN} \\ \hline
+			\textbf{Status} & 409 & \footnotesize{CONFLICT} \\ \hline
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
 	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{msg} & string & Error message. \\ \hline
+			\textbf{state} & string & Client flow state. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Login server response - NOK - username declined.}
+	\label{tab:login_server_response_nok}
+\end{table}
+
+\newpage
+
+\subsection{Logout}
+
+This request i subtype is used to perform client logout. If client is not logged in, no actions are performed and OK response is returned. Client request and server response can be seen in Table \ref{tab:logout_request_response} 
+
+\begin{table}[h]
+	\centering
+	\begin{minipage}[b]{0.475\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 05 & \footnotesize{LOGOUT} \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.475\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 05 & \footnotesize{LOGOUT} \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} \newline
+
+	\begin{minipage}[b]{0.475\textwidth}
+		\centering
+		\textit{Request payload is empty.}
+	\end{minipage}	
+	\hfill
+	\begin{minipage}[b]{0.475\textwidth}
+		\centering
+		\textit{Response payload is empty.}
+	\end{minipage}	
+	\caption{Logout request/response.}
+	\label{tab:logout_request_response}
+\end{table}
+
+\newpage
+
+\section{Menu and Lobby}
+
+These subtypes of requests are used to retrieve information about current lobbies state and to interact with a lobby.
+
+\subsection{Retrieve Open Lobbies}
+
+This request is used to get open lobbies, to which a client can connect (see Table \ref{tab:get_lobbies_request} and Table \ref{tab:get_lobbies_response}).
+
+\begin{table}[h]
+	\centering
 	\begin{minipage}[b]{0.45\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{95pt}|}
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 1 & \footnotesize{GET} \\ \hline
+			\textbf{Subtype} & 07 & \footnotesize{LOBBIES\_LIST} \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\textit{Request payload is empty.}
+	\end{minipage}	
+	\caption{Get lobbies client request.}
+	\label{tab:get_lobbies_request}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{minipage}[b]{1.0\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 1 & \footnotesize{GET} \\ \hline
+			\textbf{Subtype} & 07 & \footnotesize{LOBBIES\_LIST} \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} \\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+			\textbf{lobbies} & string array & A list of open lobbies names. \\ \hline
+			\textbf{lobby\_hosts} & string array & A list of open lobbies host usernames. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Get lobbies server response.}
+	\label{tab:get_lobbies_response}
+\end{table}
+
+\newpage
+
+\subsection{Create Lobby}
+
+This request is used to process new lobby creation, triggered by a user. Client sends a request with a lobby name (see Table \ref{tab:create_lobby_request}). Server respond with OK if a lobby is created successfully (see Table \ref{tab:create_lobby_response_OK}), and with status CONFLICT if a lobby with requested name is already exists (see Table \ref{tab:create_lobby_request_conflict}).
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 03 & \footnotesize{CREATE\_GAME}  \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{name} & string & Lobby name. \\ \hline
+		\end{tabular} \\
+		\textit{Request payload.}
+	\end{minipage}	
+	\caption{Create lobby client request.}
+	\label{tab:create_lobby_request}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 03 & \footnotesize{CREATE\_GAME}  \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+			\textbf{name} & string & Lobby name. \\ \hline
+			\textbf{user} & string & Client name. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Create lobby server response - OK.}
+	\label{tab:create_lobby_response_OK}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 03 & \footnotesize{CREATE\_GAME}  \\ \hline
+			\textbf{Status} & 409 & \footnotesize{CONFLICT} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{msg} & string & Error message. \\ \hline
@@ -452,9 +646,102 @@ This request i subtype is used to perform client login (see Table \ref{tab:login
 		\end{tabular} \\
 		\textit{Response payload.}
 	\end{minipage}	
-	\caption{Login server response - NOK - username declined.}
-	\label{tab:login_server_response_nok}
+	\caption{Create lobby server response - CONFLICT.}
+	\label{tab:create_lobby_request_conflict}
 \end{table}
+
+\newpage
+
+\subsection{Connect to Lobby}
+
+This request subtype is used to perform client connection to an existing open lobby (see Table \ref{tab:connect_lobby_request}). If connection was successful, OK response is returned (see Table \ref{tab:connect_lobby_response_ok}), otherwise, if connection was not performed, NOT FOUND response is returned (see Table \ref{tab:connect_lobby_response_not_found}).
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 08 & \footnotesize{LOBBY\_CNCT}  \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{lobby} & string & Lobby name. \\ \hline
+		\end{tabular} \\
+		\textit{Request payload.}
+	\end{minipage}	
+	\caption{Connect to lobby client request.}
+	\label{tab:connect_lobby_request}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 08 & \footnotesize{LOBBY\_CNCT}  \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+			\textbf{lobby} & string & Lobby name. \\ \hline
+			\textbf{host} & string & Host name. \\ \hline
+			\textbf{players} & string array & Players names list. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Connect to lobby server response - OK.}
+	\label{tab:connect_lobby_response_ok}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 08 & \footnotesize{LOBBY\_CNCT}  \\ \hline
+			\textbf{Status} & 404 & \footnotesize{NOT FOUND} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{msg} & string & Error message. \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+			\textbf{lobby} & string & Lobby name. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Connect to lobby server response - NOT FOUND.}
+	\label{tab:connect_lobby_response_not_found}
+\end{table}
+
+
 
 
 % _____________________________________________________________________________
