@@ -741,7 +741,92 @@ This request subtype is used to perform client connection to an existing open lo
 	\label{tab:connect_lobby_response_not_found}
 \end{table}
 
+\newpage
 
+\subsection{Get Lobby State}
+
+This request is used to get current state of the lobby, in which client is (see Table \ref{tab:get_lobby_state_request}). If state is retrieved successfully, then OK response is returned (see Table \ref{tab:get_lobby_state_response_ok}). In case when the game is started, REDIRECT response is used (see Table \ref{tab:get_lobby_state_response_redirect}).
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 1 & \footnotesize{GET} \\ \hline
+			\textbf{Subtype} & 11 & \footnotesize{LOBBY\_STATE}  \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\textit{Request payload is empty.}
+	\end{minipage}	
+	\caption{Get lobby state client request.}
+	\label{tab:get_lobby_state_request}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 1 & \footnotesize{GET} \\ \hline
+			\textbf{Subtype} & 11 & \footnotesize{LOBBY\_STATE}  \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+			\textbf{lobby} & string & Lobby name. \\ \hline
+			\textbf{host} & string & Host name. \\ \hline
+			\textbf{players} & string array & Players names list. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Get lobby state server response - OK.}
+	\label{tab:get_lobby_state_response_ok}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 1 & \footnotesize{GET} \\ \hline
+			\textbf{Subtype} & 11 & \footnotesize{LOBBY\_STATE}  \\ \hline
+			\textbf{Status} & 301 & \footnotesize{MOVED} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+			\textbf{lobby} & string & Lobby name. \\ \hline
+			\textbf{host} & string & Host name. \\ \hline
+			\textbf{players} & string array & Players names list. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Get lobby state server response - REDIRECT.}
+	\label{tab:get_lobby_state_response_redirect}
+\end{table}
 
 
 % _____________________________________________________________________________
