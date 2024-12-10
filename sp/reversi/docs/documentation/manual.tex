@@ -828,6 +828,440 @@ This request is used to get current state of the lobby, in which client is (see 
 	\label{tab:get_lobby_state_response_redirect}
 \end{table}
 
+\newpage
+
+\subsection{Start the Game}
+
+This request is used to start the game from the current lobby (see Table \ref{tab:start_game_request}). If game is started successfully, then OK response is returned (see Table \ref{tab:start_game_response_ok}). If the lobby has not enough players to start the game, NOT ALLOWED response is returned (see Table \ref{tab:start_game_response_not_allowed}). If the current player has no rights to start the game (e.g. not the host), UNAUTHORIZED response is used (see Table \ref{tab:start_game_response_unauthorized}).
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 06 & \footnotesize{START\_GAME}  \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\textit{Request payload is empty.}
+	\end{minipage}	
+	\caption{Start the game client request.}
+	\label{tab:start_game_request}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 06 & \footnotesize{START\_GAME}  \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Start the game server response - OK.}
+	\label{tab:start_game_response_ok}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 06 & \footnotesize{START\_GAME}  \\ \hline
+			\textbf{Status} & 405 & \footnotesize{NOT\_ALLOWED} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+            \textbf{msg} & string & Error message. \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+            \textbf{players} & string array & Players names list. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Start the game server response - NOT ALLOWED.}
+	\label{tab:start_game_response_not_allowed}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 06 & \footnotesize{START\_GAME}  \\ \hline
+			\textbf{Status} & 401 & \footnotesize{UNAUTHORIZED} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+            \textbf{msg} & string & Error message. \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+            \textbf{players} & string array & Players names list. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Start the game server response - NOT ALLOWED.}
+	\label{tab:start_game_response_unauthorized}
+\end{table}
+
+\newpage
+
+\subsection{Exit the Lobby}
+
+This request subtype is used to perform a player exiting the lobby or game (see Table \ref{tab:exit_lobby_request}). The only response is OK (see Table \ref{exit_lobby_response_ok}), which indicates that operation was successful.
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 04 & \footnotesize{LOBBY\_EXIT}  \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\textit{Request payload is empty.}
+	\end{minipage}	
+	\caption{Exit the lobby client request.}
+	\label{tab:exit_lobby_request}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 04 & \footnotesize{EXIT\_LOBBY}  \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Exit the lobby server response - OK.}
+	\label{tab:exit_lobby_response_ok}
+\end{table}
+
+\newpage
+
+\section{Game}
+These requests are used to retrieve information about the current game state and to perform player actions with it.
+
+\newpage
+
+\subsection{Get Game State}
+This request is used to retrieve the current game state (see Table \ref{tab:get_game_state_request}). If the game state can be get, OK response is returned with game state information (see Table \ref{tab:get_game_state_response_ok}). In case if the game is over, RESET response is returned with information about a winner (see Table \ref{tab:get_game_state_response_reset}). If the game is terminated (one of the players exited the game), then MOVED PERMANENTLY response is returned (see Table \ref{tab:get_game_state_response_moved}). If a player is trying to get a state of a game which is not started yet, NOT FOUND response is returned (see Table \ref{tab:get_game_state_response_not_found}).
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 09 & \footnotesize{GAME\_STATE}  \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\textit{Request payload is empty.}
+	\end{minipage}	
+	\caption{Get game state client request.}
+	\label{tab:get_game_state_request}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 09 & \footnotesize{GAME\_STATE}  \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+            \textbf{players} & string array & Players names list. \\ \hline
+            \textbf{player\_codes} & string array & Player codes list. \\ \hline
+            \textbf{opponent\_connected} & bool & Shows if opponent has a connection to the server. \\ \hline
+            \tetxbf{current\_player} & string & Name of the player who is on turn. \\ \hline
+            \textbf{board} & integer array & Board cells representation. \\ \hline
+            \textbf{board\_size} & integer array & board size [cols, rows]. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Get game state server response - OK.}
+	\label{tab:get_game_state_response_ok}
+\end{table}
+
+\newpage
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 09 & \footnotesize{GAME\_STATE}  \\ \hline
+			\textbf{Status} & 205 & \footnotesize{RESET} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+            \textbf{players} & string array & Players names list. \\ \hline
+            \textbf{winner} & string & Name of the game winner. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Exit the lobby server response - RESET.}
+	\label{tab:get_game_state_response_reset}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 09 & \footnotesize{GAME\_STATE}  \\ \hline
+			\textbf{Status} & 301 & \footnotesize{MOVED\_PERMANENTLY} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+            \textbf{msg} & string & User message. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Exit the lobby server response - MOVED.}
+	\label{tab:get_game_state_response_moved}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 09 & \footnotesize{GAME\_STATE}  \\ \hline
+			\textbf{Status} & 404 & \footnotesize{NOT\_FOUND} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+            \textbf{msg} & string & User message. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Exit the lobby server response - NOT FOUND.}
+	\label{tab:get_game_state_response_moved}
+\end{table}
+
+\newpage
+
+\subsection{Player Move}
+This request subtype is used to perform player move in a game (see Table \ref{tab:player_move_request}). If the move was successful, then OK response is used (see Table \ref{tab:player_move_response_ok}). If the player is not on turn, CONFLICT response is returned (see Table \ref{tab:player_move_response_conflict}). In case when the move is invalid, NOT ALLOWED response is used (see Table \ref{tab:player_move_response__not_allowed}).
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 10 & \footnotesize{GAME\_MOVE}  \\ \hline
+		\end{tabular} \\
+		\textit{Request header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{x} & integer & X coordinate of the move. \\ \hline
+            \textbf{y} & integer & Y coordinate of the move. \\ \hline
+		\end{tabular} \\
+		\textit{Request payload.}
+	\end{minipage}	
+	\caption{Player move client request.}
+	\label{tab:player_move_request}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 09 & \footnotesize{GAME\_STATE}  \\ \hline
+			\textbf{Status} & 200 & \footnotesize{OK} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{x} & integer & X coordinate of the move. \\ \hline
+            \textbf{y} & integer & Y coordinate of the move. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Player server response - OK.}
+	\label{tab:player_move_response_ok}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 09 & \footnotesize{GAME\_STATE}  \\ \hline
+			\textbf{Status} & 409 & \footnotesize{CONFLICT} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+            \textbf{msg} & string & User message. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Player server response - CONFLICT.}
+	\label{tab:player_move_response_conflict}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{minipage}[b]{0.45\textwidth}
+		\centering
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Section} & \textbf{Value} & \textbf{Description} \\ \hline
+			\textbf{Type} & 2 & \footnotesize{POST} \\ \hline
+			\textbf{Subtype} & 09 & \footnotesize{GAME\_STATE}  \\ \hline
+			\textbf{Status} & 405 & \footnotesize{NOT\_ALLOWED} \\ \hline
+		\end{tabular} \\
+		\textit{Response header.}
+	\end{minipage} 
+	\hfill
+	\begin{minipage}[b]{0.5\textwidth}
+		\centering
+		\begin{tabular}{|l|l|p{70pt}|}
+			\hline
+			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
+			\textbf{state} & string & Client flow state for synchronization. \\ \hline
+            \textbf{msg} & string & User message. \\ \hline
+		\end{tabular} \\
+		\textit{Response payload.}
+	\end{minipage}	
+	\caption{Player server response - NOT ALLOWED.}
+	\label{tab:player_move_response__not_allowed}
+\end{table}
+\newpage
+
 
 % _____________________________________________________________________________
 %
