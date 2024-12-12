@@ -9,6 +9,9 @@ static const std::string HANDSHAKE_REQUIRED_KEY = "handshake_required";
 
 void connection_config::init(const std::shared_ptr<CSimpleIniA> &ini_config) {
     this->identifier = ini_config->GetValue(CONNECTION_SECTION.c_str(), IDENTIFIER_KEY.c_str(), "");
+    if (this->identifier.size() != 4){
+        throw std::invalid_argument("Invalid identifier configuration");
+    }
     this->handshake_required = ini_config->GetBoolValue(CONNECTION_SECTION.c_str(), HANDSHAKE_REQUIRED_KEY.c_str(), true);
 }
 

@@ -29,11 +29,29 @@ int server_config::get_client_queue_size() const {
 
 void server_config::init(const std::shared_ptr<CSimpleIniA> &ini_config) {
     this->port = (int) ini_config->GetLongValue(SERVER_SECTION.c_str(), PORT_KEY.c_str(), -1);
+    if (this->port < 0 || this->port > 65535){
+        throw std::invalid_argument("Invalid port configuration");
+    }
     this->client_queue_size = (int) ini_config->GetLongValue(SERVER_SECTION.c_str(), CLIENT_QUEUE_SIZE_KEY.c_str(), -1);
+    if (this->client_queue_size <= 0) {
+        throw std::invalid_argument("Invalid client queue size configuration");
+    }
     this->handshake_timeout = (int) ini_config->GetLongValue(SERVER_SECTION.c_str(), HANDSHAKE_TIMEOUT_KEY.c_str(), -1);
+    if (this->handshake_timeout<0){
+        throw std::invalid_argument("Invalid handshake timeout configuration");
+    }
     this->timeout_check_interval = (int) ini_config->GetLongValue(SERVER_SECTION.c_str(), TIMEOUT_CHECK_INTERVAL_KEY.c_str(), -1);
+    if (this->timeout_check_interval<0){
+        throw std::invalid_argument("Invalid timeout check interval configuration");
+    }
     this->login_timeout = (int) ini_config->GetLongValue(SERVER_SECTION.c_str(), LOGIN_TIMEOUT_KEY.c_str(), -1);
+    if (this->login_timeout<0){
+        throw std::invalid_argument("Invalid login timeout configuration");
+    }
     this->ping_timeout = (int) ini_config->GetLongValue(SERVER_SECTION.c_str(), PING_TIMEOUT_KEY.c_str(), -1);
+    if (this->ping_timeout<0){
+        throw std::invalid_argument("Invalid ping timeout configuration");
+    }
 }
 
 server_config::server_config() {}
