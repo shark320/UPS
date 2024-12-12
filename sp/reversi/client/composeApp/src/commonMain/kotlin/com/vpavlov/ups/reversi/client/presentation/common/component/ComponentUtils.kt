@@ -17,15 +17,19 @@ fun ConnectionStateListenerWrapper(
 ) {
     val state = viewModel.commonScreenState.value
     if (!state.isConnectionAlive) {
-        ErrorDialog(
-            message = "Connection to the server lost.",
-            onOkClick = {
-                navController.navigate(
-                    route = ScreenNavigation.ConnectionScreen.toString(),
-                    navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
-                )
-            },
+        navController.navigate(
+            route = ScreenNavigation.ConnectionScreen.toString(),
+            navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
         )
+//        ErrorDialog(
+//            message = "Connection to the server lost.",
+//            onOkClick = {
+//                navController.navigate(
+//                    route = ScreenNavigation.ConnectionScreen.toString(),
+//                    navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
+//                )
+//            },
+//        )
     }
     content()
 }
