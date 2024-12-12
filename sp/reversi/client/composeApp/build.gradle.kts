@@ -8,6 +8,13 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21)) // Or your desired JDK version
+    }
+}
+
+
 kotlin {
     jvm("desktop")
     
@@ -42,6 +49,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
         }
     }
+
 }
 
 
@@ -51,8 +59,21 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.vpavlov.ups.reversi.client"
+            packageName = "reversiUPS"
             packageVersion = "1.0.0"
+
+            afterEvaluate {
+                val copyConfig by tasks.registering(Copy::class) {
+                    from("$projectDir/src/desktopMain/resources/config") // Adjust the path as needed
+                    //into("$buildDir/compose/binaries/main/app/reversiUPS/bin/config")
+                    into(layout.buildDirectory.dir("compose/binaries/main/app/reversiUPS/bin/config")) // Specify the desired external directory
+                }
+
+//                tasks["package${TargetFormat.Dmg.name}"].dependsOn(copyConfig)
+//                tasks["package${TargetFormat.Msi.name}"].dependsOn(copyConfig)
+//                tasks["package${TargetFormat.Deb.name}"].dependsOn(copyConfig)
+                tasks["createDistributable"].finalizedBy(copyConfig)
+            }
         }
     }
 }

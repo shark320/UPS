@@ -32,3 +32,5 @@ sp/reversi/docs/documentation/manual.toc
 sp/reversi/docs/documentation/manual.fdb_latexmk
 sp/reversi/docs/documentation/manual.fls
 sp/reversi/docs/documentation/texput.log
+sp/reversi/client/composeApp/layout.buildDirectory
+sp/reversi/server/build

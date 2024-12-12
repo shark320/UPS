@@ -3,6 +3,10 @@ package com.vpavlov.ups.reversi.client.utils
 import io.ktor.utils.io.ByteReadChannel
 import kotlin.reflect.KClass
 
+object EnvironmentVariables{
+    var isIDEStart: Boolean = false
+}
+
 val VALID_USERNAME = Regex("^[a-zA-Z][a-zA-Z0-9_]*$")
 
 val VALID_LOBBY_NAME = VALID_USERNAME

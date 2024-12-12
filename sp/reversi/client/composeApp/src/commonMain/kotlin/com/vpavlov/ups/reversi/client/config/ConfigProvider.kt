@@ -1,5 +1,8 @@
 package com.vpavlov.ups.reversi.client.config
 
+import com.vpavlov.ups.reversi.client.utils.EnvironmentVariables
+import java.io.File
+import java.io.InputStream
 import java.util.Properties
 
 private const val CONNECTION_CONFIG = "config/connection.properties"
@@ -14,7 +17,7 @@ object ConfigProvider {
 
     private fun loadProps(fileName: String): Properties{
         val props = Properties()
-        val file = this::class.java.classLoader.getResourceAsStream(fileName)
+        val file = if (EnvironmentVariables.isIDEStart) this::class.java.classLoader.getResourceAsStream(fileName) else File(fileName).inputStream()
         props.load(file)
         return props
     }

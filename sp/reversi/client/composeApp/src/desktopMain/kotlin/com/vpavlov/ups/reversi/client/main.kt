@@ -9,7 +9,9 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.vpavlov.ups.reversi.client.di.initKoin
 import com.vpavlov.ups.reversi.client.presentation.navigation.NavigationBase
+import com.vpavlov.ups.reversi.client.utils.EnvironmentVariables
 import org.apache.logging.log4j.kotlin.logger
+
 
 
 fun main(args: Array<String>) = application {
@@ -18,6 +20,7 @@ fun main(args: Array<String>) = application {
     val logger = logger("main")
     logger.debug("Run arguments: $argsSet")
     initKoin(argsSet.contains("-offline"))
+    EnvironmentVariables.isIDEStart = argsSet.contains("--ide")
     Window(
         onCloseRequest = ::exitApplication,
         title = "client",
