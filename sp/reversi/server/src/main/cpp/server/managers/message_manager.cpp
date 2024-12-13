@@ -16,7 +16,7 @@ std::shared_ptr<message> message_manager::process(const std::shared_ptr<message>
         return bad_request(request, client_connection->get_client(), msg);
     }
     //Check preconditions: if login is performed
-    if (client_connection->is_handshake() && !client_connection->is_logged_in() &&
+    if (!client_connection->is_logged_in() &&
         !(is_login_request(request->get_header()) ||
           is_ping_request(request->get_header()))) {
         const std::string msg = "The client login was not performed.";
@@ -183,6 +183,9 @@ std::shared_ptr<message> message_manager::process_create_new_game(const std::sha
                                                                   const std::shared_ptr<client_connection> &client_connection) {
     const auto client_logger = client_connection->get_logger();
     const auto client = client_connection->get_client();
+    if (client == nullptr){
+        return bad_request(request, client, "Client was not found!");
+    }
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
     const auto request_payload = request->get_payload();
@@ -225,6 +228,10 @@ std::shared_ptr<message> message_manager::process_lobby_exit(const std::shared_p
     const auto client = client_connection->get_client();
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
+
+    if (client == nullptr){
+        return bad_request(request, client, "Client was not found!");
+    }
 
     auto lobby = client->get_lobby();
 
@@ -281,6 +288,10 @@ std::shared_ptr<message> message_manager::process_get_lobbies_list(const std::sh
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
 
+    if (client == nullptr){
+        return bad_request(request, client, "Client was not found!");
+    }
+
     client_logger->debug("Processing get lobbies request.");
 
     if (client->get_flow_state() != flow_state::MENU) {
@@ -311,6 +322,10 @@ std::shared_ptr<message> message_manager::process_connect_to_the_lobby(const std
     const auto client = client_connection->get_client();
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
+
+    if (client == nullptr){
+        return bad_request(request, client, "Client was not found!");
+    }
 
     if (!client->is_in_state({flow_state::MENU})) {
         return invalid_state(client->get_flow_state(), request, client, client_logger);
@@ -348,6 +363,9 @@ std::shared_ptr<message> message_manager::process_get_lobby_state(const std::sha
                                                                   const std::shared_ptr<client_connection> &client_connection) {
     const auto client_logger = client_connection->get_logger();
     const auto client = client_connection->get_client();
+    if (client == nullptr){
+        return bad_request(request, client, "Client was not found!");
+    }
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
     const auto lobby = client->get_lobby();
@@ -385,6 +403,9 @@ std::shared_ptr<message> message_manager::process_start_the_game(const std::shar
                                                                  const std::shared_ptr<client_connection> &client_connection) {
     const auto client_logger = client_connection->get_logger();
     const auto client = client_connection->get_client();
+    if (client == nullptr){
+        return bad_request(request, client, "Client was not found!");
+    }
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
     const auto lobby = client->get_lobby();
@@ -456,6 +477,9 @@ std::shared_ptr<message> message_manager::process_get_game_state(const std::shar
                                                                  const std::shared_ptr<client_connection> &client_connection) {
     const auto client_logger = client_connection->get_logger();
     const auto client = client_connection->get_client();
+    if (client == nullptr){
+        return bad_request(request, client, "Client was not found!");
+    }
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
     const auto lobby = client->get_lobby();
@@ -537,6 +561,9 @@ std::shared_ptr<message> message_manager::process_game_move(const std::shared_pt
                                                             const std::shared_ptr<client_connection> &client_connection) {
     const auto client_logger = client_connection->get_logger();
     const auto client = client_connection->get_client();
+    if (client == nullptr){
+        return bad_request(request, client, "Client was not found!");
+    }
     const auto response_header = std::make_shared<header>(request->get_header());
     const auto response_payload = std::make_shared<payload>();
     const auto lobby = client->get_lobby();
