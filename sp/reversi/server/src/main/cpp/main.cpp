@@ -14,8 +14,7 @@ void increase(int& a){
 
 static auto LOGGER = log4cxx::Logger::getLogger("main");
 
-int main(int argc, char *argv[]) {
-    log4cxx::xml::DOMConfigurator::configure("config/logging/log4cxx.xml");
+void start(int argc, char *argv[]){
     configuration::init({
                                 {"config/config.ini", "config"}
                         });
@@ -31,5 +30,20 @@ int main(int argc, char *argv[]) {
         std::shared_ptr<server> _server = std::make_shared<server>(_server_config, _message_manager);
         _server->start();
     }
-    return 0;
+}
+
+int main(int argc, char *argv[]) {
+    try {
+        log4cxx::xml::DOMConfigurator::configure("config/logging/log4cxx.xml");
+        start(argc, argv);
+        return 0;
+    }catch(const std::exception& ex){
+        std::cerr << "Exception caught: " << ex.what() << std::endl;
+        return -1;
+    }catch (...){
+        std::cerr << "Unknown exception caught!" << std::endl;
+        return -1;
+    }
+
+
 }
