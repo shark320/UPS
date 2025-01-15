@@ -18,7 +18,7 @@ std::shared_ptr<message> message_manager::process(const std::shared_ptr<message>
     //Check preconditions: if login is performed
     if (!client_connection->is_logged_in() &&
         !(is_login_request(request->get_header()) ||
-          is_ping_request(request->get_header()))) {
+          is_ping_request(request->get_header()) || is_handshake_request(request->get_header()))) {
         const std::string msg = "The client login was not performed.";
         client_connection->get_logger()->error(msg);
         return bad_request(request, client_connection->get_client(), msg);
