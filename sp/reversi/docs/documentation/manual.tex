@@ -247,6 +247,14 @@ Some player actions (e.g. creating a new lobby or leaving current lobby) can aff
 	\label{fig:client_flow_overview}
 \end{figure}
 
+\section{Edge Cases}
+
+\begin{itemize}
+	\item \textbf{Connection lost} - Loading screen with connection message is shown. Client attempts to reconnect to the server. After a successful reconnection, client performs auto-login with previously entered username a fetches user state from the server.
+	\item \textbf{Game: opponent disconnected} - The message about game termination is shown. Client goes back to a menu state.
+	\item \textbf{Game: opponent is offline} - The message about opponent's offline status is shown. A player can wait or press a quit button. In case of quit, game is terminated. 
+\end{itemize}
+
 \chapter{Requests and Responses}
 
 In this chapter used client requests and server responses will be described. On some request types there can be more than one response type, \ac{HTTP}-like response codes are used to differentiate response processing.
