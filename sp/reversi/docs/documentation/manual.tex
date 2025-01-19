@@ -190,11 +190,12 @@ Each message (request or response) contains a header, which has predefined const
 
 \section{Header}
 
-Message \textit{header} has length of 17 bytes and contains 5 sections described in Table \ref{tab:header_sections}. Header has always constant structure: \texttt{[Identificator,Length,Type,Subtype,Status]}.
+Message \textit{header} has length of 17 bytes and contains 5 sections described in Table \ref{tab:header_sections}. Header has always constant structure: \texttt{[Identificator,Length,Type,Subtype,
+Status]}.
 
 \begin{table}[h]
 	\centering
-	\begin{tabular}{|l|l|l|l|}
+	\begin{tabular}{|l|l|l|p{140pt}|}
 		\hline
 		\textbf{Section} & \textbf{Length (bytes)} & \textbf{Data Type} & \textbf{Description}	\\ \hline
 		\textbf{Identificator} & 4 & String & Unique identificator for client-server connection \\ \hline
@@ -595,7 +596,7 @@ This request is used to process new lobby creation, triggered by a user. Client 
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -606,10 +607,11 @@ This request is used to process new lobby creation, triggered by a user. Client 
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
@@ -624,7 +626,7 @@ This request is used to process new lobby creation, triggered by a user. Client 
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -635,10 +637,11 @@ This request is used to process new lobby creation, triggered by a user. Client 
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{msg} & string & Error message. \\ \hline
@@ -684,7 +687,7 @@ This request subtype is used to perform client connection to an existing open lo
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -695,10 +698,11 @@ This request subtype is used to perform client connection to an existing open lo
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
@@ -714,7 +718,7 @@ This request subtype is used to perform client connection to an existing open lo
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -725,10 +729,11 @@ This request subtype is used to perform client connection to an existing open lo
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{msg} & string & Error message. \\ \hline
@@ -770,7 +775,7 @@ This request is used to get current state of the lobby, in which client is (see 
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -781,10 +786,11 @@ This request is used to get current state of the lobby, in which client is (see 
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
@@ -800,7 +806,7 @@ This request is used to get current state of the lobby, in which client is (see 
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -811,10 +817,11 @@ This request is used to get current state of the lobby, in which client is (see 
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
@@ -857,7 +864,7 @@ This request is used to start the game from the current lobby (see Table \ref{ta
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -868,10 +875,11 @@ This request is used to start the game from the current lobby (see Table \ref{ta
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
@@ -884,7 +892,7 @@ This request is used to start the game from the current lobby (see Table \ref{ta
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -895,10 +903,11 @@ This request is used to start the game from the current lobby (see Table \ref{ta
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
             \textbf{msg} & string & Error message. \\ \hline
@@ -913,7 +922,7 @@ This request is used to start the game from the current lobby (see Table \ref{ta
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -924,10 +933,11 @@ This request is used to start the game from the current lobby (see Table \ref{ta
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
             \textbf{msg} & string & Error message. \\ \hline
@@ -969,7 +979,7 @@ This request subtype is used to perform a player exiting the lobby or game (see 
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -980,10 +990,11 @@ This request subtype is used to perform a player exiting the lobby or game (see 
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
@@ -1027,7 +1038,7 @@ This request is used to retrieve the current game state (see Table \ref{tab:get_
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -1038,17 +1049,18 @@ This request is used to retrieve the current game state (see Table \ref{tab:get_
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
             \textbf{players} & string array & Players names list. \\ \hline
             \textbf{player\_codes} & string array & Player codes list. \\ \hline
             \textbf{opponent\_connected} & bool & Shows if opponent has a connection to the server. \\ \hline
-            \tetxbf{current\_player} & string & Name of the player who is on turn. \\ \hline
+            \textbf{current\_player} & string & Name of the player who is on turn. \\ \hline
             \textbf{board} & integer array & Board cells representation. \\ \hline
             \textbf{board\_size} & integer array & board size [cols, rows]. \\ \hline
 		\end{tabular} \\
@@ -1062,7 +1074,7 @@ This request is used to retrieve the current game state (see Table \ref{tab:get_
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -1073,10 +1085,11 @@ This request is used to retrieve the current game state (see Table \ref{tab:get_
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
@@ -1091,7 +1104,7 @@ This request is used to retrieve the current game state (see Table \ref{tab:get_
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -1102,10 +1115,11 @@ This request is used to retrieve the current game state (see Table \ref{tab:get_
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
@@ -1119,7 +1133,7 @@ This request is used to retrieve the current game state (see Table \ref{tab:get_
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -1130,10 +1144,11 @@ This request is used to retrieve the current game state (see Table \ref{tab:get_
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
@@ -1142,7 +1157,7 @@ This request is used to retrieve the current game state (see Table \ref{tab:get_
 		\textit{Response payload.}
 	\end{minipage}	
 	\caption{Exit the lobby server response - NOT FOUND.}
-	\label{tab:get_game_state_response_moved}
+	\label{tab:get_game_state_response_not_found}
 \end{table}
 
 \newpage
@@ -1152,7 +1167,7 @@ This request subtype is used to perform player move in a game (see Table \ref{ta
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -1162,10 +1177,11 @@ This request subtype is used to perform player move in a game (see Table \ref{ta
 		\end{tabular} \\
 		\textit{Request header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{x} & integer & X coordinate of the move. \\ \hline
@@ -1179,7 +1195,7 @@ This request subtype is used to perform player move in a game (see Table \ref{ta
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -1190,10 +1206,11 @@ This request subtype is used to perform player move in a game (see Table \ref{ta
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{x} & integer & X coordinate of the move. \\ \hline
@@ -1207,7 +1224,7 @@ This request subtype is used to perform player move in a game (see Table \ref{ta
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -1218,10 +1235,11 @@ This request subtype is used to perform player move in a game (see Table \ref{ta
 		\end{tabular} \\
 		\textit{Response header.}
 	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
@@ -1235,7 +1253,7 @@ This request subtype is used to perform player move in a game (see Table \ref{ta
 
 \begin{table}[h!]
 	\centering
-	\begin{minipage}[b]{0.45\textwidth}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
 		\begin{tabular}{|l|l|l|}
 			\hline
@@ -1245,11 +1263,12 @@ This request subtype is used to perform player move in a game (see Table \ref{ta
 			\textbf{Status} & 405 & \footnotesize{NOT\_ALLOWED} \\ \hline
 		\end{tabular} \\
 		\textit{Response header.}
-	\end{minipage} 
-	\hfill
-	\begin{minipage}[b]{0.5\textwidth}
+	\end{minipage}
+	\\
+	\vspace{10pt}
+	\begin{minipage}[b]{1.0\textwidth}
 		\centering
-		\begin{tabular}{|l|l|p{70pt}|}
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Field name} & \textbf{Type} & \textbf{Description} \\ \hline
 			\textbf{state} & string & Client flow state for synchronization. \\ \hline
