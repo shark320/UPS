@@ -29,6 +29,7 @@
 \usepackage{listings}
 \usepackage{color}
 \usepackage{float}
+\usepackage{dirtree}
 \title{Fundamentals of Computer Networks. Multiplayer game "Reversi"}
 %\worktypespec{Technická zpráva}% <== this command is only applicable if 'oth' switch is used above
 \author{Volodymyr}{Pavlov}{}{}
@@ -1289,6 +1290,43 @@ This request subtype is used to perform player move in a game (see Table \ref{ta
 \end{table}
 \newpage
 
+\chapter{Server}
+
+Server is written in C++ 17 along with \texttt{CMake} build system and utility packages (\texttt{log4cxx}, \texttt{fmt} and \texttt{SimpleIni}). These tools were chosen to simplify memory management (utilizing \texttt{std::shared\_ptr}) and to enable working in the object-oriented programming paradigm.
+
+\newpage
+\section{Project Structure}
+The implementation of the program consists of several modules to achieve greater flexibility in supporting or modifying the code. The following briefly shows project structure:
+\\
+\begin{dirtree}{%
+	.1 src.
+	.2 main.
+	.3 cpp.
+	.4 base.
+	.4 config.
+	.4 utils.
+	.4 reversi.
+	.5 board.
+	.5 config.
+	.5 consts.
+	.5 engine.
+	.4 server.
+	.5 connection.
+	.6 consts.
+	.6 message.
+	.7 enums.
+	.7 header.
+	.7 payload.
+	.5 managers.
+	.5 config.
+	.4 game.
+	.5 lobby.
+	.5 player.
+	}
+\end{dirtree}
+
+\newpage
+\section{Modules Description}
 
 % _____________________________________________________________________________
 %
