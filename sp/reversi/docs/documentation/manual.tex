@@ -30,6 +30,18 @@
 \usepackage{color}
 \usepackage{float}
 \usepackage{dirtree}
+
+\lstset{
+    language=bash,
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    frame=single,
+    showstringspaces=false,
+    breaklines=true
+}
+
 \title{Fundamentals of Computer Networks. Multiplayer game "Reversi"}
 %\worktypespec{Technická zpráva}% <== this command is only applicable if 'oth' switch is used above
 \author{Volodymyr}{Pavlov}{}{}
@@ -1326,7 +1338,146 @@ The implementation of the program consists of several modules to achieve greater
 \end{dirtree}
 
 \newpage
-\section{Modules Description}
+\section{Key Implementations}
+
+\subsection{Main Function}
+Program entry point - \texttt{main.cpp} file. Main function takes care of loading all needed configuration from \texttt{.ini} files, initializes logging and server. Starts the server.
+
+\subsection{Server}
+Server class implementation encapsulates the key functionalities required to manage server operations in a networked application. The server is initialized with configuration details (\texttt{server\_config}) and a message manager (\texttt{message\_manager}) and verifies that all required configurations are in place before starting.
+
+\textbf{Server} creates a socket to listen for incoming connections. Binds the socket to the specified address and port and listens for client connections and manages the connection queue size. Accepts incoming client connections and manages individual client threads. Processes client messages and handles the exchange of requests and responses. Closes client connections when necessary, including during timeouts or errors. Handles scenarios where clients disconnect or time out, ensuring the server resources are released properly. Monitors client activity and disconnects idle or unresponsive clients. Integrates with client and lobby managers to manage game-specific or application-specific states.
+
+\subsection{Client Manager}
+\textbf{Client Manager} class provides core functionalities to manage client connections and their states on the server. It takes care of storing a new client connection in a connection map and removing client connections safely when they are no longer active. Provides functionality for clients login and logout. Ensures thread-safe access to client connections and client data using shared and unique locks for read and write operations. The \textbf{Client Manager} class plays a critical role in maintaining the integrity and thread-safety of client-related data and ensuring seamless interaction between the server and its clients.
+
+\subsection{Lobby Manager}
+The \textbf{Lobby Manager} class is responsible for managing lobbies and their interactions with clients in a multiplayer environment. It's responsible for creating a new lobby with a specified name and ensuring that the provided lobby name is unique. It allows players to exit lobbies. If the host leaves, it updates the host or removes the lobby if it becomes empty. Also it updates the player's state to reflect their disconnection from the lobby. 
+
+\subsection{Message Manager}
+The \textbf{Message Manager} class is a core component responsible for processing and managing communication between clients and the server. It handles incoming messages from clients and routes them based on their type and subtype. Ensures handshake and login are performed before processing certain requests. Validates message identifiers to ensure requests are from authorized sources. Generates appropriate error responses for invalid requests, unauthorized actions, and resource conflicts. 
+
+\section{How to Build and Run}
+
+\subsection{Requirements}
+To build the server executable file next components are required:
+\begin{itemize}
+	\item \textbf{\texttt{Linux OS}} -- the server can be build only under \texttt{GNU/Linux} operation system.
+	\item \textbf{\texttt{C++ 17+}} -- Installed and configured \texttt{C++} of version 17 or higher is required.
+	\item \textbf{\texttt{CMake 3.25+}} -- Installed and configured \texttt{CMake} of version 3.25 or higher is required.
+	\item \textbf{\texttt{log4cxx}} -- Installed \texttt{liblog4cxx-dev} package is required.
+\end{itemize}
+
+\subsection{Build and Run}
+The project can be build using common way of building CMake projects and run by executing \texttt{server} executable file after the build. The process is described in the listing \ref{lst:server_build}.
+
+\begin{lstlisting}[language=bash, caption={Example server build and run}, label={lst:server_build}]
+# Navigate to the project directory
+cd project
+	
+# Create a build directory
+mkdir build && cd build
+	
+# Configure the project
+cmake ..
+	
+# Build the project
+make
+	
+# Run the executable
+./server
+\end{lstlisting}
+
+\subsection{Configuration}
+Server specific parameters such as port, client and handshake timeouts etc. can be configured using \texttt{config.ini} file located in the \texttt{config} folder in the project root.
+
+\chapter{Client}
+The client application implementation is developed in \texttt{Kotlin} language together with \texttt{Kotlin Multiplatform} and \texttt{Compose Multiplatform} frameworks. Also, the implementation relies on \texttt{koin} dependency injection library. Such development stack was chosen because it's easy to maintain and extend with a new features. Mentioned frameworks provides a mechanism for fast project migration to other platforms such as \texttt{Android}, \texttt{IOS} and \texttt{WEB} while sharing common \ac{UI} and business logic implementation. Also, \texttt{Compose Multiplatform} allows developers to use modern \texttt{Android-style} \ac{UI} implementation with a variety of pre-made features.
+
+\section{Project Structure}
+The project implementation is divided into two main parts:
+\begin{itemize}
+	\item \textbf{\texttt{commonMain}} -- contains implementation of common business logic and \ac{UI} which can be used on different platforms.
+	\item \textbf{\texttt{desktopMain}} -- contains desktop \texttt{Linux} specific implementation such as running the \texttt{Compose Application}.    
+\end{itemize}
+
+This structure ensures easy maintain of the project and its flexibility from platform and new features perspective.
+
+\section{Key Implementations}
+
+The whole project is written in \ac{MVVM} paradigm to provide a clear separation of concerns and facilitates testability, maintainability, and scalability.
+
+\subsection{Modules}
+The \textbf{Modules.kt} file contains \texttt{koin} modules declaration and provides dependency injection support to the project. It ensures correct \texttt{koin} initialization with provided parameters which allows adaptation of used dependencies without any code changes.
+
+\subsection{State Services}
+State services are used to encapsulate a state, to provide a unified interface to interact with the state and its thread-safety. The following state services are present in the project:
+\begin{itemize}
+	\item \textbf{ClientStateService} -- encapsulates the client state such as login state, username, current flow state, available lobbies list and the current lobby.
+	\item \textbf{ConnectionStateService} -- encapsulates the server connection state and stores information if the connection is alive, last successful server ping timestamp, socket, and if a handshake was performed.
+	\item \textbf{GameStateService} -- contains information about the current game state: players list, if the opponent is online, current player turn, and board cells data.
+	\item \textbf{UserMessageStateService} -- it is a utility state service which is used to manage which message (if required) is displayed to a user. It ensures that all fired messages will be shown.
+\end{itemize}
+
+\subsection{ConnectionService}
+The \textbf{ConnectionService} is used to take care of the server connection and messages sending and receiving. It provides a method to establish a connection to the server with provided parameters, and a method to exchange a message with the server (send the given message and read the response message).
+
+\subsection{Message Processors}
+The \textbf{Message Processors} are used to process a message on the business logic layer - construct a message using provided parameters and dedicated message type and subtype, send it to the server, retrieve a response message and process received data using \texttt{ConnectionService}. Here is a list of implemented message processors:
+
+\begin{itemize}
+	\item \textbf{CommonProcessor} -- is a base implementation for all message processors which performs client-server interaction.  It ensures that every exception thrown during the message sending and receiving is properly handled and propagated to \ac{UI}. It uses coroutines to provide asynchronous execution and to avoid main thread blocking. 
+	\item \textbf{CommonClientProcessor} -- is a dedicated implementation which extends \texttt{CommonProcessor} with a client state update method.
+	\item \textbf{HandshakeProcessor} -- processing a handshake with the server. Rise a fatal error in case of failure.
+	\item \textbf{LoginProcessor} -- processing a client login with provided username.
+	\item \textbf{LogoutProcessor} -- processing a client logout.
+	\item \textbf{PingProcessor} -- processing a simple ping to the server.
+	\item \textbf{GetLobbiesProcessor} -- processing a get of currently available lobbies.
+	\item \textbf{CreateLobbyProcessor} -- processing a lobby creation with provided lobby name.
+	\item \textbf{ConnectToLobbyProcessor} -- processing a connection to a lobby with a specified name.
+	\item \textbf{ExitLobbyProcessor} -- processing an exiting from the current lobby.
+	\item \textbf{GetLobbyStateProcessor} -- processing getting a state of the current lobby.
+	\item \textbf{StartGameProcessor} -- processing a game start.
+	\item \textbf{GetGameStateProcessor} -- processing getting a state of the current game.
+	\item \textbf{GameMoveProcessor} -- processing a game move using given coordinates.
+\end{itemize}
+
+\subsection{PingService}
+
+The \textbf{PingService} takes care of the regular ping to the server and updates the current client state with the given data from the server. Type of the used message processor depends on the client flow state:
+
+\begin{itemize}
+	\item \textbf{no state} -- \texttt{PingProcessor} is used to check server connection state.
+	\item \textbf{MENU} -- \texttt{GetLobbiesProcessor} is used to update the list of the available lobbies.
+	\item \textbf{LOBBY} -- \texttt{GetLobbyStateProcessor} is used to update the current lobby state.
+	\item \textbf{GAME} -- \texttt{GetGameStateProcessor} is used to update the current game state.
+\end{itemize}
+
+\section{How to Build and Run}
+
+\subsection{Requirements}
+
+\begin{itemize}
+	\item \textbf{\texttt{Windows}} or \textbf{\texttt{Linux}} operation system.
+	\item \textbf{\texttt{Java 17+}} -- installed and configured \texttt{Java} of version 17+.
+	\item \textbf{\texttt{Gradle 8.7+}} -- installed and configured \texttt{Gradle} of version 8.7+.
+\end{itemize}
+
+\subsection{Build and Run}
+In the project root folder there are two prepared files: \texttt{gradlew} and \texttt{gradlew-linux}. These files can be used to build and run the project under \texttt{Windows} and \texttt{Linux} operation systems. The example of building the executable file on \texttt{Linux} can be seen in the listing \ref{lst:}
+
+\begin{lstlisting}[language=bash, caption={Example of client build on Linux}, label={lst:client_build}]
+# Navigate to the project directory
+cd project
+
+./gradlew-linux createDistributable
+\end{lstlisting}
+
+After the executable file is build, it can be directly run.
+
+\subsection{Configuration}
+Client connection properties such as server IP address, server port and ping intervals can be found in the build directory in the \texttt{config/connection.properties} file.
+
 
 % _____________________________________________________________________________
 %
@@ -1348,13 +1499,14 @@ The implementation of the program consists of several modules to achieve greater
 
 % Определение аббревиатур
 \begin{acronym}
-\acro{UI}[UI]{User Interface}
-\acro{REST}[REST]{Representational State Transfer}
-\acro{KMP}[KMP]{Kotlin multi-platform}
-\acro{CMP}[CMP]{Compose multi-platform}
-\acro{JSON}[JSON]{JavaScript Object Notation}
-\acro{XML}[XML]{Extensible Markup Language}
-\acro{HTTP}[HTTP]{Hypertext Transfer Protocol}
+	\acro{UI}[UI]{User Interface}
+	\acro{REST}[REST]{Representational State Transfer}
+	\acro{KMP}[KMP]{Kotlin multi-platform}
+	\acro{CMP}[CMP]{Compose multi-platform}
+	\acro{JSON}[JSON]{JavaScript Object Notation}
+	\acro{XML}[XML]{Extensible Markup Language}
+	\acro{HTTP}[HTTP]{Hypertext Transfer Protocol}
+	\acro{MVVM}[MVVM]{Model-View-ViewModel}
 \end{acronym}
 
 
